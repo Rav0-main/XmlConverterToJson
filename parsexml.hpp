@@ -1,20 +1,17 @@
 #pragma once
-#ifndef tuple
+
+#ifndef PARSEXML_HPP
+
+#define PARSEXML_HPP
+
 #include <tuple>
-#endif
-
-#ifndef vector
 #include <vector>
-#endif
-
-#ifndef string
 #include <string>
-#endif
 
 struct Node {
 	std::string tagName;
 	std::string value;
-	std::vector<Node*> childs;
+	std::vector<Node*> children;
 };
 
 enum class ParsingResult {
@@ -25,6 +22,11 @@ enum class ParsingResult {
 
 typedef std::tuple<std::vector<Node*>, ParsingResult> ParsedXml;
 
-ParsedXml getXmlTreesOf(const std::string filename);
+ParsedXml getXmlTreesOf(const std::string& filename);
 
-void outputRoots(const std::vector<Node*> roots);
+void freeNode(Node* node, Node** nodePtr);
+
+void outputRoots(
+	const std::vector<Node*>& roots, const bool valueAsAscii
+);
+#endif

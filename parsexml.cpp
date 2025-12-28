@@ -1,31 +1,21 @@
-#include "parsexml.hpp"
-
-#ifndef fstream
 #include <fstream>
-#endif
-
-#ifndef cctype
 #include <cctype>
-#endif
-
-#ifndef iostream
 #include <iostream>
-#endif
-
-#ifndef queue
 #include <queue>
-#endif
+#include "parsexml.hpp"
 
 #define START_TAG_NAME '<'
 #define END_TAG_NAME '>'
 #define CLOSE_TAG_NAME '/'
+#define EMPTY "EMPTY"
 
-static void deleteAllSpaceSymbolsIn(std::string& str);
+static void strip(std::string& str);
 static bool isStartOfTagName(const char symbol);
 static bool isEndOfTagName(const char symbol);
 static bool isCloseOfTagName(const char symbol);
+static void outputASCIIOf(const std::string& str);
 
-ParsedXml getXmlTreesOf(const std::string filename) {
+ParsedXml getXmlTreesOf(const std::string& filename) {
 	std::ifstream file(filename);
 	if (!file)
 		return { {}, ParsingResult::FileNotFound };
@@ -37,12 +27,13 @@ ParsedXml getXmlTreesOf(const std::string filename) {
 	bool inTagContent = false;
 	bool inTagNameClose = false;
 	bool successParsed = true;
+
 	Node* node;
 	std::vector<Node*> stack;
 	std::vector<Node*> roots;
 	std::string tagName;
 
-	while (!file.eof()) {
+	while (!file.fail()) {
 		//in tag found space symbol
 		if (isspace(symbol) && inTagNameInit) {
 			successParsed = false;
@@ -68,8 +59,9 @@ ParsedXml getXmlTreesOf(const std::string filename) {
 			inTagContent = true;
 			node = new Node;
 			node->tagName = tagName;
+
 			if (!stack.empty()) {
-				stack.back()->childs.push_back(node);
+				stack.back()->children.push_back(node);
 				stack.push_back(node);
 			}
 			else {
@@ -85,7 +77,7 @@ ParsedXml getXmlTreesOf(const std::string filename) {
 			inTagNameInit = false;
 			inTagNameClose = false;
 
-			deleteAllSpaceSymbolsIn(stack.back()->value);
+			strip(stack.back()->value);
 			stack.pop_back();
 		}
 		else if (inTagNameClose) {
@@ -103,23 +95,32 @@ ParsedXml getXmlTreesOf(const std::string filename) {
 
 	file.close();
 
-	if (successParsed)
+	if (successParsed && file.eof())
 		return { roots, ParsingResult::Success };
-	else
+	else {
+		for (Node* node : stack)
+			freeNode(node, &node);
+
+		for (Node* node : roots)
+			freeNode(node, &node);
+
 		return { {}, ParsingResult::UnknownError };
+	}
 }
 
-static void deleteAllSpaceSymbolsIn(std::string& str) {
+static void strip(std::string& str) {
 	const size_t len = str.length();
 	size_t left = 0;
 	while (left < len && isspace(str[left]))
 		++left;
 
-	if (left == len)
+	if (left == len) {
+		str.clear();
 		return;
+	}
 
-	long long right = len - 1;
-	while (right > 0 && isspace(str[right]))
+	size_t right = len - 1;
+	while (right > -1 && isspace(str[right]))
 		--right;
 
 	str = str.substr(left, right - left + 1);
@@ -137,7 +138,19 @@ static bool isCloseOfTagName(const char symbol) {
 	return symbol == CLOSE_TAG_NAME;
 }
 
-void outputRoots(const std::vector<Node*> roots) {
+void freeNode(Node* node, Node** nodePtr) {
+	for (auto &child : node->children) {
+		freeNode(child, &child);
+		child = nullptr;
+	}
+
+	delete node;
+	*nodePtr = nullptr;
+}
+
+void outputRoots(
+	const std::vector<Node*>& roots, const bool valueAsAscii
+) {
 	std::queue<const Node*> queue;
 	const Node* node;
 
@@ -151,19 +164,34 @@ void outputRoots(const std::vector<Node*> roots) {
 
 			std::cout << "Value: ";
 			if (node->value.empty())
-				std::cout << "Empty";
+				std::cout << EMPTY;
+			else if (valueAsAscii)
+				outputASCIIOf(node->value);
 			else
 				std::cout << node->value;
 
 			std::cout << std::endl;
 
 			std::cout << "Childs: ";
-			for (Node* childNode : node->childs) {
-				std::cout << childNode->tagName << ", ";
-				queue.push(childNode);
-			}
+			if (node->children.empty())
+				std::cout << EMPTY;
+			
+			else
+				for (const Node* child : node->children) {
+					std::cout << child->tagName << ", ";
+					queue.push(child);
+				}
+
 			std::cout << std::endl;
 		}
 		std::cout << std::endl;
 	}
+}
+
+static void outputASCIIOf(const std::string& str) {
+	std::cout << std::hex;
+	for (const int symb : str)
+		std::cout << "0x" << symb << " ";
+
+	std::cout << std::dec;
 }
