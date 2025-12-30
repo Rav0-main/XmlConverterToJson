@@ -18,7 +18,9 @@ static void outputASCIIOf(const std::string& str);
 ParsedXml getXmlTreesOf(const std::string& filename) {
 	std::ifstream file(filename);
 	if (!file)
-		return { {}, ParsingResult::FileNotFound };
+		return ParsedXml(
+			std::vector<Node*>(), ParsingResult::FileNotFound
+		);
 
 	char symbol;
 	file.get(symbol);
@@ -96,7 +98,9 @@ ParsedXml getXmlTreesOf(const std::string& filename) {
 	file.close();
 
 	if (successParsed && file.eof())
-		return { roots, ParsingResult::Success };
+		return ParsedXml( 
+			{ roots, ParsingResult::Success }
+		);
 	else {
 		for (Node* node : stack)
 			freeNode(node, &node);
@@ -104,7 +108,9 @@ ParsedXml getXmlTreesOf(const std::string& filename) {
 		for (Node* node : roots)
 			freeNode(node, &node);
 
-		return { {}, ParsingResult::UnknownError };
+		return ParsedXml(
+			{ std::vector<Node*>(), ParsingResult::UnknownError}
+		);
 	}
 }
 
@@ -120,7 +126,7 @@ static void strip(std::string& str) {
 	}
 
 	size_t right = len - 1;
-	while (right > -1 && isspace(str[right]))
+	while (isspace(str[right]))
 		--right;
 
 	str = str.substr(left, right - left + 1);
@@ -139,16 +145,14 @@ static bool isCloseOfTagName(const char symbol) {
 }
 
 void freeNode(Node* node, Node** nodePtr) {
-	for (auto &child : node->children) {
+	for (auto &child : node->children)
 		freeNode(child, &child);
-		child = nullptr;
-	}
 
 	delete node;
 	*nodePtr = nullptr;
 }
 
-void outputRoots(
+void outputTrees(
 	const std::vector<Node*>& roots, const bool valueAsAscii
 ) {
 	std::queue<const Node*> queue;

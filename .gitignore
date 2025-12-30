@@ -3,4 +3,5 @@
 *.vcxproj*
 FromXmlToJson/*
 x64/*
-*.xml
+*.o
+*.exe

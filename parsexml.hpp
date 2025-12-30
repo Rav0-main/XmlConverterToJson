@@ -26,7 +26,8 @@ ParsedXml getXmlTreesOf(const std::string& filename);
 
 void freeNode(Node* node, Node** nodePtr);
 
-void outputRoots(
+void outputTrees(
 	const std::vector<Node*>& roots, const bool valueAsAscii
 );
+
 #endif

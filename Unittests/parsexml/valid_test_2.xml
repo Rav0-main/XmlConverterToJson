@@ -1,0 +1,24 @@
+<m1>
+    <t1>hello</t1>
+    <t2>
+        <t2.1>world</t2.1>
+        <t2.2>guys</t2.2>
+    </t2>
+</m1>
+
+<m2>
+    <empty></empty>
+    <t1>
+    hello world!!!
+    </t1>
+</m2>
+
+<m3>
+	<empty>
+		
+	</empty>
+	<t1>
+		test
+	</t1>
+	<t2>stack</t2>
+</m3>
