@@ -19,7 +19,7 @@ bool assertEqualParsingResult(
 	if (valid != result) {
 		std::cout << "Wrong code of parsing result: " << int(result) << std::endl;
 		std::cout << "Excepted: " << int(valid) << std::endl;
-		std::cout << VERDICT << ": " WRONG_LINE << std::endl;
+		outputWrongVerdict();
 		return false;
 	}
 
@@ -39,16 +39,14 @@ void assertEqualTrees(
 				std::cout << std::endl;
 		}
 		if (assertion)
-			std::cout << VERDICT << ": " OK_LINE;
+			outputTrueVerdict();
 		else
-			std::cout << VERDICT << ": " WRONG_LINE;
-
-		std::cout << std::endl;
+			outputWrongVerdict();
 	}
 	else {
 		std::cout << "Wrong tree count: " << trees.size() << std::endl;
 		std::cout << "But excepted: " << validTrees.size() << std::endl;
-		std::cout << VERDICT << ": " << WRONG_LINE;
+		outputWrongVerdict();
 	}
 }
 
@@ -127,4 +125,12 @@ static void outputTagNamesOfNodeVector(const std::vector<Node*> vect) {
 		std::cout << EMPTY_LINE;
 
 	std::cout << std::endl;
+}
+
+void outputWrongVerdict(void) {
+	std::cout << VERDICT << ": " << WRONG_LINE << std::endl;
+}
+
+void outputTrueVerdict(void) {
+	std::cout << VERDICT << ": " << OK_LINE << std::endl;
 }

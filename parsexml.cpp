@@ -12,23 +12,23 @@
 static void strip(std::string& str);
 static bool isStartOfTagName(const char symbol);
 static bool isEndOfTagName(const char symbol);
-static bool isCloseOfTagName(const char symbol);
+static bool isClosingTagName(const char symbol);
 static void outputASCIIOf(const std::string& str);
 
 ParsedXml getXmlTreesOf(const std::string& filename) {
 	std::ifstream file(filename);
 	if (!file)
 		return ParsedXml(
-			std::vector<Node*>(), ParsingResult::FileNotFound
+			std::vector<Node*>(), ParsingResult::FileNotExistsError
 		);
 
 	char symbol;
-	file.get(symbol);
+	symbol = file.get();
 
 	bool inTagNameInit = false;
 	bool inTagContent = false;
-	bool inTagNameClose = false;
-	bool successParsed = true;
+	bool inClosingTagName = false;
+	ParsingResult result = ParsingResult::Success;
 
 	Node* node;
 	std::vector<Node*> stack;
@@ -36,24 +36,25 @@ ParsedXml getXmlTreesOf(const std::string& filename) {
 	std::string tagName;
 
 	while (!file.fail()) {
-		//in tag found space symbol
 		if (isspace(symbol) && inTagNameInit) {
-			successParsed = false;
+			result = ParsingResult::UnknownError;
 			break;
 		}
-		//in tag found start of new tag
-		else if (isStartOfTagName(symbol) && inTagNameInit) {
-			successParsed = false;
+		//<[/]...<
+		else if (isStartOfTagName(symbol) && 
+			(inTagNameInit || inClosingTagName)) {
+
+			result = ParsingResult::WrongTagNameError;
 			break;
 		}
 		//<
-		else if (isStartOfTagName(symbol) && !inTagNameInit) {
+		else if (isStartOfTagName(symbol)) {
 			inTagNameInit = true;
 		}
 		//</
-		else if (isCloseOfTagName(symbol) && inTagNameInit) {
+		else if (isClosingTagName(symbol) && inTagNameInit) {
 			inTagNameInit = false;
-			inTagNameClose = true;
+			inClosingTagName = true;
 		}
 		//<...>
 		else if (isEndOfTagName(symbol) && inTagNameInit) {
@@ -74,42 +75,49 @@ ParsedXml getXmlTreesOf(const std::string& filename) {
 			tagName.clear();
 		}
 		//</...>
-		else if (isEndOfTagName(symbol) && inTagNameClose) {
+		else if (isEndOfTagName(symbol) && inClosingTagName) {
 			inTagContent = false;
 			inTagNameInit = false;
-			inTagNameClose = false;
+			inClosingTagName = false;
 
-			strip(stack.back()->value);
-			stack.pop_back();
+			if (tagName == stack.back()->tagName) {
+				strip(stack.back()->value);
+				stack.pop_back();
+				tagName.clear();
+			}
+			else {
+				result = ParsingResult::WrongClosingTagNameError;
+				break;
+			}
 		}
-		else if (inTagNameClose) {
-			;
-		}
-		else if (inTagNameInit && !inTagNameClose) {
+		//<...
+		else if (inTagNameInit || inClosingTagName) {
 			tagName.push_back(symbol);
 		}
+		//<...>...
 		else if (inTagContent) {
 			stack.back()->value.push_back(symbol);
 		}
 
-		file.get(symbol);
+		symbol = file.get();
 	}
 
 	file.close();
 
-	if (successParsed && file.eof())
+	if (!int(result) && file.eof())
 		return ParsedXml( 
 			{ roots, ParsingResult::Success }
 		);
 	else {
-		for (Node* node : stack)
-			freeNode(node, &node);
+		//dfs-free of current root
+		freeNode(stack.front(), &(stack.front()));
 
-		for (Node* node : roots)
-			freeNode(node, &node);
+		//last root is freed (upper)
+		for (int i = 0; i < roots.size() - 1; ++i)
+			freeNode(roots[i], &roots[i]);
 
 		return ParsedXml(
-			{ std::vector<Node*>(), ParsingResult::UnknownError}
+			{ std::vector<Node*>(), result}
 		);
 	}
 }
@@ -140,12 +148,15 @@ static bool isEndOfTagName(const char symbol) {
 	return symbol == END_TAG_NAME;
 }
 
-static bool isCloseOfTagName(const char symbol) {
+static bool isClosingTagName(const char symbol) {
 	return symbol == CLOSE_TAG_NAME;
 }
 
 void freeNode(Node* node, Node** nodePtr) {
-	for (auto &child : node->children)
+	if (node == nullptr)
+		return;
+
+	for (auto& child : node->children)
 		freeNode(child, &child);
 
 	delete node;

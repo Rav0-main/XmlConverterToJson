@@ -16,7 +16,9 @@ struct Node {
 
 enum class ParsingResult {
 	Success,
-	FileNotFound,
+	FileNotExistsError,
+	WrongClosingTagNameError,
+	WrongTagNameError,
 	UnknownError
 };
 

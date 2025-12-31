@@ -13,4 +13,7 @@ void assertEqualTrees(
 	const std::vector<Node*> validTrees, const std::vector<Node*> trees
 );
 
+void outputWrongVerdict(void);
+void outputTrueVerdict(void);
+
 #endif
