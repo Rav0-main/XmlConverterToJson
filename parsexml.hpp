@@ -7,12 +7,7 @@
 #include <tuple>
 #include <vector>
 #include <string>
-
-struct Node {
-	std::string tagName;
-	std::string value;
-	std::vector<Node*> children;
-};
+#include "node.hpp"
 
 enum class ParsingResult {
 	Success,
@@ -26,6 +21,7 @@ typedef std::tuple<std::vector<Node*>, ParsingResult> ParsedXml;
 
 ParsedXml getXmlTreesOf(const std::string& filename);
 
+//всё что связано с node вынести в другой файл
 void freeNode(Node* node, Node** nodePtr);
 
 void outputTrees(
