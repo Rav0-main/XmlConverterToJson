@@ -21,11 +21,4 @@ typedef std::tuple<std::vector<Node*>, ParsingResult> ParsedXml;
 
 ParsedXml getXmlTreesOf(const std::string& filename);
 
-//всё что связано с node вынести в другой файл
-void freeNode(Node* node, Node** nodePtr);
-
-void outputTrees(
-	const std::vector<Node*>& roots, const bool valueAsAscii
-);
-
 #endif

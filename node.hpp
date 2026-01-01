@@ -13,4 +13,10 @@ struct Node {
 	std::vector<Node*> children;
 };
 
+void freeNode(Node* node, Node** nodePtr);
+
+void outputNodes(
+	const std::vector<Node*>& nodes, const bool valueAsAscii
+);
+
 #endif

@@ -9,10 +9,10 @@ static void writeNodeIn(
 );
 
 void convertToJson(
-	const std::string& filename, const std::vector<Node*>& trees
+	const std::vector<Node*>& trees, const std::string& filename
 ) {
 	std::ofstream file(filename);
-	const Node* lastRoot = trees.back();
+	const Node* lastRoot = !trees.empty() ? trees.back() : nullptr;
 
 	file << "{\n";
 	for (const Node* root : trees)

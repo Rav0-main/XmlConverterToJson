@@ -4,11 +4,12 @@ wait_to_press_enter(){
 	read -p "Press <Enter> to close .sh-script."
 }
 
-src_cpp_files="../../parsexml.cpp ../../node.cpp"
-src_o_files="./parsexml.o ./node.o"
-test_cpp_files="./testparsexml.cpp ./assertion.cpp"
-test_o_files="./testparsexml.o ./assertion.o"
-exe_file="./testparsexml.exe"
+src_cpp_files="../../tojson.cpp"
+src_o_files="./tojson.o"
+test_cpp_files="./converttojson.cpp"
+test_o_files="./converttojson.o"
+exe_file="./converttojson.exe"
+test_py_file="./testtojson.py"
 SKIP_COMPILE_SRC="-so"
 SKIP_COMPILE_TESTS="-to"
 
@@ -57,8 +58,7 @@ else
 fi
 
 echo
-
-echo TEST LOGS:
+echo CONVERTING LOGS:
 echo -------------------------------------------------------------
 
 if "$exe_file" ; then
@@ -66,6 +66,22 @@ if "$exe_file" ; then
 
 else
 	echo "$exe_file" completed with error!
+	wait_to_press_enter
+	exit 1
+fi
+
+echo
+
+echo TEST LOGS:
+echo -------------------------------------------------------------
+
+if python "$test_py_file" ; then
+	echo $test_py_file success completed!
+
+else
+	echo $test_py_file ended with error!
+	wait_to_press_enter
+	exit 1
 fi
 
 wait_to_press_enter

@@ -5,3 +5,4 @@ FromXmlToJson/*
 x64/*
 *.o
 *.exe
+*.json
