@@ -14,6 +14,7 @@ enum class ParsingResult {
 	FileNotExistsError,
 	WrongClosingTagNameError,
 	WrongTagNameError,
+	TagNameNotClosedError,
 	UnknownError
 };
 

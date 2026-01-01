@@ -102,11 +102,14 @@ ParsedXml getXmlTreesOf(const std::string& filename) {
 
 	file.close();
 
-	if (!int(result) && file.eof())
+	if (!int(result) && file.eof() && stack.empty())
 		return ParsedXml( 
 			{ roots, ParsingResult::Success }
 		);
 	else {
+		if (!stack.empty() && !int(result))
+			result = ParsingResult::TagNameNotClosedError;
+
 		//dfs-free of current root
 		freeNode(stack.front(), &(stack.front()));
 
