@@ -4,7 +4,7 @@
 #include "..\\..\\parsexml.hpp"
 #include "assertion.hpp"
 
-#define DASH_LINE "-------------------------------------------------------------"
+#define DASH_LINE L"-------------------------------------------------------------"
 
 typedef void (*Test) (void);
 
@@ -16,7 +16,7 @@ static void testWrongClosingTagNameWith1Tree(void);
 static void testWrongClosingTagNameWith4Trees(void);
 static void testInTagNameStartingNewTagName(void);
 
-static void outputTestname(const std::string& testname);
+static void outputTestname(const std::wstring& testname);
 static void outputDashLine(void);
 
 int main(void) {
@@ -44,70 +44,70 @@ int main(void) {
 
 static void testValidXmlFileWith1Tree(void) {
 	const std::string filename = ".\\valid_test_1.xml";
-	const std::string testname = "Test with valid xml file with 1 tree";
+	const std::wstring testname = L"Test with valid xml file with 1 tree";
 
 	Node* root = new Node;
-	root->tagName = "m1";
+	root->tagName = L"m1";
 
 	Node* empty1 = new Node;
-	empty1->tagName = "empty1";
+	empty1->tagName = L"empty1";
 
 	Node* t1 = new Node;
-	t1->tagName = "t1";
+	t1->tagName = L"t1";
 
 	Node* t1_1 = new Node;
-	t1_1->tagName = "t1.1";
-	t1_1->value = "tag 1.1";
+	t1_1->tagName = L"t1.1";
+	t1_1->value = L"tag 1.1";
 
 	Node* t1_2 = new Node;
-	t1_2->tagName = "t1.2";
-	t1_2->value = "tag 1.2";
+	t1_2->tagName = L"t1.2";
+	t1_2->value = L"tag 1.2";
 
 	Node* t1_3 = new Node;
-	t1_3->tagName = "t1.3";
-	t1_3->value = "tag 1.3";
+	t1_3->tagName = L"t1.3";
+	t1_3->value = L"tag 1.3";
 
 	Node* empty2 = new Node;
-	empty2->tagName = "empty2";
+	empty2->tagName = L"empty2";
 
 	t1->children = { t1_1, t1_2, t1_3, empty2 };
 
 	Node* t2 = new Node;
-	t2->tagName = "t2";
+	t2->tagName = L"t2";
 
 	Node* t2_1 = new Node;
-	t2_1->tagName = "t2.1";
+	t2_1->tagName = L"t2.1";
 	
 	Node* t2_1_1 = new Node;
-	t2_1_1->tagName = "t2.1.1";
+	t2_1_1->tagName = L"t2.1.1";
 
 	Node* t2_1_1_1 = new Node;
-	t2_1_1_1->tagName = "t2.1.1.1";
-	t2_1_1_1->value = "tag 2.1.1.1";
+	t2_1_1_1->tagName = L"t2.1.1.1";
+	t2_1_1_1->value = L"tag 2.1.1.1";
 
 	Node* empty3 = new Node;
-	empty3->tagName = "empty3";
+	empty3->tagName = L"empty3";
 
 	t2_1_1->children = { t2_1_1_1, empty3 };
 
 	Node* t2_1_2 = new Node;
-	t2_1_2->tagName = "t2.1.2";
-	t2_1_2->value = "tag 2.1.2";
+	t2_1_2->tagName = L"t2.1.2";
+	t2_1_2->value = L"tag 2.1.2";
 
 	t2_1->children = { t2_1_1, t2_1_2 };
 
 	Node* t2_2 = new Node;
-	t2_2->tagName = "t2.2";
-	t2_2->value = "tag 2.2";
+	t2_2->tagName = L"t2.2";
+	t2_2->value = L"tag 2.2";
 
 	Node* t2_3 = new Node;
-	t2_3->tagName = "t2.3";
-	t2_3->value = "tag 2.3";
+	t2_3->tagName = L"t2.3";
+	t2_3->value = L"tag 2.3";
 
 	t2->children = { t2_1, t2_2, t2_3 };
 
 	Node* empty4 = new Node;
-	empty4->tagName = "empty4";
+	empty4->tagName = L"empty4";
 
 	root->children = { empty1, t1, t2, empty4 };
 
@@ -125,55 +125,55 @@ static void testValidXmlFileWith1Tree(void) {
 
 static void testValidXmlFileWith3Trees(void) {
 	const std::string filename = ".\\valid_test_2.xml";
-	const std::string testname = "Test with valid xml file with 3 trees";
+	const std::wstring testname = L"Test with valid xml file with 3 trees";
 
 	Node* root1 = new Node;
-	root1->tagName = "m1";
+	root1->tagName = L"m1";
 
 	Node* m1t1 = new Node;
-	m1t1->tagName = "t1";
-	m1t1->value = "hello";
+	m1t1->tagName = L"t1";
+	m1t1->value = L"hello";
 
 	Node* m1t2 = new Node;
-	m1t2->tagName = "t2";
+	m1t2->tagName = L"t2";
 
 	Node* m1t2_1 = new Node;
-	m1t2_1->tagName = "t2.1";
-	m1t2_1->value = "world";
+	m1t2_1->tagName = L"t2.1";
+	m1t2_1->value = L"world";
 
 	Node* m1t2_2 = new Node;
-	m1t2_2->tagName = "t2.2";
-	m1t2_2->value = "guys";
+	m1t2_2->tagName = L"t2.2";
+	m1t2_2->value = L"guys";
 
 	m1t2->children = { m1t2_1, m1t2_2 };
 
 	root1->children = { m1t1, m1t2 };
 
 	Node* root2 = new Node;
-	root2->tagName = "m2";
+	root2->tagName = L"m2";
 
 	Node* empty = new Node;
-	empty->tagName = "empty";
+	empty->tagName = L"empty";
 
 	Node* m2t1 = new Node;
-	m2t1->tagName = "t1";
-	m2t1->value = "hello world!!!";
+	m2t1->tagName = L"t1";
+	m2t1->value = L"hello world!!!";
 
 	root2->children = { empty, m2t1 };
 
 	Node* root3 = new Node;
-	root3->tagName = "m3";
+	root3->tagName = L"m3";
 
 	Node* m3t1 = new Node;
-	m3t1->tagName = "t1";
-	m3t1->value = "test";
+	m3t1->tagName = L"t1";
+	m3t1->value = L"test";
 
 	Node* m3t2 = new Node;
-	m3t2->tagName = "t2";
-	m3t2->value = "stack";
+	m3t2->tagName = L"t2";
+	m3t2->value = L"stack";
 
 	empty = new Node;
-	empty->tagName = "empty";
+	empty->tagName = L"empty";
 
 	root3->children = { empty, m3t1, m3t2 };
 
@@ -196,43 +196,43 @@ static void testValidXmlFileWith3Trees(void) {
 
 static void testValidXmlFileWithChaosFormat(void) {
 	const std::string filename = ".\\valid_test_3.xml";
-	const std::string testname = "Test with valid xml file with chaos format";
+	const std::wstring testname = L"Test with valid xml file with chaos format";
 
 	Node* root1 = new Node;
-	root1->tagName = "m1";
+	root1->tagName = L"m1";
 
 	Node* t1 = new Node;
-	t1->tagName = "t1";
-	t1->value = "tag 1";
+	t1->tagName = L"t1";
+	t1->value = L"tag 1";
 
 	Node* t2 = new Node;
-	t2->tagName = "t2";
+	t2->tagName = L"t2";
 
 	Node* t2_1 = new Node;
-	t2_1->tagName = "t2.1";
-	t2_1->value = "tag 2.1";
+	t2_1->tagName = L"t2.1";
+	t2_1->value = L"tag 2.1";
 
 	Node* t2_2 = new Node;
-	t2_2->tagName = "t2.2";
-	t2_2->value = "tag 2.2";
+	t2_2->tagName = L"t2.2";
+	t2_2->value = L"tag 2.2";
 
 	t2->children = { t2_1, t2_2 };
 
 	Node* t3 = new Node;
-	t3->tagName = "t3";
-	t3->value = "tag 3";
+	t3->tagName = L"t3";
+	t3->value = L"tag 3";
 
 	root1->children = { t1, t2, t3 };
 
 	Node* root2 = new Node;
-	root2->tagName = "m2";
+	root2->tagName = L"m2";
 
 	Node* empty = new Node;
-	empty->tagName = "empty";
+	empty->tagName = L"empty";
 
 	t1 = new Node;
-	t1->tagName = "t1";
-	t1->value = "tag 1";
+	t1->tagName = L"t1";
+	t1->value = L"tag 1";
 
 	root2->children = { empty, t1 };
 
@@ -253,7 +253,7 @@ static void testValidXmlFileWithChaosFormat(void) {
 
 static void testNotExistFile(void) {
 	const std::string filename = ".\\not_exist_file.xml";
-	const std::string testname = "Test with not exist file";
+	const std::wstring testname = L"Test with not exist file";
 
 	auto [trees, res] = getXmlTreesOf(filename);
 
@@ -264,7 +264,7 @@ static void testNotExistFile(void) {
 
 static void testWrongClosingTagNameWith1Tree(void) {
 	const std::string filename = ".\\wrong_closing_tag_name_1_tree.xml";
-	const std::string testname = "Test with wrong closing tag name with 1 tree";
+	const std::wstring testname = L"Test with wrong closing tag name with 1 tree";
 
 	auto [trees, res] = getXmlTreesOf(filename);
 
@@ -275,7 +275,7 @@ static void testWrongClosingTagNameWith1Tree(void) {
 
 static void testWrongClosingTagNameWith4Trees(void) {
 	const std::string filename = ".\\wrong_closing_tag_name_4_trees.xml";
-	const std::string testname = "Test with wrong closing tag name with 4 trees";
+	const std::wstring testname = L"Test with wrong closing tag name with 4 trees";
 
 	auto [trees, res] = getXmlTreesOf(filename);
 
@@ -286,7 +286,7 @@ static void testWrongClosingTagNameWith4Trees(void) {
 
 static void testInTagNameStartingNewTagName(void) {
 	const std::string filename = ".\\wrong_tag_name.xml";
-	const std::string testname = "Test with wrong tag name, in him starting new tag";
+	const std::wstring testname = L"Test with wrong tag name, in him starting new tag";
 
 	auto [trees, res] = getXmlTreesOf(filename);
 	outputTestname(testname);
@@ -294,10 +294,10 @@ static void testInTagNameStartingNewTagName(void) {
 		outputTrueVerdict();
 }
 
-static void outputTestname(const std::string& testname) {
-	std::cout << " * " << testname << ":" << std::endl;
+static void outputTestname(const std::wstring& testname) {
+	std::wcout << L" * " << testname << L":" << std::endl;
 }
 
 static void outputDashLine(void) {
-	std::cout << std::endl << DASH_LINE << std::endl;
+	std::wcout << std::endl << DASH_LINE << std::endl;
 }

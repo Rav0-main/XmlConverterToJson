@@ -1,17 +1,17 @@
 #include <fstream>
 #include "tojson.hpp"
 
-#define TABULATION '\t'
+#define TABULATION L'\t'
 
 static void writeNodeIn(
-	std::ofstream& file, const Node* const node,
+	std::wofstream& file, const Node* const node,
 	const unsigned short level, const bool isLastNode
 );
 
 void convertToJson(
 	const std::vector<Node*>& trees, const std::string& filename
 ) {
-	std::ofstream file(filename);
+	std::wofstream file(filename);
 	const Node* lastRoot = !trees.empty() ? trees.back() : nullptr;
 
 	file << "{\n";
@@ -24,30 +24,30 @@ void convertToJson(
 }
 
 static void writeNodeIn(
-	std::ofstream& file, const Node* const node,
+	std::wofstream& file, const Node* const node,
 	const unsigned short level, const bool isLastNode
 ) {
 
-	std::string ts(level, TABULATION);
-	file << ts << '\"' << node->tagName << "\" : ";
+	std::wstring ts(level, TABULATION);
+	file << ts << L'\"' << node->tagName << L"\" : ";
 
 	if (node->children.empty()) {
-		file << '\"' << node->value << '\"';
+		file << L'\"' << node->value << L'\"';
 
 		if (!isLastNode)
-			file << ',';
-		file << '\n';
+			file << L',';
+		file << L'\n';
 	}
 	else {
-		file << "{\n";
+		file << L"{\n";
 
 		const Node* lastChild = node->children.back();
 		for (const Node* child : node->children)
 			writeNodeIn(file, child, level + 1, child == lastChild);
 
-		file << ts << '}';
+		file << ts << L'}';
 		if (!isLastNode)
-			file << ',';
-		file << '\n';
+			file << L',';
+		file << L'\n';
 	}
 }

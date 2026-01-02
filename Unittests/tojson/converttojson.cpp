@@ -1,7 +1,7 @@
 #include <iostream>
 #include "..\\..\\tojson.hpp"
 
-#define DASH_LINE "-------------------------------------------------------------"
+#define DASH_LINE L"-------------------------------------------------------------"
 
 typedef void (*Convert) (void);
 
@@ -10,7 +10,7 @@ static void convert1Tree(void);
 static void convert2Trees(void);
 static void convert3Trees(void);
 
-static void outputTestname(const std::string& testname);
+static void outputTestname(const std::wstring& testname);
 static void outputThatTestConverted(void);
 static void outputDashLine(void);
 
@@ -36,7 +36,7 @@ int main(void) {
 }
 
 void convertEmptyTree(void) {
-	const std::string testname = "Test with empty tree";
+	const std::wstring testname = L"Test with empty tree";
 	const std::string filename = ".\\empty_tree.json";
 
 	/*
@@ -51,7 +51,7 @@ void convertEmptyTree(void) {
 }
 
 static void convert1Tree(void) {
-	const std::string testname = "Test with 1 tree";
+	const std::wstring testname = L"Test with 1 tree";
 	const std::string filename = ".\\1_tree.json";
 
 	/*
@@ -75,39 +75,39 @@ static void convert1Tree(void) {
 	*/
 
 	Node* root = new Node;
-	root->tagName = "main";
+	root->tagName = L"main";
 
 	Node* t1 = new Node;
-	t1->tagName = "t1";
-	t1->value = "tag 1";
+	t1->tagName = L"t1";
+	t1->value = L"tag 1";
 	
 	Node* t2 = new Node;
-	t2->tagName = "t2";
+	t2->tagName = L"t2";
 
 	Node* t2_1 = new Node;
-	t2_1->tagName = "t2.1";
-	t2_1->value = "tag 2.1";
+	t2_1->tagName = L"t2.1";
+	t2_1->value = L"tag 2.1";
 
 	Node* t2_2 = new Node;
-	t2_2->tagName = "t2.2";
+	t2_2->tagName = L"t2.2";
 	
 	Node* t2_2_1 = new Node;
-	t2_2_1->tagName = "t2.2.1";
-	t2_2_1->value = "tag 2.2.1";
+	t2_2_1->tagName = L"t2.2.1";
+	t2_2_1->value = L"tag 2.2.1";
 
 	Node* t2_2_2 = new Node;
-	t2_2_2->tagName = "empty";
+	t2_2_2->tagName = L"empty";
 
 	t2_2->children = { t2_2_1, t2_2_2 };
 
 	Node* t2_3 = new Node;
-	t2_3->tagName = "empty";
+	t2_3->tagName = L"empty";
 
 	t2->children = { t2_1, t2_2, t2_3 };
 
 	Node* t3 = new Node;
-	t3->tagName = "NOT EMPTY";
-	t3->value = "MEGA VAlUE";
+	t3->tagName = L"NOT EMPTY";
+	t3->value = L"MEGA VAlUE";
 
 	root->children = { t1, t2, t3 };
 
@@ -118,7 +118,7 @@ static void convert1Tree(void) {
 }
 
 static void convert2Trees(void) {
-	const std::string testname = "Test with 2 tree";
+	const std::wstring testname = L"Test with 2 tree";
 	const std::string filename = ".\\2_trees.json";
 
 	/*
@@ -141,39 +141,39 @@ static void convert2Trees(void) {
 	*/
 
 	Node* root1 = new Node;
-	root1->tagName = "root1";
+	root1->tagName = L"root1";
 
 	Node* t1 = new Node;
-	t1->tagName = "t1";
-	t1->value = "tag 1";
+	t1->tagName = L"t1";
+	t1->value = L"tag 1";
 
 	Node* t2 = new Node;
-	t2->tagName = "t2";
+	t2->tagName = L"t2";
 
 	Node* t2_1 = new Node;
-	t2_1->tagName = "t2.1";
-	t2_1->value = "tag 2.1";
+	t2_1->tagName = L"t2.1";
+	t2_1->value = L"tag 2.1";
 
 	Node* t2_2 = new Node;
-	t2_2->tagName = "t2.2";
-	t2_2->value = "tag 2.2";
+	t2_2->tagName = L"t2.2";
+	t2_2->value = L"tag 2.2";
 
 	t2->children = { t2_1, t2_2 };
 
 	Node* empty = new Node;
-	empty->tagName = "empty";
+	empty->tagName = L"empty";
 
 	root1->children = { t1, t2, empty };
 
 	Node* root2 = new Node;
-	root2->tagName = "root2";
+	root2->tagName = L"root2";
 
 	empty = new Node;
-	empty->tagName = "empty";
+	empty->tagName = L"empty";
 
 	t1 = new Node;
-	t1->tagName = "t1";
-	t1->value = "tag 1";
+	t1->tagName = L"t1";
+	t1->value = L"tag 1";
 
 	root2->children = { empty, t1 };
 
@@ -184,7 +184,7 @@ static void convert2Trees(void) {
 }
 
 static void convert3Trees(void) {
-	const std::string testname = "Test with 3 trees";
+	const std::wstring testname = L"Test with 3 trees";
 	const std::string filename = ".\\3_trees.json";
 
 	/*
@@ -203,21 +203,21 @@ static void convert3Trees(void) {
 	*/
 
 	Node* root1 = new Node;
-	root1->tagName = "root1";
+	root1->tagName = L"root1";
 
 	Node* root2 = new Node;
-	root2->tagName = "HELLO";
+	root2->tagName = L"HELLO";
 
 	Node* root3 = new Node;
-	root3->tagName = "root3";
+	root3->tagName = L"root3";
 
 	Node* t1 = new Node;
-	t1->tagName = "t1";
-	t1->value = "tag 1";
+	t1->tagName = L"t1";
+	t1->value = L"tag 1";
 
 	Node* t2 = new Node;
-	t2->tagName = "t2";
-	t2->value = "tag 2";
+	t2->tagName = L"t2";
+	t2->value = L"tag 2";
 
 	root3->children = { t1, t2 };
 
@@ -227,14 +227,14 @@ static void convert3Trees(void) {
 	outputThatTestConverted();
 }
 
-static void outputTestname(const std::string& testname) {
-	std::cout << " * " << testname << ":" << std::endl;
+static void outputTestname(const std::wstring& testname) {
+	std::wcout << L" * " << testname << L":" << std::endl;
 }
 
 static void outputThatTestConverted(void) {
-	std::cout << "CONVERTED." << std::endl;
+	std::wcout << L"CONVERTED." << std::endl;
 }
 
 static void outputDashLine(void) {
-	std::cout << std::endl << DASH_LINE << std::endl;
+	std::wcout << std::endl << DASH_LINE << std::endl;
 }

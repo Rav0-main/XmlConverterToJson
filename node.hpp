@@ -8,8 +8,8 @@
 #include <vector>
 
 struct Node {
-	std::string tagName;
-	std::string value;
+	std::wstring tagName;
+	std::wstring value;
 	std::vector<Node*> children;
 };
 

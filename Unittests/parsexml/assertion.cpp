@@ -3,10 +3,10 @@
 #include <string>
 #include "assertion.hpp"
 
-#define OK_LINE "OK"
-#define WRONG_LINE "ERROR"
-#define VERDICT "Verdict"
-#define EMPTY_LINE "EMPTY"
+#define OK_LINE L"OK"
+#define WRONG_LINE L"ERROR"
+#define VERDICT L"Verdict"
+#define EMPTY_LINE L"EMPTY"
 
 static bool checkAtEqualNodes(
 	const Node* const validTree, const Node* const tree
@@ -17,8 +17,8 @@ bool assertEqualParsingResult(
 	const ParsingResult valid, const ParsingResult result
 ) {
 	if (valid != result) {
-		std::cout << "Wrong code of parsing result: " << int(result) << std::endl;
-		std::cout << "Excepted: " << int(valid) << std::endl;
+		std::wcout << L"Wrong code of parsing result: " << int(result) << std::endl;
+		std::wcout << L"Excepted: " << int(valid) << std::endl;
 		outputWrongVerdict();
 		return false;
 	}
@@ -36,7 +36,7 @@ void assertEqualTrees(
 			isEqualTree = checkAtEqualNodes(validTrees[i], trees[i]);
 			assertion = isEqualTree && assertion;
 			if (!isEqualTree)
-				std::cout << std::endl;
+				std::wcout << std::endl;
 		}
 		if (assertion)
 			outputTrueVerdict();
@@ -44,8 +44,8 @@ void assertEqualTrees(
 			outputWrongVerdict();
 	}
 	else {
-		std::cout << "Wrong tree count: " << trees.size() << std::endl;
-		std::cout << "But excepted: " << validTrees.size() << std::endl;
+		std::wcout << L"Wrong tree count: " << trees.size() << std::endl;
+		std::wcout << L"But excepted: " << validTrees.size() << std::endl;
 		outputWrongVerdict();
 	}
 }
@@ -56,8 +56,8 @@ static bool checkAtEqualNodes(
 	std::queue<const Node*> validQueue;
 	std::queue<const Node*> queue;
 
-	std::queue<std::string> paths;
-	paths.push("");
+	std::queue<std::wstring> paths;
+	paths.push(L"");
 
 	validQueue.push(validTree);
 	queue.push(tree);
@@ -73,40 +73,40 @@ static bool checkAtEqualNodes(
 		queue.pop();
 
 		if (validNode->tagName != node->tagName) {
-			std::cout << "Node with path: \"" << paths.front() << "/"
+			std::wcout << L"Node with path: \"" << paths.front() << L"/"
 				<< node->tagName
-				<< "\" not equal tagNames!" << std::endl;
+				<< L"\" not equal tagNames!" << std::endl;
 
-			std::cout << "Truth tagName: " << validNode->tagName << "\n";
-			std::cout << "But taken: " << node->tagName << "\n";
+			std::wcout << L"Truth tagName: " << validNode->tagName << L"\n";
+			std::wcout << L"But taken: " << node->tagName << L"\n";
 			return false;
 		}
 		else if (validNode->value != node->value) {
-			std::cout << "Node with path: \"" << paths.front() << "/"
+			std::wcout << L"Node with path: \"" << paths.front() << L"/"
 				<< node->tagName
-				<< "\" not equal values!" << std::endl;
+				<< L"\" not equal values!" << std::endl;
 
-			std::cout << "Truth value: " << validNode->value << "\n";
-			std::cout << "But taken: " << node->value << "\n";
+			std::wcout << L"Truth value: " << validNode->value << L"\n";
+			std::wcout << L"But taken: " << node->value << L"\n";
 			return false;
 		}
 		else if (validNode->children.size() != node->children.size()) {
-			std::cout << "Node with path: \"" << paths.front() << "/"
+			std::wcout << L"Node with path: \"" << paths.front() << L"/"
 				<< node->tagName
-				<< "\" not equal children size!" << std::endl;
+				<< L"\" not equal children size!" << std::endl;
 
-			std::cout << "Truth value: " << validNode->children.size() << "\n";
-			std::cout << "But taken: " << node->children.size() << "\n";
+			std::wcout << L"Truth value: " << validNode->children.size() << L"\n";
+			std::wcout << L"But taken: " << node->children.size() << L"\n";
 
-			std::cout << "Valid children: ";
+			std::wcout << L"Valid children: ";
 			outputTagNamesOfNodeVector(validNode->children);
-			std::cout << "But taken: ";
+			std::wcout << L"But taken: ";
 			outputTagNamesOfNodeVector(node->children);
 			return false;
 		}
 
 		for (int i = 0; i < validNode->children.size(); ++i) {
-			paths.push(paths.front() + "/" + validNode->tagName);
+			paths.push(paths.front() + L"/" + validNode->tagName);
 			validQueue.push(validNode->children[i]);
 			queue.push(node->children[i]);
 		}
@@ -120,17 +120,17 @@ static bool checkAtEqualNodes(
 static void outputTagNamesOfNodeVector(const std::vector<Node*> vect) {
 	if (vect.size())
 		for (const Node* node : vect)
-			std::cout << node->tagName << ", ";
+			std::wcout << node->tagName << L", ";
 	else
-		std::cout << EMPTY_LINE;
+		std::wcout << EMPTY_LINE;
 
-	std::cout << std::endl;
+	std::wcout << std::endl;
 }
 
 void outputWrongVerdict(void) {
-	std::cout << VERDICT << ": " << WRONG_LINE << std::endl;
+	std::wcout << VERDICT << L": " << WRONG_LINE << std::endl;
 }
 
 void outputTrueVerdict(void) {
-	std::cout << VERDICT << ": " << OK_LINE << std::endl;
+	std::wcout << VERDICT << L": " << OK_LINE << std::endl;
 }

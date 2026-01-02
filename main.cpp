@@ -8,7 +8,7 @@
 #include "config.hpp"
 
 #define HELP_COMMAND "help"
-#define JSON_EXTENSION ".json"
+#define JSON ".json"
 
 static void outputXmlParsingError(const ParsingResult& result);
 static void getFilenameWithExtension(
@@ -36,15 +36,17 @@ int main(const int argc, const char* argv[]) {
 		std::string jsonFilename;
 		for (int i = 1; i < argc; ++i) {
 			filename = std::string(argv[i]);
+			std::cout << i << ") "
+						  << "Parsing \"" << filename << "\"..." << std::endl;
+
 			auto [trees, result] = getXmlTreesOf(filename);
 			
-			std::cout << i << ") ";
 			if (int(result)) {
 				std::cerr << "While parsing file \"" << filename << "\" throwed error: " << std::endl;
 				outputXmlParsingError(result);
 			}
 			else {
-				getFilenameWithExtension(JSON_EXTENSION, filename, jsonFilename);
+				getFilenameWithExtension(JSON, filename, jsonFilename);
 				convertToJson(trees, jsonFilename);
 				for (Node* root : trees)
 					freeNode(root, &root);

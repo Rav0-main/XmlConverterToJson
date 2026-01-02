@@ -3,9 +3,9 @@
 #include <vector>
 #include "node.hpp"
 
-#define EMPTY "EMPTY"
+#define EMPTY L"EMPTY"
 
-static void outputASCIIOf(const std::string& str);
+static void outputASCIIOf(const std::wstring& str);
 
 void freeNode(Node* node, Node** nodePtr) {
 	if (node == nullptr)
@@ -30,38 +30,38 @@ void outputNodes(
 			node = queue.front();
 			queue.pop();
 
-			std::cout << "* Node: " << node->tagName << std::endl;
+			std::wcout << L"* Node: " << node->tagName << std::endl;
 
-			std::cout << "Value: ";
+			std::wcout << L"Value: ";
 			if (node->value.empty())
-				std::cout << EMPTY;
+				std::wcout << EMPTY;
 			else if (valueAsAscii)
 				outputASCIIOf(node->value);
 			else
-				std::cout << node->value;
+				std::wcout << node->value;
 
-			std::cout << std::endl;
+			std::wcout << std::endl;
 
-			std::cout << "Childs: ";
+			std::wcout << "Childs: ";
 			if (node->children.empty())
-				std::cout << EMPTY;
+				std::wcout << EMPTY;
 
 			else
 				for (const Node* child : node->children) {
-					std::cout << child->tagName << ", ";
+					std::wcout << child->tagName << L", ";
 					queue.push(child);
 				}
 
-			std::cout << std::endl;
+			std::wcout << std::endl;
 		}
-		std::cout << std::endl;
+		std::wcout << std::endl;
 	}
 }
 
-static void outputASCIIOf(const std::string& str) {
-	std::cout << std::hex;
+static void outputASCIIOf(const std::wstring& str) {
+	std::wcout << std::hex;
 	for (const int symb : str)
-		std::cout << "0x" << symb << " ";
+		std::wcout << "0x" << symb << " ";
 
-	std::cout << std::dec;
+	std::wcout << std::dec;
 }

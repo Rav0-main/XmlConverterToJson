@@ -1,0 +1,352 @@
+<catalog>
+    <library>
+        <name>Центральная городская библиотека</name>
+        <address>
+            <street>проспект Знаний, 123</street>
+            <city>Метрополис</city>
+            <country>Библиографика</country>
+            <postalCode>LC12345</postalCode>
+        </address>
+        <contact>
+            <phone>+1234567890</phone>
+            <email>info@centrallibrary.example</email>
+            <website>www.centrallibrary.example</website>
+        </contact>
+        <operatingHours>
+            <weekday>Понедельник-Пятница: 9:00-21:00</weekday>
+            <weekend>Суббота-Воскресенье: 10:00-18:00</weekend>
+            <holiday>Праздничные дни: 12:00-16:00</holiday>
+        </operatingHours>
+    </library>
+    
+    <books>
+        <book>
+            <id>B001</id>
+            <title>Цифровой Фронтир</title>
+            <author>
+                <firstName>Роберт</firstName>
+                <lastName>Райтер</lastName>
+                <nationality>Американец</nationality>
+                <birthYear>1975</birthYear>
+            </author>
+            <publication>
+                <publisher>ТехПресс Пабликейшнс</publisher>
+                <year>2023</year>
+                <isbn>978-1-234567-89-0</isbn>
+                <edition>Первое издание</edition>
+            </publication>
+            <category>Технологии</category>
+            <subcategory>Компьютерные науки</subcategory>
+            <pages>425</pages>
+            <language>Английский</language>
+            <description>Всеобъемлющее руководство по современным вычислениям и цифровой трансформации в различных отраслях.</description>
+            <availability>
+                <totalCopies>15</totalCopies>
+                <availableCopies>12</availableCopies>
+                <reservedCopies>3</reservedCopies>
+            </availability>
+            <location>
+                <section>Технологическое крыло</section>
+                <shelf>T-45</shelf>
+                <row>7</row>
+            </location>
+        </book>
+        
+        <book>
+            <id>B002</id>
+            <title>Отголоски Прошлого</title>
+            <author>
+                <firstName>Мария</firstName>
+                <lastName>Сторителлер</lastName>
+                <nationality>Итальянка</nationality>
+                <birthYear>1968</birthYear>
+            </author>
+            <publication>
+                <publisher>Хисторикал Принтс Лтд</publisher>
+                <year>2021</year>
+                <isbn>978-0-987654-32-1</isbn>
+                <edition>Второе издание</edition>
+            </publication>
+            <category>История</category>
+            <subcategory>Европейская история</subcategory>
+            <pages>532</pages>
+            <language>Английский</language>
+            <description>Глубокий анализ исторических событий Европы от средневековья до современности.</description>
+            <availability>
+                <totalCopies>8</totalCopies>
+                <availableCopies>5</availableCopies>
+                <reservedCopies>3</reservedCopies>
+            </availability>
+            <location>
+                <section>Исторический отдел</section>
+                <shelf>H-22</shelf>
+                <row>3</row>
+            </location>
+        </book>
+        
+        <book>
+            <id>B003</id>
+            <title>Космический Странник</title>
+            <author>
+                <firstName>Алекс</firstName>
+                <lastName>Старгейзер</lastName>
+                <nationality>Канадец</nationality>
+                <birthYear>1982</birthYear>
+            </author>
+            <publication>
+                <publisher>Юниверс Паблишинг</publisher>
+                <year>2022</year>
+                <isbn>978-3-456789-01-2</isbn>
+                <edition>Первое издание</edition>
+            </publication>
+            <category>Наука</category>
+            <subcategory>Астрономия</subcategory>
+            <pages>318</pages>
+            <language>Английский</language>
+            <description>Исследование тайн вселенной: от черных дыр до далеких галактик.</description>
+            <availability>
+                <totalCopies>10</totalCopies>
+                <availableCopies>9</availableCopies>
+                <reservedCopies>1</reservedCopies>
+            </availability>
+            <location>
+                <section>Научный отдел</section>
+                <shelf>S-18</shelf>
+                <row>5</row>
+            </location>
+        </book>
+        
+        <book>
+            <id>B004</id>
+            <title>Искусство Выражения</title>
+            <author>
+                <firstName>Софи</firstName>
+                <lastName>Пейнтер</lastName>
+                <nationality>Француженка</nationality>
+                <birthYear>1979</birthYear>
+            </author>
+            <publication>
+                <publisher>Креатив Артс Медиа</publisher>
+                <year>2020</year>
+                <isbn>978-2-345678-90-3</isbn>
+                <edition>Третье издание</edition>
+            </publication>
+            <category>Искусство</category>
+            <subcategory>Изобразительное искусство</subcategory>
+            <pages>276</pages>
+            <language>Английский</language>
+            <description>Визуальное путешествие по современным художественным направлениям и техникам.</description>
+            <availability>
+                <totalCopies>6</totalCopies>
+                <availableCopies>4</availableCopies>
+                <reservedCopies>2</reservedCopies>
+            </availability>
+            <location>
+                <section>Уголок искусств</section>
+                <shelf>A-09</shelf>
+                <row>2</row>
+            </location>
+        </book>
+    </books>
+    
+    <magazines>
+        <magazine>
+            <id>M001</id>
+            <title>Глобальная Наука Ежемесячно</title>
+            <publisher>Издательство "Мир Науки"</publisher>
+            <issueNumber>45</issueNumber>
+            <publicationDate>2023-10-15</publicationDate>
+            <category>Наука</category>
+            <pages>64</pages>
+            <language>Английский</language>
+            <availability>
+                <totalCopies>25</totalCopies>
+                <availableCopies>20</availableCopies>
+            </availability>
+        </magazine>
+        
+        <magazine>
+            <id>M002</id>
+            <title>Технологии Сегодня</title>
+            <publisher>Дигитал Фьючер Медиа</publisher>
+            <issueNumber>128</issueNumber>
+            <publicationDate>2023-11-01</publicationDate>
+            <category>Технологии</category>
+            <pages>72</pages>
+            <language>Английский</language>
+            <availability>
+                <totalCopies>30</totalCopies>
+                <availableCopies>28</availableCopies>
+            </availability>
+        </magazine>
+    </magazines>
+    
+    <digitalResources>
+        <resource>
+            <id>D001</id>
+            <title>Онлайн База Данных для Исследований</title>
+            <type>База данных</type>
+            <accessMethod>Портал библиотеки</accessMethod>
+            <description>Доступ к тысячам академических журналов и исследовательских работ</description>
+            <subscriptionStatus>Активна</subscriptionStatus>
+            <expirationDate>2024-12-31</expirationDate>
+        </resource>
+        
+        <resource>
+            <id>D002</id>
+            <title>Коллекция Аудиокниг</title>
+            <type>Аудиокниги</type>
+            <accessMethod>Мобильное приложение</accessMethod>
+            <description>Более 10 000 аудиокниг всех жанров</description>
+            <subscriptionStatus>Активна</subscriptionStatus>
+            <expirationDate>2024-06-30</expirationDate>
+        </resource>
+    </digitalResources>
+    
+    <members>
+        <member>
+            <memberId>MEM001</memberId>
+            <personalInfo>
+                <firstName>Джон</firstName>
+                <lastName>Ридер</lastName>
+                <dateOfBirth>1990-05-15</dateOfBirth>
+                <email>john.reader@email.example</email>
+                <phone>+1234567891</phone>
+                <address>
+                    <street>Бук Стрит, 456</street>
+                    <city>Метрополис</city>
+                    <country>Библиографика</country>
+                </address>
+            </personalInfo>
+            <membership>
+                <type>Премиум</type>
+                <startDate>2022-03-10</startDate>
+                <endDate>2024-03-10</endDate>
+                <status>Активен</status>
+            </membership>
+            <borrowedItems>
+                <item>
+                    <id>B001</id>
+                    <borrowDate>2023-10-28</borrowDate>
+                    <dueDate>2023-11-28</dueDate>
+                    <renewals>1</renewals>
+                </item>
+            </borrowedItems>
+        </member>
+        
+        <member>
+            <memberId>MEM002</memberId>
+            <personalInfo>
+                <firstName>Эмма</firstName>
+                <lastName>Сколар</lastName>
+                <dateOfBirth>1985-11-22</dateOfBirth>
+                <email>emma.scholar@email.example</email>
+                <phone>+1234567892</phone>
+                <address>
+                    <street>Лернинг Лейн, 789</street>
+                    <city>Метрополис</city>
+                    <country>Библиографика</country>
+                </address>
+            </personalInfo>
+            <membership>
+                <type>Стандарт</type>
+                <startDate>2023-01-15</startDate>
+                <endDate>2024-01-15</endDate>
+                <status>Активен</status>
+            </membership>
+            <borrowedItems>
+                <item>
+                    <id>B002</id>
+                    <borrowDate>2023-10-25</borrowDate>
+                    <dueDate>2023-11-25</dueDate>
+                    <renewals>0</renewals>
+                </item>
+                <item>
+                    <id>M001</id>
+                    <borrowDate>2023-11-01</borrowDate>
+                    <dueDate>2023-11-15</dueDate>
+                    <renewals>0</renewals>
+                </item>
+            </borrowedItems>
+        </member>
+    </members>
+    
+    <employees>
+        <employee>
+            <employeeId>EMP001</employeeId>
+            <personalInfo>
+                <firstName>Дэвид</firstName>
+                <lastName>Лайбрериан</lastName>
+                <position>Главный библиотекарь</position>
+                <department>Администрация</department>
+                <hireDate>2015-06-01</hireDate>
+                <email>david.librarian@centrallibrary.example</email>
+                <phone>+1234567801</phone>
+            </personalInfo>
+            <schedule>
+                <workDays>Понедельник-Пятница</workDays>
+                <shift>9:00-17:00</shift>
+            </schedule>
+        </employee>
+        
+        <employee>
+            <employeeId>EMP002</employeeId>
+            <personalInfo>
+                <firstName>Сара</firstName>
+                <lastName>Ассистент</lastName>
+                <position>Помощник библиотекаря</position>
+                <department>Общественные услуги</department>
+                <hireDate>2020-02-15</hireDate>
+                <email>sarah.assistant@centrallibrary.example</email>
+                <phone>+1234567802</phone>
+            </personalInfo>
+            <schedule>
+                <workDays>Вторник-Суббота</workDays>
+                <shift>12:00-20:00</shift>
+            </schedule>
+        </employee>
+    </employees>
+    
+    <statistics>
+        <collectionStats>
+            <totalBooks>25000</totalBooks>
+            <totalMagazines>5000</totalMagazines>
+            <totalDigitalResources>150</totalDigitalResources>
+            <newAdditionsThisYear>1200</newAdditionsThisYear>
+        </collectionStats>
+        <memberStats>
+            <totalMembers>5000</totalMembers>
+            <activeMembers>4200</activeMembers>
+            <newMembersThisMonth>85</newMembersThisMonth>
+        </memberStats>
+        <usageStats>
+            <averageDailyVisitors>350</averageDailyVisitors>
+            <monthlyBorrows>8500</monthlyBorrows>
+            <digitalResourceAccess>12000</digitalResourceAccess>
+        </usageStats>
+    </statistics>
+    
+    <events>
+        <event>
+            <id>EVT001</id>
+            <title>Встреча с автором</title>
+            <description>Встреча с автором книги "Цифровой Фронтир"</description>
+            <date>2023-11-15</date>
+            <time>18:00-20:00</time>
+            <location>Аудитория библиотеки</location>
+            <maxParticipants>100</maxParticipants>
+            <registeredParticipants>78</registeredParticipants>
+        </event>
+        
+        <event>
+            <id>EVT002</id>
+            <title>Час сказок для детей</title>
+            <description>Еженедельное чтение сказок для детей 4-8 лет</description>
+            <date>2023-11-18</date>
+            <time>10:00-11:00</time>
+            <location>Детский отдел</location>
+            <maxParticipants>30</maxParticipants>
+            <registeredParticipants>25</registeredParticipants>
+        </event>
+    </events>
+</catalog>
