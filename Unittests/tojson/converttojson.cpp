@@ -5,10 +5,10 @@
 
 typedef void (*Convert) (void);
 
-static void convertEmptyTree(void);
-static void convert1Tree(void);
-static void convert2Trees(void);
-static void convert3Trees(void);
+static void convertEmptyRoot(void);
+static void convert1Root(void);
+static void convert2Roots(void);
+static void convert3Roots(void);
 
 static void outputTestname(const std::wstring& testname);
 static void outputThatTestConverted(void);
@@ -16,10 +16,10 @@ static void outputDashLine(void);
 
 int main(void) {
 	const Convert converts[] = {
-		convertEmptyTree,
-		convert1Tree,
-		convert2Trees,
-		convert3Trees
+		convertEmptyRoot,
+		convert1Root,
+		convert2Roots,
+		convert3Roots
 	};
 
 	const size_t size = sizeof(converts) / sizeof(converts[0]);
@@ -35,7 +35,7 @@ int main(void) {
 	return 0;
 }
 
-void convertEmptyTree(void) {
+void convertEmptyRoot(void) {
 	const std::wstring testname = L"Test with empty tree";
 	const std::string filename = ".\\empty_tree.json";
 
@@ -44,13 +44,15 @@ void convertEmptyTree(void) {
 
 	*/
 	
-	convertToJson({}, filename);
+	const NodePtrSequence root = {};
+
+	convertToJson(root, filename);
 
 	outputTestname(testname);
 	outputThatTestConverted();
 }
 
-static void convert1Tree(void) {
+static void convert1Root(void) {
 	const std::wstring testname = L"Test with 1 tree";
 	const std::string filename = ".\\1_tree.json";
 
@@ -111,13 +113,14 @@ static void convert1Tree(void) {
 
 	root->children = { t1, t2, t3 };
 
-	convertToJson({ root }, filename);
+	const NodePtrSequence roots = {root};
+	convertToJson(roots, filename);
 
 	outputTestname(testname);
 	outputThatTestConverted();
 }
 
-static void convert2Trees(void) {
+static void convert2Roots(void) {
 	const std::wstring testname = L"Test with 2 tree";
 	const std::string filename = ".\\2_trees.json";
 
@@ -177,13 +180,14 @@ static void convert2Trees(void) {
 
 	root2->children = { empty, t1 };
 
-	convertToJson({ root1, root2 }, filename);
+	const NodePtrSequence roots = {root1, root2};
+	convertToJson(roots, filename);
 
 	outputTestname(testname);
 	outputThatTestConverted();
 }
 
-static void convert3Trees(void) {
+static void convert3Roots(void) {
 	const std::wstring testname = L"Test with 3 trees";
 	const std::string filename = ".\\3_trees.json";
 
@@ -221,7 +225,8 @@ static void convert3Trees(void) {
 
 	root3->children = { t1, t2 };
 
-	convertToJson({ root1, root2, root3 }, filename);
+	const NodePtrSequence roots = {root1, root2, root3};
+	convertToJson(roots, filename);
 
 	outputTestname(testname);
 	outputThatTestConverted();

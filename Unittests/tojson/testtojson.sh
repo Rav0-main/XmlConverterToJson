@@ -13,7 +13,6 @@ test_py_file="./testtojson.py"
 SKIP_COMPILE_SRC="-so"
 SKIP_COMPILE_TESTS="-to"
 
-#if need compile src_cpp_files -> src_o_files
 if [ ! \( "$1" = "$SKIP_COMPILE_SRC" -o "$2" = "$SKIP_COMPILE_SRC" \) ] ; then
 	echo Compiling "\"$src_o_files\"" from "\"$src_cpp_files\"..."
 
@@ -31,7 +30,6 @@ else
 	echo Skip compiling of "\"$src_cpp_files\"."
 fi
 
-#if need compile test_cpp_files -> test_o_files
 if [ ! \( "$1" = "$SKIP_COMPILE_TESTS" -o "$2" = "$SKIP_COMPILE_TESTS" \) ] ; then
 	echo Compiling $test_cpp_files...
 

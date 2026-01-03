@@ -9,8 +9,8 @@ bool assertEqualParsingResult(
 	const ParsingResult valid, const ParsingResult result
 );
 
-void assertEqualTrees(
-	const std::vector<Node*> validTrees, const std::vector<Node*> trees
+void assertEqualRoots(
+	const NodePtrSequence validRoots, const NodePtrSequence roots
 );
 
 void outputWrongVerdict(void);

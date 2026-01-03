@@ -19,7 +19,7 @@ void freeNode(Node* node, Node** nodePtr) {
 }
 
 void outputNodes(
-	const std::vector<Node*>& roots, const bool valueAsAscii
+	const NodePtrSequence& roots, const bool valueAsAscii
 ) {
 	std::queue<const Node*> queue;
 	const Node* node;

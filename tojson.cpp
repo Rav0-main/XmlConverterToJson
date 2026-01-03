@@ -9,13 +9,13 @@ static void writeNodeIn(
 );
 
 void convertToJson(
-	const std::vector<Node*>& trees, const std::string& filename
+	const NodePtrSequence& roots, const std::string& filename
 ) {
 	std::wofstream file(filename);
-	const Node* lastRoot = !trees.empty() ? trees.back() : nullptr;
+	const Node* lastRoot = !roots.empty() ? roots.back() : nullptr;
 
 	file << "{\n";
-	for (const Node* root : trees)
+	for (const Node* root : roots)
 		writeNodeIn(file, root, 1, root == lastRoot);
 
 	file << "}";

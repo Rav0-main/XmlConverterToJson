@@ -5,18 +5,20 @@
 #define NODE_HPP
 
 #include <string>
-#include <vector>
+#include <deque>
 
 struct Node {
 	std::wstring tagName;
 	std::wstring value;
-	std::vector<Node*> children;
+	std::deque<Node*> children;
 };
+
+typedef std::deque<Node*> NodePtrSequence;
 
 void freeNode(Node* node, Node** nodePtr);
 
 void outputNodes(
-	const std::vector<Node*>& nodes, const bool valueAsAscii
+	const NodePtrSequence& nodes, const bool valueAsAscii
 );
 
 #endif

@@ -11,7 +11,6 @@ test_py_file="./testtime.py"
 SKIP_COMPILE_SRC="-so"
 SAVE_JSONs="-sj"
 
-#if need compile src_cpp_files -> src_o_files
 if [ ! \( "$1" = "$SKIP_COMPILE_SRC" -o "$2" = "$SKIP_COMPILE_SRC" \) ] ; then
 	echo Compiling "\"$src_o_files\"" from "\"$src_cpp_files\"..."
 

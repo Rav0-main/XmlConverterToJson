@@ -5,7 +5,7 @@
 #define PARSEXML_HPP
 
 #include <tuple>
-#include <vector>
+#include <deque>
 #include <string>
 #include "node.hpp"
 
@@ -18,8 +18,10 @@ enum class ParsingResult {
 	UnknownError
 };
 
-typedef std::tuple<std::vector<Node*>, ParsingResult> ParsedXml;
+struct ParsedXml {
+	const ParsingResult result;
+};
 
-ParsedXml getXmlTreesOf(const std::string& filename);
+ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots);
 
 #endif

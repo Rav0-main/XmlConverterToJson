@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <vector>
 #include "..\\..\\parsexml.hpp"
 #include "assertion.hpp"
 
@@ -8,12 +7,12 @@
 
 typedef void (*Test) (void);
 
-static void testValidXmlFileWith1Tree(void);
-static void testValidXmlFileWith3Trees(void);
+static void testValidXmlFileWith1Root(void);
+static void testValidXmlFileWith3Roots(void);
 static void testValidXmlFileWithChaosFormat(void);
 static void testNotExistFile(void);
-static void testWrongClosingTagNameWith1Tree(void);
-static void testWrongClosingTagNameWith4Trees(void);
+static void testWrongClosingTagNameWith1Root(void);
+static void testWrongClosingTagNameWith4Roots(void);
 static void testInTagNameStartingNewTagName(void);
 
 static void outputTestname(const std::wstring& testname);
@@ -21,12 +20,12 @@ static void outputDashLine(void);
 
 int main(void) {
 	const Test tests[] = {
-		testValidXmlFileWith1Tree,
-		testValidXmlFileWith3Trees,
+		testValidXmlFileWith1Root,
+		testValidXmlFileWith3Roots,
 		testValidXmlFileWithChaosFormat,
 		testNotExistFile,
-		testWrongClosingTagNameWith1Tree,
-		testWrongClosingTagNameWith4Trees,
+		testWrongClosingTagNameWith1Root,
+		testWrongClosingTagNameWith4Roots,
 		testInTagNameStartingNewTagName
 	};
 	const size_t size = sizeof(tests) / sizeof(tests[0]);
@@ -42,9 +41,9 @@ int main(void) {
 	return 0;
 }
 
-static void testValidXmlFileWith1Tree(void) {
+static void testValidXmlFileWith1Root(void) {
 	const std::string filename = ".\\valid_test_1.xml";
-	const std::wstring testname = L"Test with valid xml file with 1 tree";
+	const std::wstring testname = L"Test with valid xml file with 1 root";
 
 	Node* root = new Node;
 	root->tagName = L"m1";
@@ -111,21 +110,22 @@ static void testValidXmlFileWith1Tree(void) {
 
 	root->children = { empty1, t1, t2, empty4 };
 
-	auto [tree, res] = getXmlTreesOf(filename);
+	NodePtrSequence roots;
+	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
 	if(assertEqualParsingResult(ParsingResult::Success, res))
-		assertEqualTrees({ root }, tree);
+		assertEqualRoots({ root }, roots);
 
 	freeNode(root, &root);
 
-	for (auto& node : tree)
+	for (auto& node : roots)
 		freeNode(node, &node);
 }
 
-static void testValidXmlFileWith3Trees(void) {
+static void testValidXmlFileWith3Roots(void) {
 	const std::string filename = ".\\valid_test_2.xml";
-	const std::wstring testname = L"Test with valid xml file with 3 trees";
+	const std::wstring testname = L"Test with valid xml file with 3 roots";
 
 	Node* root1 = new Node;
 	root1->tagName = L"m1";
@@ -177,20 +177,21 @@ static void testValidXmlFileWith3Trees(void) {
 
 	root3->children = { empty, m3t1, m3t2 };
 
-	std::vector<Node*> answer = {
+	 NodePtrSequence answer = {
 		root1, root2, root3
 	};
 
-	auto [trees, res] = getXmlTreesOf(filename);
+	 NodePtrSequence roots;
+	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
 	if(assertEqualParsingResult(ParsingResult::Success, res))
-		assertEqualTrees(answer, trees);
+		assertEqualRoots(answer, roots);
 
 	for (auto& node : answer)
 		freeNode(node, &node);
 
-	for (auto& node : trees)
+	for (auto& node : roots)
 		freeNode(node, &node);
 }
 
@@ -236,18 +237,19 @@ static void testValidXmlFileWithChaosFormat(void) {
 
 	root2->children = { empty, t1 };
 
-	auto [trees, res] = getXmlTreesOf(filename);
+	NodePtrSequence roots;
+	auto [res] = getXmlRootsOf(filename, roots);
 
-	std::vector<Node*> answer = { root1, root2 };
+	NodePtrSequence answer = { root1, root2 };
 
 	outputTestname(testname);
 	if (assertEqualParsingResult(ParsingResult::Success, res))
-		assertEqualTrees(answer, trees);
+		assertEqualRoots(answer, roots);
 
 	for (auto& node : answer)
 		freeNode(node, &node);
 
-	for (auto& node : trees)
+	for (auto& node : roots)
 		freeNode(node, &node);
 }
 
@@ -255,29 +257,32 @@ static void testNotExistFile(void) {
 	const std::string filename = ".\\not_exist_file.xml";
 	const std::wstring testname = L"Test with not exist file";
 
-	auto [trees, res] = getXmlTreesOf(filename);
+	NodePtrSequence roots;
+	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
 	if (assertEqualParsingResult(ParsingResult::FileNotExistsError, res))
 		outputTrueVerdict();
 }
 
-static void testWrongClosingTagNameWith1Tree(void) {
+static void testWrongClosingTagNameWith1Root(void) {
 	const std::string filename = ".\\wrong_closing_tag_name_1_tree.xml";
-	const std::wstring testname = L"Test with wrong closing tag name with 1 tree";
+	const std::wstring testname = L"Test with wrong closing tag name with 1 root";
 
-	auto [trees, res] = getXmlTreesOf(filename);
+	NodePtrSequence roots;
+	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
 	if (assertEqualParsingResult(ParsingResult::WrongClosingTagNameError, res))
 		outputTrueVerdict();
 }
 
-static void testWrongClosingTagNameWith4Trees(void) {
+static void testWrongClosingTagNameWith4Roots(void) {
 	const std::string filename = ".\\wrong_closing_tag_name_4_trees.xml";
-	const std::wstring testname = L"Test with wrong closing tag name with 4 trees";
+	const std::wstring testname = L"Test with wrong closing tag name with 4 roots";
 
-	auto [trees, res] = getXmlTreesOf(filename);
+	NodePtrSequence roots;
+	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
 	if (assertEqualParsingResult(ParsingResult::WrongClosingTagNameError, res))
@@ -288,7 +293,8 @@ static void testInTagNameStartingNewTagName(void) {
 	const std::string filename = ".\\wrong_tag_name.xml";
 	const std::wstring testname = L"Test with wrong tag name, in him starting new tag";
 
-	auto [trees, res] = getXmlTreesOf(filename);
+	NodePtrSequence roots;
+	auto [res] = getXmlRootsOf(filename, roots);
 	outputTestname(testname);
 	if (assertEqualParsingResult(ParsingResult::WrongTagNameError, res))
 		outputTrueVerdict();

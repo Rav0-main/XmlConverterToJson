@@ -6,7 +6,7 @@
 #include "node.hpp"
 
 void convertToJson(
-	const std::vector<Node*>& trees, const std::string& filename
+	const NodePtrSequence& roots, const std::string& filename
 );
 
 #endif

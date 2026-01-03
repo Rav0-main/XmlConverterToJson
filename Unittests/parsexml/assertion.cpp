@@ -9,9 +9,9 @@
 #define EMPTY_LINE L"EMPTY"
 
 static bool checkAtEqualNodes(
-	const Node* const validTree, const Node* const tree
+	const Node* const validNode, const Node* const node
 );
-static void outputTagNamesOfNodeVector(const std::vector<Node*> vect);
+static void outputTagNamesOfNodeVector(const NodePtrSequence& vect);
 
 bool assertEqualParsingResult(
 	const ParsingResult valid, const ParsingResult result
@@ -26,16 +26,16 @@ bool assertEqualParsingResult(
 	return true;
 }
 
-void assertEqualTrees(
-	const std::vector<Node*> validTrees, const std::vector<Node*> trees
+void assertEqualRoots(
+	const NodePtrSequence validRoots, const NodePtrSequence roots
 ) {
-	if (validTrees.size() == trees.size()) {
+	if (validRoots.size() == roots.size()) {
 		bool assertion = true;
-		bool isEqualTree = true;
-		for (int i = 0; i < validTrees.size(); ++i) {
-			isEqualTree = checkAtEqualNodes(validTrees[i], trees[i]);
-			assertion = isEqualTree && assertion;
-			if (!isEqualTree)
+		bool isEqualRoot = true;
+		for (int i = 0; i < validRoots.size(); ++i) {
+			isEqualRoot = checkAtEqualNodes(validRoots[i], roots[i]);
+			assertion = isEqualRoot && assertion;
+			if (!isEqualRoot)
 				std::wcout << std::endl;
 		}
 		if (assertion)
@@ -44,14 +44,14 @@ void assertEqualTrees(
 			outputWrongVerdict();
 	}
 	else {
-		std::wcout << L"Wrong tree count: " << trees.size() << std::endl;
-		std::wcout << L"But excepted: " << validTrees.size() << std::endl;
+		std::wcout << L"Wrong tree count: " << roots.size() << std::endl;
+		std::wcout << L"But excepted: " << validRoots.size() << std::endl;
 		outputWrongVerdict();
 	}
 }
 
 static bool checkAtEqualNodes(
-	const Node* const validTree, const Node* const tree
+	const Node* const validRoot, const Node* const root
 ) {
 	std::queue<const Node*> validQueue;
 	std::queue<const Node*> queue;
@@ -59,8 +59,8 @@ static bool checkAtEqualNodes(
 	std::queue<std::wstring> paths;
 	paths.push(L"");
 
-	validQueue.push(validTree);
-	queue.push(tree);
+	validQueue.push(validRoot);
+	queue.push(root);
 
 	bool run = true;
 	const Node* validNode;
@@ -117,7 +117,7 @@ static bool checkAtEqualNodes(
 	return true;
 }
 
-static void outputTagNamesOfNodeVector(const std::vector<Node*> vect) {
+static void outputTagNamesOfNodeVector(const NodePtrSequence& vect) {
 	if (vect.size())
 		for (const Node* node : vect)
 			std::wcout << node->tagName << L", ";

@@ -34,12 +34,13 @@ int main(const int argc, const char* argv[]) {
 	else {
 		std::string filename;
 		std::string jsonFilename;
+		NodePtrSequence roots;
 		for (int i = 1; i < argc; ++i) {
 			filename = std::string(argv[i]);
 			std::cout << i << ") "
 						  << "Parsing \"" << filename << "\"..." << std::endl;
 
-			auto [trees, result] = getXmlTreesOf(filename);
+			auto [result] = getXmlRootsOf(filename, roots);
 			
 			if (int(result)) {
 				std::cerr << "While parsing file \"" << filename << "\" throwed error: " << std::endl;
@@ -47,9 +48,11 @@ int main(const int argc, const char* argv[]) {
 			}
 			else {
 				getFilenameWithExtension(JSON, filename, jsonFilename);
-				convertToJson(trees, jsonFilename);
-				for (Node* root : trees)
+				convertToJson(roots, jsonFilename);
+
+				for (Node* root : roots)
 					freeNode(root, &root);
+				roots.clear();
 
 				std::cout << '\"' << filename << "\" converted to \"" << jsonFilename << "\"." << std::endl;
 			}

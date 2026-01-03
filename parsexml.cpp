@@ -1,7 +1,6 @@
 #include <fstream>
 #include <cctype>
-#include <iostream>
-#include <queue>
+#include <deque>
 #include "parsexml.hpp"
 
 #define START_TAG_NAME L'<'
@@ -13,12 +12,12 @@ static bool isStartOfTagName(const char symbol);
 static bool isEndOfTagName(const char symbol);
 static bool isClosingTagName(const char symbol);
 
-ParsedXml getXmlTreesOf(const std::string& filename) {
+ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 	std::wifstream file(filename);
 
 	if (!file)
 		return ParsedXml(
-			std::vector<Node*>(), ParsingResult::FileNotExistsError
+			ParsingResult::FileNotExistsError
 		);
 
 	wchar_t symbol;
@@ -30,8 +29,7 @@ ParsedXml getXmlTreesOf(const std::string& filename) {
 	ParsingResult result = ParsingResult::Success;
 
 	Node* node;
-	std::vector<Node*> stack;
-	std::vector<Node*> roots;
+	NodePtrSequence stack;
 	std::wstring tagName;
 
 	while (!file.fail()) {
@@ -105,7 +103,7 @@ ParsedXml getXmlTreesOf(const std::string& filename) {
 
 	if (!int(result) && file.eof() && stack.empty())
 		return ParsedXml( 
-			{ roots, ParsingResult::Success }
+			ParsingResult::Success
 		);
 	else {
 		if (!stack.empty() && !int(result))
@@ -113,13 +111,14 @@ ParsedXml getXmlTreesOf(const std::string& filename) {
 
 		//dfs-free of current root
 		freeNode(stack.front(), &(stack.front()));
+		roots.pop_back();
 
 		//last root is freed (upper)
-		for (int i = 0; i < roots.size() - 1; ++i)
-			freeNode(roots[i], &roots[i]);
+		for (Node* &root: roots)
+			freeNode(root, &root);
 
 		return ParsedXml(
-			{ std::vector<Node*>(), result}
+			result
 		);
 	}
 }
