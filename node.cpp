@@ -1,6 +1,5 @@
 #include <queue>
 #include <iostream>
-#include <vector>
 #include "node.hpp"
 
 #define EMPTY L"EMPTY"

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE main>
+<main>
+	<t1>
+		<t1.1>
+			tag 1.1
+		</t1.1>
+		<empty></empty>
+	</t1>
+	<t2>
+		tag 2
+	</t2>
+	<empty></empty>
+</main>

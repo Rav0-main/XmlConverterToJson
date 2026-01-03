@@ -8,9 +8,10 @@
 #define CLOSE_TAG_NAME L'/'
 
 static void strip(std::wstring& str);
-static bool isStartOfTagName(const char symbol);
-static bool isEndOfTagName(const char symbol);
-static bool isClosingTagName(const char symbol);
+static bool isInformationTag(const wchar_t firstSymbol);
+static bool isStartOfTagName(const wchar_t symbol);
+static bool isEndOfTagName(const wchar_t symbol);
+static bool isClosingTagName(const wchar_t symbol);
 
 ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 	std::wifstream file(filename);
@@ -19,11 +20,12 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 		return ParsedXml(
 			ParsingResult::FileNotExistsError
 		);
-
+	
 	wchar_t symbol;
 	symbol = file.get();
 
 	bool inTagNameInit = false;
+	bool inTagNameFoundSpace = false;
 	bool inTagContent = false;
 	bool inClosingTagName = false;
 	ParsingResult result = ParsingResult::Success;
@@ -33,16 +35,16 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 	std::wstring tagName;
 
 	while (!file.fail()) {
-		if (iswspace(symbol) && inTagNameInit) {
-			result = ParsingResult::UnknownError;
-			break;
-		}
 		//<[/]...<
-		else if (isStartOfTagName(symbol) && 
+		if (isStartOfTagName(symbol) &&
 			(inTagNameInit || inClosingTagName)) {
 
 			result = ParsingResult::WrongTagNameError;
 			break;
+		}
+		//<[/]abc ...
+		else if (iswspace(symbol) && (inTagNameInit || inClosingTagName)) {
+			inTagNameFoundSpace = true;
 		}
 		//<
 		else if (isStartOfTagName(symbol)) {
@@ -56,17 +58,23 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 		//<...>
 		else if (isEndOfTagName(symbol) && inTagNameInit) {
 			inTagNameInit = false;
+			inTagNameFoundSpace = false;
 			inTagContent = true;
-			node = new Node;
-			node->tagName = tagName;
 
-			if (!stack.empty()) {
-				stack.back()->children.push_back(node);
-				stack.push_back(node);
-			}
+			if (tagName.empty() || isInformationTag(tagName.front()))
+				inTagContent = false;
 			else {
-				stack.push_back(node);
-				roots.push_back(node);
+				node = new Node;
+				node->tagName = tagName;
+
+				if (!stack.empty()) {
+					stack.back()->children.push_back(node);
+					stack.push_back(node);
+				}
+				else {
+					stack.push_back(node);
+					roots.push_back(node);
+				}
 			}
 
 			tagName.clear();
@@ -77,7 +85,7 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 			inTagNameInit = false;
 			inClosingTagName = false;
 
-			if (tagName == stack.back()->tagName) {
+			if (tagName == stack.back()->tagName && !inTagNameFoundSpace) {
 				strip(stack.back()->value);
 				stack.pop_back();
 				tagName.clear();
@@ -87,10 +95,12 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 				break;
 			}
 		}
-		//<...
-		else if (inTagNameInit || inClosingTagName) {
+		//<[/]...
+		else if ((inTagNameInit || inClosingTagName) && !inTagNameFoundSpace) {
 			tagName.push_back(symbol);
 		}
+		else if ((inTagNameInit || inClosingTagName) && inTagNameFoundSpace)
+			;
 		//<...>...
 		else if (inTagContent) {
 			stack.back()->value.push_back(symbol);
@@ -109,14 +119,18 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 		if (!stack.empty() && !int(result))
 			result = ParsingResult::TagNameNotClosedError;
 
-		//dfs-free of current root
-		freeNode(stack.front(), &(stack.front()));
+		if(!stack.empty())
+			//dfs-free of current root
+			freeNode(stack.front(), &(stack.front()));
+
 		roots.pop_back();
+		if (!roots.empty()) {
 
-		//last root is freed (upper)
-		for (Node* &root: roots)
-			freeNode(root, &root);
+			//last root is freed (upper)
+			for (Node*& root : roots)
+				freeNode(root, &root);
 
+		}
 		return ParsedXml(
 			result
 		);
@@ -141,14 +155,18 @@ static void strip(std::wstring& str) {
 	str = str.substr(left, right - left + 1);
 }
 
-static bool isStartOfTagName(const char symbol) {
+static bool isInformationTag(const wchar_t firstSymbol) {
+	return firstSymbol == L'?' || firstSymbol == L'!';
+}
+
+static bool isStartOfTagName(const wchar_t symbol) {
 	return symbol == START_TAG_NAME;
 }
 
-static bool isEndOfTagName(const char symbol) {
+static bool isEndOfTagName(const wchar_t symbol) {
 	return symbol == END_TAG_NAME;
 }
 
-static bool isClosingTagName(const char symbol) {
+static bool isClosingTagName(const wchar_t symbol) {
 	return symbol == CLOSE_TAG_NAME;
 }

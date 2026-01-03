@@ -1,0 +1,14 @@
+<body>
+	<t1 attr1="a1" attr2="a2">
+		tag 1
+	</t1>
+	<t2 attr3="AA">
+		<t2.1>
+			tag 2.1
+		</t2.1>
+		<empty></empty>
+		<t2.2 attr1="abc">
+			tag 2.2
+		</t2.2>
+	</t2>
+</body>

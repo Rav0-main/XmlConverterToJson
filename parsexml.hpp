@@ -4,8 +4,6 @@
 
 #define PARSEXML_HPP
 
-#include <tuple>
-#include <deque>
 #include <string>
 #include "node.hpp"
 
