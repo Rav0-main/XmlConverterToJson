@@ -10,7 +10,7 @@
 #define HELP_COMMAND "help"
 #define JSON ".json"
 
-static void outputXmlParsingError(const ParsingResult& result);
+static void outputXmlParsingError(const ParsingStatus& result);
 static void getFilenameWithExtension(
 	const std::string& newExtension, const std::string& filename,
 	std::string& newFilename
@@ -63,7 +63,7 @@ int main(const int argc, const char* argv[]) {
 	return 0;
 }
 
-static void outputXmlParsingError(const ParsingResult& result) {
+static void outputXmlParsingError(const ParsingStatus& result) {
 	switch (int(result)) {
 	case 1:
 		std::cerr << "File not found." << std::endl;

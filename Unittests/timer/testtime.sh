@@ -29,7 +29,7 @@ else
 fi
 
 if g++ -std=c++20 -o "$exe_file" $src_o_files ; then
-	echo Success compiled "$exe_file";
+	echo Success compiled "\"$exe_file\"";
 
 else
 	echo Compiling errors...
@@ -43,10 +43,10 @@ echo TIMER LOGS:
 echo -------------------------------------------------------------
 
 if python "$test_py_file" ; then
-	echo $test_py_file success completed!
+	echo "\"$test_py_file\"" success completed!
 
 else
-	echo $test_py_file ended with error!
+	echo "\"$test_py_file\"" ended with error!
 	wait_to_press_enter
 	exit 1
 fi

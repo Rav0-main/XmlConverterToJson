@@ -1,6 +1,5 @@
 #include <fstream>
 #include <cctype>
-#include <deque>
 #include "parsexml.hpp"
 
 #define START_TAG_NAME L'<'
@@ -18,7 +17,7 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 
 	if (!file)
 		return ParsedXml(
-			ParsingResult::FileNotExistsError
+			ParsingStatus::FileNotExistsError
 		);
 	
 	wchar_t symbol;
@@ -28,7 +27,7 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 	bool inTagNameFoundSpace = false;
 	bool inTagContent = false;
 	bool inClosingTagName = false;
-	ParsingResult result = ParsingResult::Success;
+	ParsingStatus result = ParsingStatus::Success;
 
 	Node* node;
 	NodePtrSequence stack;
@@ -39,7 +38,7 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 		if (isStartOfTagName(symbol) &&
 			(inTagNameInit || inClosingTagName)) {
 
-			result = ParsingResult::WrongTagNameError;
+			result = ParsingStatus::WrongTagNameError;
 			break;
 		}
 		//<[/]abc ...
@@ -91,7 +90,7 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 				tagName.clear();
 			}
 			else {
-				result = ParsingResult::WrongClosingTagNameError;
+				result = ParsingStatus::WrongClosingTagNameError;
 				break;
 			}
 		}
@@ -113,11 +112,11 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 
 	if (!int(result) && file.eof() && stack.empty())
 		return ParsedXml( 
-			ParsingResult::Success
+			ParsingStatus::Success
 		);
 	else {
 		if (!stack.empty() && !int(result))
-			result = ParsingResult::TagNameNotClosedError;
+			result = ParsingStatus::TagNameNotClosedError;
 
 		if(!stack.empty())
 			//dfs-free of current root

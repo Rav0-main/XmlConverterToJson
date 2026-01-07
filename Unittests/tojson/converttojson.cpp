@@ -10,6 +10,11 @@ static void convert1Root(void);
 static void convert2Roots(void);
 static void convert3Roots(void);
 
+static void convertSimpleOneNamedArray(void);
+static void convertObjectOneNamedArray(void);
+static void convertTwoDifferentArraysInTag(void);
+static void convertNestedDifferentArrays(void);
+
 static void outputTestname(const std::wstring& testname);
 static void outputThatTestConverted(void);
 static void outputDashLine(void);
@@ -19,7 +24,12 @@ int main(void) {
 		convertEmptyRoot,
 		convert1Root,
 		convert2Roots,
-		convert3Roots
+		convert3Roots,
+
+		convertSimpleOneNamedArray,
+		convertObjectOneNamedArray,
+		convertTwoDifferentArraysInTag,
+		convertNestedDifferentArrays
 	};
 
 	const size_t size = sizeof(converts) / sizeof(converts[0]);
@@ -118,6 +128,8 @@ static void convert1Root(void) {
 
 	outputTestname(testname);
 	outputThatTestConverted();
+
+	freeNode(root, &root);
 }
 
 static void convert2Roots(void) {
@@ -180,11 +192,14 @@ static void convert2Roots(void) {
 
 	root2->children = { empty, t1 };
 
-	const NodePtrSequence roots = {root1, root2};
+	NodePtrSequence roots = {root1, root2};
 	convertToJson(roots, filename);
 
 	outputTestname(testname);
 	outputThatTestConverted();
+
+	for (auto& root : roots)
+		freeNode(root, &root);
 }
 
 static void convert3Roots(void) {
@@ -225,11 +240,404 @@ static void convert3Roots(void) {
 
 	root3->children = { t1, t2 };
 
-	const NodePtrSequence roots = {root1, root2, root3};
+	NodePtrSequence roots = {root1, root2, root3};
 	convertToJson(roots, filename);
 
 	outputTestname(testname);
 	outputThatTestConverted();
+
+	for (auto& root : roots)
+		freeNode(root, &root);
+}
+
+static void convertSimpleOneNamedArray(void) {
+	const std::wstring testname = L"Test converting of simple one named array";
+	const std::string filename = ".\\simple_one_named_array.json";
+
+	/*
+	XML-testcase:
+	<main>
+		<people>
+			<human>Ivan</human>
+
+			<human>Georgy</human>
+
+			<human>John</human>
+
+			<human>My friend</human>
+		</people>
+	</main>
+	*/
+
+	Node* root = new Node;
+	root->tagName = L"main";
+	
+	Node* people = new Node;
+	people->tagName = L"people";
+
+	Node* human1 = new Node;
+	human1->tagName = L"human";
+	human1->value = L"Ivan";
+
+	Node* human2 = new Node;
+	human2->tagName = L"human";
+	human2->value = L"Georgy";
+
+	Node* human3 = new Node;
+	human3->tagName = L"human";
+	human3->value = L"John";
+
+	Node* human4 = new Node;
+	human4->tagName = L"human";
+	human4->value = L"My friend";
+
+	people->children = { human1, human2, human3, human4 };
+	root->children = { people };
+
+	NodePtrSequence roots = { root };
+
+	convertToJson(roots, filename);
+
+	outputTestname(testname);
+	outputThatTestConverted();
+
+	for (auto& root : roots)
+		freeNode(root, &root);
+}
+
+static void convertObjectOneNamedArray(void) {
+	const std::wstring testname = L"Test converting of object one named array";
+	const std::string filename = ".\\object_one_named_array.json";
+
+	/*
+	XML-testcase:
+	<main>
+		<people>
+			<human>
+				<name>Ivan</name>
+				<surname>Shweps</surname>
+			</human>
+
+			<human>
+				<name>Georgy</name>
+				<surname>First</surname>
+			</human>
+			
+			<human>
+				<name>Friend</name>
+				<surname>Unknown</surname>
+			</human>
+		</people>
+	</main>
+	*/
+
+	Node* root = new Node;
+	root->tagName = L"main";
+
+	Node* people = new Node;
+	people->tagName = L"people";
+
+	Node* human1 = new Node;
+	human1->tagName = L"human";
+	
+	Node* human1name = new Node;
+	human1name->tagName = L"name";
+	human1name->value = L"Ivan";
+
+	Node* human1surname = new Node;
+	human1surname->tagName = L"surname";
+	human1surname->value = L"Shweps";
+
+	human1->children = { human1name, human1surname };
+
+	Node* human2 = new Node;
+	human2->tagName = L"human";
+	
+	Node* human2name = new Node;
+	human2name->tagName = L"name";
+	human2name->value = L"Georgy";
+
+	Node* human2surname = new Node;
+	human2surname->tagName = L"surname";
+	human2surname->value = L"First";
+
+	human2->children = { human2name, human2surname };
+
+	Node* human3 = new Node;
+	human3->tagName = L"human";
+
+	Node* human3name = new Node;
+	human3name->tagName = L"name";
+	human3name->value = L"Friend";
+
+	Node* human3surname = new Node;
+	human3surname->tagName = L"surname";
+	human3surname->value = L"Unknown";
+
+	human3->children = { human3name, human3surname };
+
+	people->children = { human1, human2, human3 };
+	root->children = { people };
+
+	NodePtrSequence roots = { root };
+	convertToJson(roots, filename);
+
+	outputTestname(testname);
+	outputThatTestConverted();
+
+	for (auto& root : roots)
+		freeNode(root, &root);
+}
+
+static void convertTwoDifferentArraysInTag(void) {
+	const std::wstring testname = L"Test two different arrays in tag";
+	const std::string filename = ".\\two_arrays_in_tag.json";
+
+	/*
+	XML-testcase:
+	<main>
+		<people>
+			<human>
+				<name>Ivan</name>
+				<surname>Shewps</surname>
+			</human>
+			<human>
+				<name>Georgy</name>
+				<surname>First</surname>
+			</human>
+			<human>
+				<name>Friend</name>
+				<surname>Unknown</surname>
+			</human>
+			<only_name>
+				Ivan
+			</only_name>
+			<only_name>
+				Georgy
+			</only_name>
+			<only_name>
+				John
+			</only_name>
+			<only_name>
+				My friend
+			</only_name>
+		</people>
+	</main>
+	*/
+
+	Node* root = new Node;
+	root->tagName = L"main";
+
+	Node* people = new Node;
+	people->tagName = L"people";
+
+	Node* human1 = new Node;
+	human1->tagName = L"human";
+
+	Node* human1name = new Node;
+	human1name->tagName = L"name";
+	human1name->value = L"Ivan";
+
+	Node* human1surname = new Node;
+	human1surname->tagName = L"surname";
+	human1surname->value = L"Shweps";
+
+	human1->children = { human1name, human1surname };
+
+	Node* human2 = new Node;
+	human2->tagName = L"human";
+
+	Node* human2name = new Node;
+	human2name->tagName = L"name";
+	human2name->value = L"Georgy";
+
+	Node* human2surname = new Node;
+	human2surname->tagName = L"surname";
+	human2surname->value = L"First";
+
+	human2->children = { human2name, human2surname };
+
+	Node* human3 = new Node;
+	human3->tagName = L"human";
+
+	Node* human3name = new Node;
+	human3name->tagName = L"name";
+	human3name->value = L"Friend";
+
+	Node* human3surname = new Node;
+	human3surname->tagName = L"surname";
+	human3surname->value = L"Unknown";
+
+	human3->children = { human3name, human3surname };
+
+	Node* onlyName1 = new Node;
+	onlyName1->tagName = L"only_name";
+	onlyName1->value = L"Ivan";
+
+	Node* onlyName2 = new Node;
+	onlyName2->tagName = L"only_name";
+	onlyName2->value = L"Georgy";
+
+	Node* onlyName3 = new Node;
+	onlyName3->tagName = L"only_name";
+	onlyName3->value = L"John";
+
+	Node* onlyName4 = new Node;
+	onlyName4->tagName = L"only_name";
+	onlyName4->value = L"My friend";
+
+	people->children = { human1, human2, human3,
+								   onlyName1, onlyName2, onlyName3, onlyName4 };
+
+	root->children = { people };
+	NodePtrSequence roots = { root };
+
+	convertToJson(roots, filename);
+
+	outputTestname(testname);
+	outputThatTestConverted();
+
+	for (auto& root : roots)
+		freeNode(root, &root);
+}
+
+static void convertNestedDifferentArrays(void) {
+	const std::wstring testname = L"Test nested different arrays";
+	const std::string filename = ".\\nested_arrays.json";
+
+	/*
+	XML-testcase:
+	<main>
+		<people>
+			<human>
+				<name>Ivan</name>
+				<surname>Shewps</surname>
+			</human>
+			<human>
+				<name>Georgy</name>
+				<surname>First</surname>
+			</human>
+			<human>
+				<name>Friend</name>
+				<surname>Unknown</surname>
+			</human>
+			<only_name>
+				Ivan
+			</only_name>
+			<only_name>
+				Georgy
+			</only_name>
+			<only_name>
+				John
+			</only_name>
+			<only_name>
+				My friend
+			</only_name>
+		</people>
+		<people>
+			<obj>w1</obj>
+			<obj>w2</obj>
+			<obj>w3</obj>
+		</people>
+		<people>tag value</people>
+	</main>
+	*/
+
+	Node* root = new Node;
+	root->tagName = L"main";
+
+	Node* people1 = new Node;
+	people1->tagName = L"people";
+
+	Node* human1 = new Node;
+	human1->tagName = L"human";
+
+	Node* human1name = new Node;
+	human1name->tagName = L"name";
+	human1name->value = L"Ivan";
+
+	Node* human1surname = new Node;
+	human1surname->tagName = L"surname";
+	human1surname->value = L"Shweps";
+
+	human1->children = { human1name, human1surname };
+
+	Node* human2 = new Node;
+	human2->tagName = L"human";
+
+	Node* human2name = new Node;
+	human2name->tagName = L"name";
+	human2name->value = L"Georgy";
+
+	Node* human2surname = new Node;
+	human2surname->tagName = L"surname";
+	human2surname->value = L"First";
+
+	human2->children = { human2name, human2surname };
+
+	Node* human3 = new Node;
+	human3->tagName = L"human";
+
+	Node* human3name = new Node;
+	human3name->tagName = L"name";
+	human3name->value = L"Friend";
+
+	Node* human3surname = new Node;
+	human3surname->tagName = L"surname";
+	human3surname->value = L"Unknown";
+
+	human3->children = { human3name, human3surname };
+
+	Node* onlyName1 = new Node;
+	onlyName1->tagName = L"only_name";
+	onlyName1->value = L"Ivan";
+
+	Node* onlyName2 = new Node;
+	onlyName2->tagName = L"only_name";
+	onlyName2->value = L"Georgy";
+
+	Node* onlyName3 = new Node;
+	onlyName3->tagName = L"only_name";
+	onlyName3->value = L"John";
+
+	Node* onlyName4 = new Node;
+	onlyName4->tagName = L"only_name";
+	onlyName4->value = L"My friend";
+
+	people1->children = { human1, human2, human3, 
+									 onlyName1, onlyName2, onlyName3, onlyName4};
+
+	Node* people2 = new Node;
+	people2->tagName = L"people";
+
+	Node* obj1 = new Node;
+	obj1->tagName = L"obj";
+	obj1->value = L"w1";
+
+	Node* obj2 = new Node;
+	obj2->tagName = L"obj";
+	obj2->value = L"w2";
+
+	Node* obj3 = new Node;
+	obj3->tagName = L"obj";
+	obj3->value = L"w3";
+
+	people2->children = { obj1, obj2, obj3 };
+
+	Node* people3 = new Node;
+	people3->tagName = L"people";
+	people3->value = L"tag value";
+
+	root->children = { people1, people2, people3 };
+	NodePtrSequence roots = { root };
+	
+	convertToJson(roots, filename);
+
+	outputTestname(testname);
+	outputThatTestConverted();
+
+	for (auto& root : roots)
+		freeNode(root, &root);
 }
 
 static void outputTestname(const std::wstring& testname) {

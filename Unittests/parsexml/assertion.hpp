@@ -5,8 +5,8 @@
 
 #include "..\\..\\parsexml.hpp"
 
-bool assertEqualParsingResult(
-	const ParsingResult valid, const ParsingResult result
+bool assertEqualParsingStatus(
+	const ParsingStatus valid, const ParsingStatus result
 );
 
 void assertEqualRoots(

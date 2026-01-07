@@ -13,8 +13,8 @@ static bool checkAtEqualNodes(
 );
 static void outputTagNamesOfNodeVector(const NodePtrSequence& vect);
 
-bool assertEqualParsingResult(
-	const ParsingResult valid, const ParsingResult result
+bool assertEqualParsingStatus(
+	const ParsingStatus valid, const ParsingStatus result
 ) {
 	if (valid != result) {
 		std::wcout << L"Wrong code of parsing result: " << int(result) << std::endl;

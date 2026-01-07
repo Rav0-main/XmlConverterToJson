@@ -30,7 +30,7 @@ else
 fi
 
 if [ ! \( "$1" = "$SKIP_COMPILE_TESTS" -o "$2" = "$SKIP_COMPILE_TESTS" \) ] ; then
-	echo Compiling $test_cpp_files...
+	echo Compiling "\"$test_cpp_files\""...
 
 	if  g++ -I. -std=c++20 -c $test_cpp_files ; then
 		echo Success compiled object-files of tests!
@@ -46,7 +46,7 @@ else
 fi
 
 if g++ -std=c++20 -o "$exe_file" $src_o_files $test_o_files ; then
-	echo Success compiled "$exe_file";
+	echo Success compiled "\"$exe_file\"";
 
 else
 	echo Compiling errors...
@@ -60,10 +60,10 @@ echo TEST LOGS:
 echo -------------------------------------------------------------
 
 if "$exe_file" ; then
-	echo "$exe_file" success completed!
+	echo "\"$exe_file\"" success completed!
 
 else
-	echo "$exe_file" completed with error!
+	echo "\"$exe_file\"" completed with error!
 fi
 
 wait_to_press_enter

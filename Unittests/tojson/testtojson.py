@@ -53,11 +53,11 @@ class TestOfConvertingTreeToJson(TestCase):
 
     def testEmptyTree(self):
         self.filename: str = "empty_tree.json"
-        empty_tree = getFromJson(self.filename)
+        empty_root = getFromJson(self.filename)
 
         self.assertParsedJson(
             ParsedJson(IntParsingResult.Success, {}),
-            empty_tree
+            empty_root
         )
 
     def test1Tree(self):
@@ -74,11 +74,11 @@ class TestOfConvertingTreeToJson(TestCase):
                                 'NOT EMPTY': 'MEGA VAlUE'}
                         }
         
-        tree = getFromJson(self.filename)
+        root = getFromJson(self.filename)
 
         self.assertParsedJson(
             ParsedJson(IntParsingResult.Success, answer),
-            tree
+            root
         )
 
     def test2Trees(self):
@@ -96,11 +96,11 @@ class TestOfConvertingTreeToJson(TestCase):
                         }
                         }
         
-        trees = getFromJson(self.filename)
+        roots = getFromJson(self.filename)
 
         self.assertParsedJson(
             ParsedJson(IntParsingResult.Success, answer),
-            trees
+            roots
         )
 
     def test3Trees(self):
@@ -112,11 +112,128 @@ class TestOfConvertingTreeToJson(TestCase):
                                   }
                         }
         
-        trees = getFromJson(self.filename)
+        roots = getFromJson(self.filename)
 
         self.assertParsedJson(
             ParsedJson(IntParsingResult.Success, answer),
-            trees
+            roots
+        )
+
+    def testSimpleOneNamedArray(self):
+        self.filename: str = ".\\simple_one_named_array.json"
+        answer: dict = {"main": {
+                        "people": [
+                            "Ivan", "Georgy", "John",
+                            "My friend"
+                        ]
+                        }
+                        }
+        
+        root = getFromJson(self.filename)
+        self.assertParsedJson(
+            ParsedJson(IntParsingResult.Success, answer),
+            root
+        )
+
+    def testObjectOneNamedArray(self):
+        self.filename: str = ".\\object_one_named_array.json"
+        answer: dict = {"main": {
+                        "people": [
+                            {
+                                "name": "Ivan",
+                                "surname": "Shweps"
+                            },
+                            {
+                                "name": "Georgy",
+                                "surname": "First"
+                            },
+                            {
+                                "name": "Friend",
+                                "surname": "Unknown"
+                            }
+                        ]
+                        }
+                        }
+        
+        root = getFromJson(self.filename)
+        self.assertParsedJson(
+            ParsedJson(IntParsingResult.Success, answer),
+            root
+        )
+
+    def testTwoDifferentArraysInTag(self):
+        self.filename: str = ".\\two_arrays_in_tag.json"
+        answer: dict = {"main":{
+                        "people":{
+                            "human":[
+                                {
+                                    "name": "Ivan",
+                                    "surname": "Shweps"
+                                },
+                                {
+                                    "name": "Georgy",
+                                    "surname": "First"
+                                },
+                                {
+                                    "name": "Friend",
+                                    "surname": "Unknown"
+                                }
+                            ],
+                            "only_name": [
+                                "Ivan",
+                                "Georgy",
+                                "John",
+                                "My friend"
+                            ]
+                        }
+                        }
+                        }
+        
+        root = getFromJson(self.filename)
+        self.assertParsedJson(
+            ParsedJson(IntParsingResult.Success, answer),
+            root
+        )
+
+    def testNestedDifferentArrays(self):
+        self.filename: str = ".\\nested_arrays.json"
+        answer: dict = {
+	        "main" : [
+		        {
+			        "only_name" : [
+				        "Ivan",
+				        "Georgy",
+				        "John",
+				        "My friend"
+			        ],
+			        "human" : [
+				        {
+					        "name" : "Ivan",
+					        "surname" : "Shweps"
+				        },
+				        {
+					        "name" : "Georgy",
+					        "surname" : "First"
+				        },
+				        {
+					        "name" : "Friend",
+					        "surname" : "Unknown"
+				        }
+			        ]
+		        },
+		        [
+			        "w1",
+			        "w2",
+			        "w3"
+		        ],
+		        "tag value"
+	        ]
+        }
+
+        root = getFromJson(self.filename)
+        self.assertParsedJson(
+            ParsedJson(IntParsingResult.Success, answer),
+            root
         )
 
 if __name__ == "__main__":

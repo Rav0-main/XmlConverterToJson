@@ -7,7 +7,7 @@
 #include <string>
 #include "node.hpp"
 
-enum class ParsingResult {
+enum class ParsingStatus {
 	Success,
 	FileNotExistsError,
 	WrongClosingTagNameError,
@@ -17,7 +17,7 @@ enum class ParsingResult {
 };
 
 struct ParsedXml {
-	const ParsingResult result;
+	const ParsingStatus status;
 };
 
 ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots);

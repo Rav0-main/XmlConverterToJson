@@ -118,7 +118,7 @@ static void testValidXmlFileWith1Root(void) {
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if(assertEqualParsingResult(ParsingResult::Success, res))
+	if(assertEqualParsingStatus(ParsingStatus::Success, res))
 		assertEqualRoots({ root }, roots);
 
 	freeNode(root, &root);
@@ -189,7 +189,7 @@ static void testValidXmlFileWith3Roots(void) {
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if(assertEqualParsingResult(ParsingResult::Success, res))
+	if(assertEqualParsingStatus(ParsingStatus::Success, res))
 		assertEqualRoots(answer, roots);
 
 	for (auto& node : answer)
@@ -247,7 +247,7 @@ static void testValidXmlFileWithChaosFormat(void) {
 	NodePtrSequence answer = { root1, root2 };
 
 	outputTestname(testname);
-	if (assertEqualParsingResult(ParsingResult::Success, res))
+	if (assertEqualParsingStatus(ParsingStatus::Success, res))
 		assertEqualRoots(answer, roots);
 
 	for (auto& node : answer)
@@ -289,7 +289,7 @@ static void testValidXmlFileWithDocTags(void) {
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if (assertEqualParsingResult(ParsingResult::Success, res))
+	if (assertEqualParsingStatus(ParsingStatus::Success, res))
 		assertEqualRoots({ root }, roots);
 
 	freeNode(root, &root);
@@ -331,7 +331,7 @@ static void testValidXmlFileWithTagAttributes(void) {
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if (assertEqualParsingResult(ParsingResult::Success, res))
+	if (assertEqualParsingStatus(ParsingStatus::Success, res))
 		assertEqualRoots({ root }, roots);
 
 	freeNode(root, &root);
@@ -348,7 +348,7 @@ static void testNotExistFile(void) {
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if (assertEqualParsingResult(ParsingResult::FileNotExistsError, res))
+	if (assertEqualParsingStatus(ParsingStatus::FileNotExistsError, res))
 		outputTrueVerdict();
 }
 
@@ -360,7 +360,7 @@ static void testWrongClosingTagNameWith1Root(void) {
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if (assertEqualParsingResult(ParsingResult::WrongClosingTagNameError, res))
+	if (assertEqualParsingStatus(ParsingStatus::WrongClosingTagNameError, res))
 		outputTrueVerdict();
 }
 
@@ -372,7 +372,7 @@ static void testWrongClosingTagNameWith4Roots(void) {
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if (assertEqualParsingResult(ParsingResult::WrongClosingTagNameError, res))
+	if (assertEqualParsingStatus(ParsingStatus::WrongClosingTagNameError, res))
 		outputTrueVerdict();
 }
 
@@ -383,7 +383,7 @@ static void testInTagNameStartingNewTagName(void) {
 	NodePtrSequence roots;
 	auto [res] = getXmlRootsOf(filename, roots);
 	outputTestname(testname);
-	if (assertEqualParsingResult(ParsingResult::WrongTagNameError, res))
+	if (assertEqualParsingStatus(ParsingStatus::WrongTagNameError, res))
 		outputTrueVerdict();
 }
 
