@@ -236,5 +236,28 @@ class TestOfConvertingTreeToJson(TestCase):
             root
         )
 
+    def testArrayWithNotAllSubarrays(self):
+        self.filename: str = ".\\not_all_subarrays.json"
+        answer: dict = {"main" : {
+		                "array" : {
+			                "fourth" : "5",
+	                        "third" : {
+				    	        "name" : "AMAZING",
+					            "surname" : "WOOOOW!"
+				            },
+			                "second" : "2",
+			                "first" : [
+				                "1",
+				                "4"
+                            ]
+		                }
+	                }}
+        
+        root = getFromJson(self.filename)
+        self.assertParsedJson(
+            ParsedJson(IntParsingResult.Success, answer),
+            root
+        )  
+
 if __name__ == "__main__":
     main()

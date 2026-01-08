@@ -4,13 +4,13 @@
 
 #define START_TAG_NAME L'<'
 #define END_TAG_NAME L'>'
-#define CLOSE_TAG_NAME L'/'
+#define CLOSING_TAG_NAME L'/'
 
 static void strip(std::wstring& str);
-static bool isInformationTag(const wchar_t firstSymbol);
-static bool isStartOfTagName(const wchar_t symbol);
-static bool isEndOfTagName(const wchar_t symbol);
-static bool isClosingTagName(const wchar_t symbol);
+inline static bool isInformationTag(const wchar_t firstSymbol);
+inline static bool isStartOfTagName(const wchar_t symbol);
+inline static bool isEndOfTagName(const wchar_t symbol);
+inline static bool isClosingTagName(const wchar_t symbol);
 
 ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 	std::wifstream file(filename);
@@ -154,18 +154,18 @@ static void strip(std::wstring& str) {
 	str = str.substr(left, right - left + 1);
 }
 
-static bool isInformationTag(const wchar_t firstSymbol) {
+inline static bool isInformationTag(const wchar_t firstSymbol) {
 	return firstSymbol == L'?' || firstSymbol == L'!';
 }
 
-static bool isStartOfTagName(const wchar_t symbol) {
+inline static bool isStartOfTagName(const wchar_t symbol) {
 	return symbol == START_TAG_NAME;
 }
 
-static bool isEndOfTagName(const wchar_t symbol) {
+inline static bool isEndOfTagName(const wchar_t symbol) {
 	return symbol == END_TAG_NAME;
 }
 
-static bool isClosingTagName(const wchar_t symbol) {
-	return symbol == CLOSE_TAG_NAME;
+inline static bool isClosingTagName(const wchar_t symbol) {
+	return symbol == CLOSING_TAG_NAME;
 }

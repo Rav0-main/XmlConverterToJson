@@ -4,8 +4,23 @@
 
 #define TABULATION L'\t'
 
+struct WritingNodeParameters {
+	unsigned short level;
+	bool isLastNode;
+	bool writeTagName;
+};
+
+static void writeNodeIn(
+	std::wofstream& file, const Node* const node,
+	const WritingNodeParameters parameters
+);
+inline static void groupChildrenByName(
+	const Node* const node,
+	std::unordered_map<std::wstring, NodePtrSequence>& groups
+);
+
 static ConvertingProfile profile = {
-	.notNeedNamingOneTaggedArray = true
+	.notNamesOneTagArray = true
 };
 
 ConvertingProfile* getConvertingProfile(void) {
@@ -16,12 +31,6 @@ void setConvertingProfile(ConvertingProfile& newProfile) {
 	profile = newProfile;
 }
 
-static void writeNodeIn(
-	std::wofstream& file, const Node* const node,
-	const unsigned short level, const bool isLastNode,
-	const bool needWriteTagName
-);
-
 ConvertingResult convertToJson(
 	const NodePtrSequence& roots, const std::string& filename
 ) {
@@ -30,7 +39,12 @@ ConvertingResult convertToJson(
 
 	file << "{\n";
 	for (const Node* root : roots)
-		writeNodeIn(file, root, 1, root == lastRoot, true);
+		writeNodeIn(file, root, WritingNodeParameters{
+			.level = 1,
+			.isLastNode = root == lastRoot,
+			.writeTagName = true
+			}
+		);
 
 	file << "}";
 
@@ -43,68 +57,78 @@ ConvertingResult convertToJson(
 
 static void writeNodeIn(
 	std::wofstream& file, const Node* const node,
-	const unsigned short level, const bool isLastNode,
-	const bool needWriteTagName
+	const WritingNodeParameters parameters
 ) {
-
-	std::wstring ts(level, TABULATION);
+	std::wstring ts(parameters.level, TABULATION);
 	file << ts;
-	if(needWriteTagName)
+
+	if(parameters.writeTagName)
 		file << L'\"' << node->tagName << L"\" : ";
 
-	if (node->children.empty()) {
+	if (node->children.empty())
 		file << L'\"' << node->value << L'\"';
 
-		if (!isLastNode)
-			file << L',';
-		file << L'\n';
-	}
 	else {
 		Node* lastChild = node->children.back();
 		std::unordered_map<std::wstring, NodePtrSequence> groupedChildren;
 
-		for (Node* child : node->children) {
-			if (groupedChildren.contains(child->tagName))
-				groupedChildren.at(child->tagName).push_back(child);
-			else
-				groupedChildren[child->tagName] = { child };
-		}
-
-		//not tag array
+		groupChildrenByName(node, groupedChildren);
+		
+		//haves not tag array
 		if (groupedChildren.size() == node->children.size()) {
 			file << L"{\n";
+
 			for (const Node* child : node->children)
-				writeNodeIn(file, child, level + 1, child == lastChild, true);
+				writeNodeIn(file, child, WritingNodeParameters{
+					.level = static_cast<unsigned short>(parameters.level + 1),
+					.isLastNode = child == lastChild,
+					.writeTagName = true
+					}
+				);
 
 			file << ts << L'}';
-			if (!isLastNode)
-				file << L',';
-			file << L'\n';
 		}
-		//in tag have equal child tags
-		else if (groupedChildren.size() == 1 && profile.notNeedNamingOneTaggedArray) {
+		//haves children tags with equal tagName
+		else if (groupedChildren.size() == 1 && profile.notNamesOneTagArray) {
 			file << L"[\n";
+
 			for (const Node* child : node->children)
-				writeNodeIn(file, child, level + 1, child == lastChild, false);
+				writeNodeIn(file, child, WritingNodeParameters{
+					.level = static_cast<unsigned short>(parameters.level + 1),
+					.isLastNode = child == lastChild,
+					.writeTagName = false
+					}
+				);
 
 			file << ts << L']';
-			if (!isLastNode)
-				file << L',';
-			file << L'\n';
 		}
 		else {
 			file << L"{\n";
+
 			size_t groupCount = groupedChildren.size();
 
-			for (const auto& [tagName, children] : groupedChildren) {
-				file << ts << TABULATION << L'\"' << tagName << L"\" : [\n";
+			for (const auto& [childName, children] : groupedChildren) {
+				file << ts << TABULATION << L'\"' << childName;
+				if (children.size() != 1)
+					file << L"\" : [\n";
+				else
+					file << L"\" : \n";
 
 				lastChild = children.back();
-				for(const Node* child : children)
-					writeNodeIn(file, child, level + 2, child == lastChild, false);
+				for (const Node* child : children)
+					writeNodeIn(file, child,
+						WritingNodeParameters{
+							.level = static_cast<unsigned short>(parameters.level + 2),
+							.isLastNode = child == lastChild,
+							.writeTagName = false
+						}
+					);
 
 				--groupCount;
-				file << ts << TABULATION << L']';
+				file << ts << TABULATION;
+				if(children.size() != 1)
+					file << L']';
+
 				if (groupCount)
 					file << L',';
 
@@ -112,9 +136,23 @@ static void writeNodeIn(
 			}
 
 			file << ts << L'}';
-			if (!isLastNode)
-				file << L',';
-			file << L'\n';
 		}
+	}
+
+	if (!parameters.isLastNode)
+		file << L',';
+
+	file << L'\n';
+}
+
+inline static void groupChildrenByName(
+	const Node* const node,
+	std::unordered_map<std::wstring, NodePtrSequence>& groups
+) {
+	for (Node* child : node->children) {
+		if (groups.contains(child->tagName))
+			groups.at(child->tagName).push_back(child);
+		else
+			groups[child->tagName] = { child };
 	}
 }

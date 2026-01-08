@@ -15,6 +15,8 @@ static void convertObjectOneNamedArray(void);
 static void convertTwoDifferentArraysInTag(void);
 static void convertNestedDifferentArrays(void);
 
+static void convertArrayWithNotAllSubarrays(void);
+
 static void outputTestname(const std::wstring& testname);
 static void outputThatTestConverted(void);
 static void outputDashLine(void);
@@ -29,7 +31,9 @@ int main(void) {
 		convertSimpleOneNamedArray,
 		convertObjectOneNamedArray,
 		convertTwoDifferentArraysInTag,
-		convertNestedDifferentArrays
+		convertNestedDifferentArrays,
+		
+		convertArrayWithNotAllSubarrays
 	};
 
 	const size_t size = sizeof(converts) / sizeof(converts[0]);
@@ -631,6 +635,75 @@ static void convertNestedDifferentArrays(void) {
 	root->children = { people1, people2, people3 };
 	NodePtrSequence roots = { root };
 	
+	convertToJson(roots, filename);
+
+	outputTestname(testname);
+	outputThatTestConverted();
+
+	for (auto& root : roots)
+		freeNode(root, &root);
+}
+
+static void convertArrayWithNotAllSubarrays(void) {
+	const std::wstring testname = L"Test array with not all subarrays";
+	const std::string filename = ".\\not_all_subarrays.json";
+
+	/*
+	XML-testcase:
+	<main>
+		<array>
+			<first>1</first>
+			<second>2</second>
+			<third>
+				<name>AMAZING</name>
+				<surname>WOOOOW!</surname>
+			</third>
+			<first>4</first>
+			<fourth>5</fourth>
+		</array>
+	</main>
+	*/
+
+	Node* root = new Node;
+	root->tagName = L"main";
+	
+	Node* array = new Node;
+	array->tagName = L"array";
+
+	Node* first1 = new Node;
+	first1->tagName = L"first";
+	first1->value = L"1";
+
+	Node* second = new Node;
+	second->tagName = L"second";
+	second->value = L"2";
+
+	Node* third = new Node;
+	third->tagName = L"third";
+	
+	Node* thirdName = new Node;
+	thirdName->tagName = L"name";
+	thirdName->value = L"AMAZING";
+
+	Node* thirdSurname = new Node;
+	thirdSurname->tagName = L"surname";
+	thirdSurname->value = L"WOOOOW!";
+
+	third->children = { thirdName, thirdSurname };
+
+	Node* first2 = new Node;
+	first2->tagName = L"first";
+	first2->value = L"4";
+
+	Node* fourth = new Node;
+	fourth->tagName = L"fourth";
+	fourth->value = L"5";
+
+	array->children = { first1, second, third, first2, fourth };
+
+	root->children = { array };
+	NodePtrSequence roots = { root };
+
 	convertToJson(roots, filename);
 
 	outputTestname(testname);

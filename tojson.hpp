@@ -36,10 +36,10 @@ struct ConvertingProfile {
 				"first",
 				"second",
 				"third"
-				]
+		]
 	}
 	*/
-	bool notNeedNamingOneTaggedArray;
+	bool notNamesOneTagArray;
 };
 
 void setConvertingProfile(ConvertingProfile& newProfile);
