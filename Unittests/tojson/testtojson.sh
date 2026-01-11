@@ -4,8 +4,8 @@ wait_to_press_enter(){
 	read -p "Press <Enter> to close .sh-script."
 }
 
-src_cpp_files="../../tojson.cpp ../../node.cpp"
-src_o_files="./tojson.o ./node.o"
+src_cpp_files="../../tojson.cpp ../../tag.cpp"
+src_o_files="./tojson.o ./tag.o"
 test_cpp_files="./converttojson.cpp"
 test_o_files="./converttojson.o"
 exe_file="./converttojson.exe"

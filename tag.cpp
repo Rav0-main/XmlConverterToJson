@@ -1,53 +1,53 @@
 #include <queue>
 #include <iostream>
-#include "node.hpp"
+#include "tag.hpp"
 
 #define EMPTY L"EMPTY"
 
 static void outputASCIIOf(const std::wstring& str);
 
-void freeNode(Node* node, Node** nodePtr) {
-	if (node == nullptr)
+void freeTag(Tag* tag, Tag** tagPtr) {
+	if (tag == nullptr)
 		return;
 
-	for (auto& child : node->children)
-		freeNode(child, &child);
+	for (auto& child : tag->children)
+		freeTag(child, &child);
 
-	delete node;
-	*nodePtr = nullptr;
+	delete tag;
+	*tagPtr = nullptr;
 }
 
-void outputNodes(
-	const NodePtrSequence& roots, const bool valueAsAscii
+void outputTags(
+	const TagPtrSequence& roots, const bool valueAsAscii
 ) {
-	std::queue<const Node*> queue;
-	const Node* node;
+	std::queue<const Tag*> queue;
+	const Tag* tag;
 
-	for (const Node* root : roots) {
+	for (const Tag* root : roots) {
 		queue.push(root);
 		while (!queue.empty()) {
-			node = queue.front();
+			tag = queue.front();
 			queue.pop();
 
-			std::wcout << L"* Node: " << node->tagName << std::endl;
+			std::wcout << L"* Tag: " << tag->name << std::endl;
 
 			std::wcout << L"Value: ";
-			if (node->value.empty())
+			if (tag->value.empty())
 				std::wcout << EMPTY;
 			else if (valueAsAscii)
-				outputASCIIOf(node->value);
+				outputASCIIOf(tag->value);
 			else
-				std::wcout << node->value;
+				std::wcout << tag->value;
 
 			std::wcout << std::endl;
 
 			std::wcout << "Childs: ";
-			if (node->children.empty())
+			if (tag->children.empty())
 				std::wcout << EMPTY;
 
 			else
-				for (const Node* child : node->children) {
-					std::wcout << child->tagName << L", ";
+				for (const Tag* child : tag->children) {
+					std::wcout << child->name << L", ";
 					queue.push(child);
 				}
 

@@ -49,302 +49,302 @@ static void testValidXmlFileWith1Root(void) {
 	const std::string filename = ".\\valid_test_1.xml";
 	const std::wstring testname = L"Test with valid xml file with 1 root";
 
-	Node* root = new Node;
-	root->tagName = L"m1";
+	Tag* root = new Tag;
+	root->name = L"m1";
 
-	Node* empty1 = new Node;
-	empty1->tagName = L"empty1";
+	Tag* empty1 = new Tag;
+	empty1->name = L"empty1";
 
-	Node* t1 = new Node;
-	t1->tagName = L"t1";
+	Tag* t1 = new Tag;
+	t1->name = L"t1";
 
-	Node* t1_1 = new Node;
-	t1_1->tagName = L"t1.1";
+	Tag* t1_1 = new Tag;
+	t1_1->name = L"t1.1";
 	t1_1->value = L"tag 1.1";
 
-	Node* t1_2 = new Node;
-	t1_2->tagName = L"t1.2";
+	Tag* t1_2 = new Tag;
+	t1_2->name = L"t1.2";
 	t1_2->value = L"tag 1.2";
 
-	Node* t1_3 = new Node;
-	t1_3->tagName = L"t1.3";
+	Tag* t1_3 = new Tag;
+	t1_3->name = L"t1.3";
 	t1_3->value = L"tag 1.3";
 
-	Node* empty2 = new Node;
-	empty2->tagName = L"empty2";
+	Tag* empty2 = new Tag;
+	empty2->name = L"empty2";
 
 	t1->children = { t1_1, t1_2, t1_3, empty2 };
 
-	Node* t2 = new Node;
-	t2->tagName = L"t2";
+	Tag* t2 = new Tag;
+	t2->name = L"t2";
 
-	Node* t2_1 = new Node;
-	t2_1->tagName = L"t2.1";
+	Tag* t2_1 = new Tag;
+	t2_1->name = L"t2.1";
 	
-	Node* t2_1_1 = new Node;
-	t2_1_1->tagName = L"t2.1.1";
+	Tag* t2_1_1 = new Tag;
+	t2_1_1->name = L"t2.1.1";
 
-	Node* t2_1_1_1 = new Node;
-	t2_1_1_1->tagName = L"t2.1.1.1";
+	Tag* t2_1_1_1 = new Tag;
+	t2_1_1_1->name = L"t2.1.1.1";
 	t2_1_1_1->value = L"tag 2.1.1.1";
 
-	Node* empty3 = new Node;
-	empty3->tagName = L"empty3";
+	Tag* empty3 = new Tag;
+	empty3->name = L"empty3";
 
 	t2_1_1->children = { t2_1_1_1, empty3 };
 
-	Node* t2_1_2 = new Node;
-	t2_1_2->tagName = L"t2.1.2";
+	Tag* t2_1_2 = new Tag;
+	t2_1_2->name = L"t2.1.2";
 	t2_1_2->value = L"tag 2.1.2";
 
 	t2_1->children = { t2_1_1, t2_1_2 };
 
-	Node* t2_2 = new Node;
-	t2_2->tagName = L"t2.2";
+	Tag* t2_2 = new Tag;
+	t2_2->name = L"t2.2";
 	t2_2->value = L"tag 2.2";
 
-	Node* t2_3 = new Node;
-	t2_3->tagName = L"t2.3";
+	Tag* t2_3 = new Tag;
+	t2_3->name = L"t2.3";
 	t2_3->value = L"tag 2.3";
 
 	t2->children = { t2_1, t2_2, t2_3 };
 
-	Node* empty4 = new Node;
-	empty4->tagName = L"empty4";
+	Tag* empty4 = new Tag;
+	empty4->name = L"empty4";
 
 	root->children = { empty1, t1, t2, empty4 };
 
-	NodePtrSequence roots;
+	TagPtrSequence roots;
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
 	if(assertEqualParsingStatus(ParsingStatus::Success, res))
 		assertEqualRoots({ root }, roots);
 
-	freeNode(root, &root);
+	freeTag(root, &root);
 
-	for (auto& node : roots)
-		freeNode(node, &node);
+	for (auto& tag : roots)
+		freeTag(tag, &tag);
 }
 
 static void testValidXmlFileWith3Roots(void) {
 	const std::string filename = ".\\valid_test_2.xml";
 	const std::wstring testname = L"Test with valid xml file with 3 roots";
 
-	Node* root1 = new Node;
-	root1->tagName = L"m1";
+	Tag* root1 = new Tag;
+	root1->name = L"m1";
 
-	Node* m1t1 = new Node;
-	m1t1->tagName = L"t1";
+	Tag* m1t1 = new Tag;
+	m1t1->name = L"t1";
 	m1t1->value = L"hello";
 
-	Node* m1t2 = new Node;
-	m1t2->tagName = L"t2";
+	Tag* m1t2 = new Tag;
+	m1t2->name = L"t2";
 
-	Node* m1t2_1 = new Node;
-	m1t2_1->tagName = L"t2.1";
+	Tag* m1t2_1 = new Tag;
+	m1t2_1->name = L"t2.1";
 	m1t2_1->value = L"world";
 
-	Node* m1t2_2 = new Node;
-	m1t2_2->tagName = L"t2.2";
+	Tag* m1t2_2 = new Tag;
+	m1t2_2->name = L"t2.2";
 	m1t2_2->value = L"guys";
 
 	m1t2->children = { m1t2_1, m1t2_2 };
 
 	root1->children = { m1t1, m1t2 };
 
-	Node* root2 = new Node;
-	root2->tagName = L"m2";
+	Tag* root2 = new Tag;
+	root2->name = L"m2";
 
-	Node* empty = new Node;
-	empty->tagName = L"empty";
+	Tag* empty = new Tag;
+	empty->name = L"empty";
 
-	Node* m2t1 = new Node;
-	m2t1->tagName = L"t1";
+	Tag* m2t1 = new Tag;
+	m2t1->name = L"t1";
 	m2t1->value = L"hello world!!!";
 
 	root2->children = { empty, m2t1 };
 
-	Node* root3 = new Node;
-	root3->tagName = L"m3";
+	Tag* root3 = new Tag;
+	root3->name = L"m3";
 
-	Node* m3t1 = new Node;
-	m3t1->tagName = L"t1";
+	Tag* m3t1 = new Tag;
+	m3t1->name = L"t1";
 	m3t1->value = L"test";
 
-	Node* m3t2 = new Node;
-	m3t2->tagName = L"t2";
+	Tag* m3t2 = new Tag;
+	m3t2->name = L"t2";
 	m3t2->value = L"stack";
 
-	empty = new Node;
-	empty->tagName = L"empty";
+	empty = new Tag;
+	empty->name = L"empty";
 
 	root3->children = { empty, m3t1, m3t2 };
 
-	 NodePtrSequence answer = {
+	 TagPtrSequence answer = {
 		root1, root2, root3
 	};
 
-	 NodePtrSequence roots;
+	 TagPtrSequence roots;
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
 	if(assertEqualParsingStatus(ParsingStatus::Success, res))
 		assertEqualRoots(answer, roots);
 
-	for (auto& node : answer)
-		freeNode(node, &node);
+	for (auto& tag : answer)
+		freeTag(tag, &tag);
 
-	for (auto& node : roots)
-		freeNode(node, &node);
+	for (auto& tag : roots)
+		freeTag(tag, &tag);
 }
 
 static void testValidXmlFileWithChaosFormat(void) {
 	const std::string filename = ".\\valid_test_3.xml";
 	const std::wstring testname = L"Test with valid xml file with chaos format";
 
-	Node* root1 = new Node;
-	root1->tagName = L"m1";
+	Tag* root1 = new Tag;
+	root1->name = L"m1";
 
-	Node* t1 = new Node;
-	t1->tagName = L"t1";
+	Tag* t1 = new Tag;
+	t1->name = L"t1";
 	t1->value = L"tag 1";
 
-	Node* t2 = new Node;
-	t2->tagName = L"t2";
+	Tag* t2 = new Tag;
+	t2->name = L"t2";
 
-	Node* t2_1 = new Node;
-	t2_1->tagName = L"t2.1";
+	Tag* t2_1 = new Tag;
+	t2_1->name = L"t2.1";
 	t2_1->value = L"tag 2.1";
 
-	Node* t2_2 = new Node;
-	t2_2->tagName = L"t2.2";
+	Tag* t2_2 = new Tag;
+	t2_2->name = L"t2.2";
 	t2_2->value = L"tag 2.2";
 
 	t2->children = { t2_1, t2_2 };
 
-	Node* t3 = new Node;
-	t3->tagName = L"t3";
+	Tag* t3 = new Tag;
+	t3->name = L"t3";
 	t3->value = L"tag 3";
 
 	root1->children = { t1, t2, t3 };
 
-	Node* root2 = new Node;
-	root2->tagName = L"m2";
+	Tag* root2 = new Tag;
+	root2->name = L"m2";
 
-	Node* empty = new Node;
-	empty->tagName = L"empty";
+	Tag* empty = new Tag;
+	empty->name = L"empty";
 
-	t1 = new Node;
-	t1->tagName = L"t1";
+	t1 = new Tag;
+	t1->name = L"t1";
 	t1->value = L"tag 1";
 
 	root2->children = { empty, t1 };
 
-	NodePtrSequence roots;
+	TagPtrSequence roots;
 	auto [res] = getXmlRootsOf(filename, roots);
 
-	NodePtrSequence answer = { root1, root2 };
+	TagPtrSequence answer = { root1, root2 };
 
 	outputTestname(testname);
 	if (assertEqualParsingStatus(ParsingStatus::Success, res))
 		assertEqualRoots(answer, roots);
 
-	for (auto& node : answer)
-		freeNode(node, &node);
+	for (auto& tag : answer)
+		freeTag(tag, &tag);
 
-	for (auto& node : roots)
-		freeNode(node, &node);
+	for (auto& tag : roots)
+		freeTag(tag, &tag);
 }
 
 static void testValidXmlFileWithDocTags(void) {
 	const std::string filename = ".\\with_doc_tags.xml";
 	const std::wstring testname = L"Test xml-file with documentation tags";
 
-	Node* root = new Node;
-	root->tagName = L"main";
+	Tag* root = new Tag;
+	root->name = L"main";
 
-	Node* t1 = new Node;
-	t1->tagName = L"t1";
+	Tag* t1 = new Tag;
+	t1->name = L"t1";
 
-	Node* t1_1 = new Node;
-	t1_1->tagName = L"t1.1";
+	Tag* t1_1 = new Tag;
+	t1_1->name = L"t1.1";
 	t1_1->value = L"tag 1.1";
 
-	Node* empty = new Node;
-	empty->tagName = L"empty";
+	Tag* empty = new Tag;
+	empty->name = L"empty";
 
 	t1->children = { t1_1, empty };
 
-	Node* t2 = new Node;
-	t2->tagName = L"t2";
+	Tag* t2 = new Tag;
+	t2->name = L"t2";
 	t2->value = L"tag 2";
 
-	empty = new Node;
-	empty->tagName = L"empty";
+	empty = new Tag;
+	empty->name = L"empty";
 
 	root->children = { t1, t2, empty };
 
-	NodePtrSequence roots;
+	TagPtrSequence roots;
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
 	if (assertEqualParsingStatus(ParsingStatus::Success, res))
 		assertEqualRoots({ root }, roots);
 
-	freeNode(root, &root);
+	freeTag(root, &root);
 
-	for (auto& node : roots)
-		freeNode(node, &node);
+	for (auto& tag : roots)
+		freeTag(tag, &tag);
 }
 
 static void testValidXmlFileWithTagAttributes(void) {
 	const std::string filename = ".\\tags_with_attrs.xml";
 	const std::wstring testname = L"Test with tags which have attributes";
 
-	Node* root = new Node;
-	root->tagName = L"body";
+	Tag* root = new Tag;
+	root->name = L"body";
 
-	Node* t1 = new Node;
-	t1->tagName = L"t1";
+	Tag* t1 = new Tag;
+	t1->name = L"t1";
 	t1->value = L"tag 1";
 
-	Node* t2 = new Node;
-	t2->tagName = L"t2";
+	Tag* t2 = new Tag;
+	t2->name = L"t2";
 
-	Node* t2_1 = new Node;
-	t2_1->tagName = L"t2.1";
+	Tag* t2_1 = new Tag;
+	t2_1->name = L"t2.1";
 	t2_1->value = L"tag 2.1";
 
-	Node* empty = new Node;
-	empty->tagName = L"empty";
+	Tag* empty = new Tag;
+	empty->name = L"empty";
 
-	Node* t2_2 = new Node;
-	t2_2->tagName = L"t2.2";
+	Tag* t2_2 = new Tag;
+	t2_2->name = L"t2.2";
 	t2_2->value = L"tag 2.2";
 
 	t2->children = { t2_1, empty, t2_2 };
 
 	root->children = { t1, t2 };
 
-	NodePtrSequence roots;
+	TagPtrSequence roots;
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
 	if (assertEqualParsingStatus(ParsingStatus::Success, res))
 		assertEqualRoots({ root }, roots);
 
-	freeNode(root, &root);
+	freeTag(root, &root);
 
-	for (auto& node : roots)
-		freeNode(node, &node);
+	for (auto& tag : roots)
+		freeTag(tag, &tag);
 }
 
 static void testNotExistFile(void) {
 	const std::string filename = ".\\not_exist_file.xml";
 	const std::wstring testname = L"Test not exist file";
 
-	NodePtrSequence roots;
+	TagPtrSequence roots;
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
@@ -356,7 +356,7 @@ static void testWrongClosingTagNameWith1Root(void) {
 	const std::string filename = ".\\wrong_closing_tag_name_1_tree.xml";
 	const std::wstring testname = L"Test with wrong closing tag name with 1 root";
 
-	NodePtrSequence roots;
+	TagPtrSequence roots;
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
@@ -368,7 +368,7 @@ static void testWrongClosingTagNameWith4Roots(void) {
 	const std::string filename = ".\\wrong_closing_tag_name_4_trees.xml";
 	const std::wstring testname = L"Test with wrong closing tag name with 4 roots";
 
-	NodePtrSequence roots;
+	TagPtrSequence roots;
 	auto [res] = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
@@ -380,7 +380,7 @@ static void testInTagNameStartingNewTagName(void) {
 	const std::string filename = ".\\wrong_tag_name.xml";
 	const std::wstring testname = L"Test with wrong tag name, in him starting new tag";
 
-	NodePtrSequence roots;
+	TagPtrSequence roots;
 	auto [res] = getXmlRootsOf(filename, roots);
 	outputTestname(testname);
 	if (assertEqualParsingStatus(ParsingStatus::WrongTagNameError, res))

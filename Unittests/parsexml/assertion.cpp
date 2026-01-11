@@ -8,10 +8,10 @@
 #define VERDICT L"Verdict"
 #define EMPTY_LINE L"EMPTY"
 
-static bool checkAtEqualNodes(
-	const Node* const validNode, const Node* const node
+static bool checkAtEqualTags(
+	const Tag* const validTag, const Tag* const tag
 );
-static void outputTagNamesOfNodeVector(const NodePtrSequence& vect);
+static void outputTagNamesOf(const TagPtrSequence& vect);
 
 bool assertEqualParsingStatus(
 	const ParsingStatus valid, const ParsingStatus result
@@ -27,13 +27,13 @@ bool assertEqualParsingStatus(
 }
 
 void assertEqualRoots(
-	const NodePtrSequence validRoots, const NodePtrSequence roots
+	const TagPtrSequence validRoots, const TagPtrSequence roots
 ) {
 	if (validRoots.size() == roots.size()) {
 		bool assertion = true;
 		bool isEqualRoot = true;
 		for (int i = 0; i < validRoots.size(); ++i) {
-			isEqualRoot = checkAtEqualNodes(validRoots[i], roots[i]);
+			isEqualRoot = checkAtEqualTags(validRoots[i], roots[i]);
 			assertion = isEqualRoot && assertion;
 			if (!isEqualRoot)
 				std::wcout << std::endl;
@@ -50,11 +50,11 @@ void assertEqualRoots(
 	}
 }
 
-static bool checkAtEqualNodes(
-	const Node* const validRoot, const Node* const root
+static bool checkAtEqualTags(
+	const Tag* const validRoot, const Tag* const root
 ) {
-	std::queue<const Node*> validQueue;
-	std::queue<const Node*> queue;
+	std::queue<const Tag*> validQueue;
+	std::queue<const Tag*> queue;
 
 	std::queue<std::wstring> paths;
 	paths.push(L"");
@@ -63,52 +63,52 @@ static bool checkAtEqualNodes(
 	queue.push(root);
 
 	bool run = true;
-	const Node* validNode;
-	const Node* node;
+	const Tag* validTag;
+	const Tag* tag;
 	while (run && !validQueue.empty() && !queue.empty()) {
-		validNode = validQueue.front();
+		validTag = validQueue.front();
 		validQueue.pop();
 
-		node = queue.front();
+		tag = queue.front();
 		queue.pop();
 
-		if (validNode->tagName != node->tagName) {
-			std::wcout << L"Node with path: \"" << paths.front() << L"/"
-				<< node->tagName
+		if (validTag->name != tag->name) {
+			std::wcout << L"Tag with path: \"" << paths.front() << L"/"
+				<< tag->name
 				<< L"\" not equal tagNames!" << std::endl;
 
-			std::wcout << L"Truth tagName: " << validNode->tagName << L"\n";
-			std::wcout << L"But taken: " << node->tagName << L"\n";
+			std::wcout << L"Truth tagName: " << validTag->name << L"\n";
+			std::wcout << L"But taken: " << tag->name << L"\n";
 			return false;
 		}
-		else if (validNode->value != node->value) {
-			std::wcout << L"Node with path: \"" << paths.front() << L"/"
-				<< node->tagName
+		else if (validTag->value != tag->value) {
+			std::wcout << L"Tag with path: \"" << paths.front() << L"/"
+				<< tag->name
 				<< L"\" not equal values!" << std::endl;
 
-			std::wcout << L"Truth value: " << validNode->value << L"\n";
-			std::wcout << L"But taken: " << node->value << L"\n";
+			std::wcout << L"Truth value: " << validTag->value << L"\n";
+			std::wcout << L"But taken: " << tag->value << L"\n";
 			return false;
 		}
-		else if (validNode->children.size() != node->children.size()) {
-			std::wcout << L"Node with path: \"" << paths.front() << L"/"
-				<< node->tagName
+		else if (validTag->children.size() != tag->children.size()) {
+			std::wcout << L"Tag with path: \"" << paths.front() << L"/"
+				<< tag->name
 				<< L"\" not equal children size!" << std::endl;
 
-			std::wcout << L"Truth value: " << validNode->children.size() << L"\n";
-			std::wcout << L"But taken: " << node->children.size() << L"\n";
+			std::wcout << L"Truth value: " << validTag->children.size() << L"\n";
+			std::wcout << L"But taken: " << tag->children.size() << L"\n";
 
 			std::wcout << L"Valid children: ";
-			outputTagNamesOfNodeVector(validNode->children);
+			outputTagNamesOf(validTag->children);
 			std::wcout << L"But taken: ";
-			outputTagNamesOfNodeVector(node->children);
+			outputTagNamesOf(tag->children);
 			return false;
 		}
 
-		for (int i = 0; i < validNode->children.size(); ++i) {
-			paths.push(paths.front() + L"/" + validNode->tagName);
-			validQueue.push(validNode->children[i]);
-			queue.push(node->children[i]);
+		for (int i = 0; i < validTag->children.size(); ++i) {
+			paths.push(paths.front() + L"/" + validTag->name);
+			validQueue.push(validTag->children[i]);
+			queue.push(tag->children[i]);
 		}
 
 		paths.pop();
@@ -117,10 +117,10 @@ static bool checkAtEqualNodes(
 	return true;
 }
 
-static void outputTagNamesOfNodeVector(const NodePtrSequence& vect) {
+static void outputTagNamesOf(const TagPtrSequence& vect) {
 	if (vect.size())
-		for (const Node* node : vect)
-			std::wcout << node->tagName << L", ";
+		for (const Tag* tag : vect)
+			std::wcout << tag->name << L", ";
 	else
 		std::wcout << EMPTY_LINE;
 

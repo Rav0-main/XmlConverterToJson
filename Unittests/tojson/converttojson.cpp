@@ -58,7 +58,7 @@ void convertEmptyRoot(void) {
 
 	*/
 	
-	const NodePtrSequence root = {};
+	const TagPtrSequence root = {};
 
 	convertToJson(root, filename);
 
@@ -90,50 +90,50 @@ static void convert1Root(void) {
 	</main>
 	*/
 
-	Node* root = new Node;
-	root->tagName = L"main";
+	Tag* root = new Tag;
+	root->name = L"main";
 
-	Node* t1 = new Node;
-	t1->tagName = L"t1";
+	Tag* t1 = new Tag;
+	t1->name = L"t1";
 	t1->value = L"tag 1";
 	
-	Node* t2 = new Node;
-	t2->tagName = L"t2";
+	Tag* t2 = new Tag;
+	t2->name = L"t2";
 
-	Node* t2_1 = new Node;
-	t2_1->tagName = L"t2.1";
+	Tag* t2_1 = new Tag;
+	t2_1->name = L"t2.1";
 	t2_1->value = L"tag 2.1";
 
-	Node* t2_2 = new Node;
-	t2_2->tagName = L"t2.2";
+	Tag* t2_2 = new Tag;
+	t2_2->name = L"t2.2";
 	
-	Node* t2_2_1 = new Node;
-	t2_2_1->tagName = L"t2.2.1";
+	Tag* t2_2_1 = new Tag;
+	t2_2_1->name = L"t2.2.1";
 	t2_2_1->value = L"tag 2.2.1";
 
-	Node* t2_2_2 = new Node;
-	t2_2_2->tagName = L"empty";
+	Tag* t2_2_2 = new Tag;
+	t2_2_2->name = L"empty";
 
 	t2_2->children = { t2_2_1, t2_2_2 };
 
-	Node* t2_3 = new Node;
-	t2_3->tagName = L"empty";
+	Tag* t2_3 = new Tag;
+	t2_3->name = L"empty";
 
 	t2->children = { t2_1, t2_2, t2_3 };
 
-	Node* t3 = new Node;
-	t3->tagName = L"NOT EMPTY";
+	Tag* t3 = new Tag;
+	t3->name = L"NOT EMPTY";
 	t3->value = L"MEGA VAlUE";
 
 	root->children = { t1, t2, t3 };
 
-	const NodePtrSequence roots = {root};
+	const TagPtrSequence roots = {root};
 	convertToJson(roots, filename);
 
 	outputTestname(testname);
 	outputThatTestConverted();
 
-	freeNode(root, &root);
+	freeTag(root, &root);
 }
 
 static void convert2Roots(void) {
@@ -159,51 +159,51 @@ static void convert2Roots(void) {
 	</root2>
 	*/
 
-	Node* root1 = new Node;
-	root1->tagName = L"root1";
+	Tag* root1 = new Tag;
+	root1->name = L"root1";
 
-	Node* t1 = new Node;
-	t1->tagName = L"t1";
+	Tag* t1 = new Tag;
+	t1->name = L"t1";
 	t1->value = L"tag 1";
 
-	Node* t2 = new Node;
-	t2->tagName = L"t2";
+	Tag* t2 = new Tag;
+	t2->name = L"t2";
 
-	Node* t2_1 = new Node;
-	t2_1->tagName = L"t2.1";
+	Tag* t2_1 = new Tag;
+	t2_1->name = L"t2.1";
 	t2_1->value = L"tag 2.1";
 
-	Node* t2_2 = new Node;
-	t2_2->tagName = L"t2.2";
+	Tag* t2_2 = new Tag;
+	t2_2->name = L"t2.2";
 	t2_2->value = L"tag 2.2";
 
 	t2->children = { t2_1, t2_2 };
 
-	Node* empty = new Node;
-	empty->tagName = L"empty";
+	Tag* empty = new Tag;
+	empty->name = L"empty";
 
 	root1->children = { t1, t2, empty };
 
-	Node* root2 = new Node;
-	root2->tagName = L"root2";
+	Tag* root2 = new Tag;
+	root2->name = L"root2";
 
-	empty = new Node;
-	empty->tagName = L"empty";
+	empty = new Tag;
+	empty->name = L"empty";
 
-	t1 = new Node;
-	t1->tagName = L"t1";
+	t1 = new Tag;
+	t1->name = L"t1";
 	t1->value = L"tag 1";
 
 	root2->children = { empty, t1 };
 
-	NodePtrSequence roots = {root1, root2};
+	TagPtrSequence roots = {root1, root2};
 	convertToJson(roots, filename);
 
 	outputTestname(testname);
 	outputThatTestConverted();
 
 	for (auto& root : roots)
-		freeNode(root, &root);
+		freeTag(root, &root);
 }
 
 static void convert3Roots(void) {
@@ -225,33 +225,33 @@ static void convert3Roots(void) {
 	</root3>
 	*/
 
-	Node* root1 = new Node;
-	root1->tagName = L"root1";
+	Tag* root1 = new Tag;
+	root1->name = L"root1";
 
-	Node* root2 = new Node;
-	root2->tagName = L"HELLO";
+	Tag* root2 = new Tag;
+	root2->name = L"HELLO";
 
-	Node* root3 = new Node;
-	root3->tagName = L"root3";
+	Tag* root3 = new Tag;
+	root3->name = L"root3";
 
-	Node* t1 = new Node;
-	t1->tagName = L"t1";
+	Tag* t1 = new Tag;
+	t1->name = L"t1";
 	t1->value = L"tag 1";
 
-	Node* t2 = new Node;
-	t2->tagName = L"t2";
+	Tag* t2 = new Tag;
+	t2->name = L"t2";
 	t2->value = L"tag 2";
 
 	root3->children = { t1, t2 };
 
-	NodePtrSequence roots = {root1, root2, root3};
+	TagPtrSequence roots = {root1, root2, root3};
 	convertToJson(roots, filename);
 
 	outputTestname(testname);
 	outputThatTestConverted();
 
 	for (auto& root : roots)
-		freeNode(root, &root);
+		freeTag(root, &root);
 }
 
 static void convertSimpleOneNamedArray(void) {
@@ -273,32 +273,32 @@ static void convertSimpleOneNamedArray(void) {
 	</main>
 	*/
 
-	Node* root = new Node;
-	root->tagName = L"main";
+	Tag* root = new Tag;
+	root->name = L"main";
 	
-	Node* people = new Node;
-	people->tagName = L"people";
+	Tag* people = new Tag;
+	people->name = L"people";
 
-	Node* human1 = new Node;
-	human1->tagName = L"human";
+	Tag* human1 = new Tag;
+	human1->name = L"human";
 	human1->value = L"Ivan";
 
-	Node* human2 = new Node;
-	human2->tagName = L"human";
+	Tag* human2 = new Tag;
+	human2->name = L"human";
 	human2->value = L"Georgy";
 
-	Node* human3 = new Node;
-	human3->tagName = L"human";
+	Tag* human3 = new Tag;
+	human3->name = L"human";
 	human3->value = L"John";
 
-	Node* human4 = new Node;
-	human4->tagName = L"human";
+	Tag* human4 = new Tag;
+	human4->name = L"human";
 	human4->value = L"My friend";
 
 	people->children = { human1, human2, human3, human4 };
 	root->children = { people };
 
-	NodePtrSequence roots = { root };
+	TagPtrSequence roots = { root };
 
 	convertToJson(roots, filename);
 
@@ -306,7 +306,7 @@ static void convertSimpleOneNamedArray(void) {
 	outputThatTestConverted();
 
 	for (auto& root : roots)
-		freeNode(root, &root);
+		freeTag(root, &root);
 }
 
 static void convertObjectOneNamedArray(void) {
@@ -335,47 +335,47 @@ static void convertObjectOneNamedArray(void) {
 	</main>
 	*/
 
-	Node* root = new Node;
-	root->tagName = L"main";
+	Tag* root = new Tag;
+	root->name = L"main";
 
-	Node* people = new Node;
-	people->tagName = L"people";
+	Tag* people = new Tag;
+	people->name = L"people";
 
-	Node* human1 = new Node;
-	human1->tagName = L"human";
+	Tag* human1 = new Tag;
+	human1->name = L"human";
 	
-	Node* human1name = new Node;
-	human1name->tagName = L"name";
+	Tag* human1name = new Tag;
+	human1name->name = L"name";
 	human1name->value = L"Ivan";
 
-	Node* human1surname = new Node;
-	human1surname->tagName = L"surname";
+	Tag* human1surname = new Tag;
+	human1surname->name = L"surname";
 	human1surname->value = L"Shweps";
 
 	human1->children = { human1name, human1surname };
 
-	Node* human2 = new Node;
-	human2->tagName = L"human";
+	Tag* human2 = new Tag;
+	human2->name = L"human";
 	
-	Node* human2name = new Node;
-	human2name->tagName = L"name";
+	Tag* human2name = new Tag;
+	human2name->name = L"name";
 	human2name->value = L"Georgy";
 
-	Node* human2surname = new Node;
-	human2surname->tagName = L"surname";
+	Tag* human2surname = new Tag;
+	human2surname->name = L"surname";
 	human2surname->value = L"First";
 
 	human2->children = { human2name, human2surname };
 
-	Node* human3 = new Node;
-	human3->tagName = L"human";
+	Tag* human3 = new Tag;
+	human3->name = L"human";
 
-	Node* human3name = new Node;
-	human3name->tagName = L"name";
+	Tag* human3name = new Tag;
+	human3name->name = L"name";
 	human3name->value = L"Friend";
 
-	Node* human3surname = new Node;
-	human3surname->tagName = L"surname";
+	Tag* human3surname = new Tag;
+	human3surname->name = L"surname";
 	human3surname->value = L"Unknown";
 
 	human3->children = { human3name, human3surname };
@@ -383,14 +383,14 @@ static void convertObjectOneNamedArray(void) {
 	people->children = { human1, human2, human3 };
 	root->children = { people };
 
-	NodePtrSequence roots = { root };
+	TagPtrSequence roots = { root };
 	convertToJson(roots, filename);
 
 	outputTestname(testname);
 	outputThatTestConverted();
 
 	for (auto& root : roots)
-		freeNode(root, &root);
+		freeTag(root, &root);
 }
 
 static void convertTwoDifferentArraysInTag(void) {
@@ -429,72 +429,72 @@ static void convertTwoDifferentArraysInTag(void) {
 	</main>
 	*/
 
-	Node* root = new Node;
-	root->tagName = L"main";
+	Tag* root = new Tag;
+	root->name = L"main";
 
-	Node* people = new Node;
-	people->tagName = L"people";
+	Tag* people = new Tag;
+	people->name = L"people";
 
-	Node* human1 = new Node;
-	human1->tagName = L"human";
+	Tag* human1 = new Tag;
+	human1->name = L"human";
 
-	Node* human1name = new Node;
-	human1name->tagName = L"name";
+	Tag* human1name = new Tag;
+	human1name->name = L"name";
 	human1name->value = L"Ivan";
 
-	Node* human1surname = new Node;
-	human1surname->tagName = L"surname";
+	Tag* human1surname = new Tag;
+	human1surname->name = L"surname";
 	human1surname->value = L"Shweps";
 
 	human1->children = { human1name, human1surname };
 
-	Node* human2 = new Node;
-	human2->tagName = L"human";
+	Tag* human2 = new Tag;
+	human2->name = L"human";
 
-	Node* human2name = new Node;
-	human2name->tagName = L"name";
+	Tag* human2name = new Tag;
+	human2name->name = L"name";
 	human2name->value = L"Georgy";
 
-	Node* human2surname = new Node;
-	human2surname->tagName = L"surname";
+	Tag* human2surname = new Tag;
+	human2surname->name = L"surname";
 	human2surname->value = L"First";
 
 	human2->children = { human2name, human2surname };
 
-	Node* human3 = new Node;
-	human3->tagName = L"human";
+	Tag* human3 = new Tag;
+	human3->name = L"human";
 
-	Node* human3name = new Node;
-	human3name->tagName = L"name";
+	Tag* human3name = new Tag;
+	human3name->name = L"name";
 	human3name->value = L"Friend";
 
-	Node* human3surname = new Node;
-	human3surname->tagName = L"surname";
+	Tag* human3surname = new Tag;
+	human3surname->name = L"surname";
 	human3surname->value = L"Unknown";
 
 	human3->children = { human3name, human3surname };
 
-	Node* onlyName1 = new Node;
-	onlyName1->tagName = L"only_name";
+	Tag* onlyName1 = new Tag;
+	onlyName1->name = L"only_name";
 	onlyName1->value = L"Ivan";
 
-	Node* onlyName2 = new Node;
-	onlyName2->tagName = L"only_name";
+	Tag* onlyName2 = new Tag;
+	onlyName2->name = L"only_name";
 	onlyName2->value = L"Georgy";
 
-	Node* onlyName3 = new Node;
-	onlyName3->tagName = L"only_name";
+	Tag* onlyName3 = new Tag;
+	onlyName3->name = L"only_name";
 	onlyName3->value = L"John";
 
-	Node* onlyName4 = new Node;
-	onlyName4->tagName = L"only_name";
+	Tag* onlyName4 = new Tag;
+	onlyName4->name = L"only_name";
 	onlyName4->value = L"My friend";
 
 	people->children = { human1, human2, human3,
 								   onlyName1, onlyName2, onlyName3, onlyName4 };
 
 	root->children = { people };
-	NodePtrSequence roots = { root };
+	TagPtrSequence roots = { root };
 
 	convertToJson(roots, filename);
 
@@ -502,7 +502,7 @@ static void convertTwoDifferentArraysInTag(void) {
 	outputThatTestConverted();
 
 	for (auto& root : roots)
-		freeNode(root, &root);
+		freeTag(root, &root);
 }
 
 static void convertNestedDifferentArrays(void) {
@@ -547,93 +547,93 @@ static void convertNestedDifferentArrays(void) {
 	</main>
 	*/
 
-	Node* root = new Node;
-	root->tagName = L"main";
+	Tag* root = new Tag;
+	root->name = L"main";
 
-	Node* people1 = new Node;
-	people1->tagName = L"people";
+	Tag* people1 = new Tag;
+	people1->name = L"people";
 
-	Node* human1 = new Node;
-	human1->tagName = L"human";
+	Tag* human1 = new Tag;
+	human1->name = L"human";
 
-	Node* human1name = new Node;
-	human1name->tagName = L"name";
+	Tag* human1name = new Tag;
+	human1name->name = L"name";
 	human1name->value = L"Ivan";
 
-	Node* human1surname = new Node;
-	human1surname->tagName = L"surname";
+	Tag* human1surname = new Tag;
+	human1surname->name = L"surname";
 	human1surname->value = L"Shweps";
 
 	human1->children = { human1name, human1surname };
 
-	Node* human2 = new Node;
-	human2->tagName = L"human";
+	Tag* human2 = new Tag;
+	human2->name = L"human";
 
-	Node* human2name = new Node;
-	human2name->tagName = L"name";
+	Tag* human2name = new Tag;
+	human2name->name = L"name";
 	human2name->value = L"Georgy";
 
-	Node* human2surname = new Node;
-	human2surname->tagName = L"surname";
+	Tag* human2surname = new Tag;
+	human2surname->name = L"surname";
 	human2surname->value = L"First";
 
 	human2->children = { human2name, human2surname };
 
-	Node* human3 = new Node;
-	human3->tagName = L"human";
+	Tag* human3 = new Tag;
+	human3->name = L"human";
 
-	Node* human3name = new Node;
-	human3name->tagName = L"name";
+	Tag* human3name = new Tag;
+	human3name->name = L"name";
 	human3name->value = L"Friend";
 
-	Node* human3surname = new Node;
-	human3surname->tagName = L"surname";
+	Tag* human3surname = new Tag;
+	human3surname->name = L"surname";
 	human3surname->value = L"Unknown";
 
 	human3->children = { human3name, human3surname };
 
-	Node* onlyName1 = new Node;
-	onlyName1->tagName = L"only_name";
+	Tag* onlyName1 = new Tag;
+	onlyName1->name = L"only_name";
 	onlyName1->value = L"Ivan";
 
-	Node* onlyName2 = new Node;
-	onlyName2->tagName = L"only_name";
+	Tag* onlyName2 = new Tag;
+	onlyName2->name = L"only_name";
 	onlyName2->value = L"Georgy";
 
-	Node* onlyName3 = new Node;
-	onlyName3->tagName = L"only_name";
+	Tag* onlyName3 = new Tag;
+	onlyName3->name = L"only_name";
 	onlyName3->value = L"John";
 
-	Node* onlyName4 = new Node;
-	onlyName4->tagName = L"only_name";
+	Tag* onlyName4 = new Tag;
+	onlyName4->name = L"only_name";
 	onlyName4->value = L"My friend";
 
 	people1->children = { human1, human2, human3, 
 									 onlyName1, onlyName2, onlyName3, onlyName4};
 
-	Node* people2 = new Node;
-	people2->tagName = L"people";
+	Tag* people2 = new Tag;
+	people2->name = L"people";
 
-	Node* obj1 = new Node;
-	obj1->tagName = L"obj";
+	Tag* obj1 = new Tag;
+	obj1->name = L"obj";
 	obj1->value = L"w1";
 
-	Node* obj2 = new Node;
-	obj2->tagName = L"obj";
+	Tag* obj2 = new Tag;
+	obj2->name = L"obj";
 	obj2->value = L"w2";
 
-	Node* obj3 = new Node;
-	obj3->tagName = L"obj";
+	Tag* obj3 = new Tag;
+	obj3->name = L"obj";
 	obj3->value = L"w3";
 
 	people2->children = { obj1, obj2, obj3 };
 
-	Node* people3 = new Node;
-	people3->tagName = L"people";
+	Tag* people3 = new Tag;
+	people3->name = L"people";
 	people3->value = L"tag value";
 
 	root->children = { people1, people2, people3 };
-	NodePtrSequence roots = { root };
+	TagPtrSequence roots = { root };
 	
 	convertToJson(roots, filename);
 
@@ -641,7 +641,7 @@ static void convertNestedDifferentArrays(void) {
 	outputThatTestConverted();
 
 	for (auto& root : roots)
-		freeNode(root, &root);
+		freeTag(root, &root);
 }
 
 static void convertArrayWithNotAllSubarrays(void) {
@@ -664,45 +664,45 @@ static void convertArrayWithNotAllSubarrays(void) {
 	</main>
 	*/
 
-	Node* root = new Node;
-	root->tagName = L"main";
+	Tag* root = new Tag;
+	root->name = L"main";
 	
-	Node* array = new Node;
-	array->tagName = L"array";
+	Tag* array = new Tag;
+	array->name = L"array";
 
-	Node* first1 = new Node;
-	first1->tagName = L"first";
+	Tag* first1 = new Tag;
+	first1->name = L"first";
 	first1->value = L"1";
 
-	Node* second = new Node;
-	second->tagName = L"second";
+	Tag* second = new Tag;
+	second->name = L"second";
 	second->value = L"2";
 
-	Node* third = new Node;
-	third->tagName = L"third";
+	Tag* third = new Tag;
+	third->name = L"third";
 	
-	Node* thirdName = new Node;
-	thirdName->tagName = L"name";
+	Tag* thirdName = new Tag;
+	thirdName->name = L"name";
 	thirdName->value = L"AMAZING";
 
-	Node* thirdSurname = new Node;
-	thirdSurname->tagName = L"surname";
+	Tag* thirdSurname = new Tag;
+	thirdSurname->name = L"surname";
 	thirdSurname->value = L"WOOOOW!";
 
 	third->children = { thirdName, thirdSurname };
 
-	Node* first2 = new Node;
-	first2->tagName = L"first";
+	Tag* first2 = new Tag;
+	first2->name = L"first";
 	first2->value = L"4";
 
-	Node* fourth = new Node;
-	fourth->tagName = L"fourth";
+	Tag* fourth = new Tag;
+	fourth->name = L"fourth";
 	fourth->value = L"5";
 
 	array->children = { first1, second, third, first2, fourth };
 
 	root->children = { array };
-	NodePtrSequence roots = { root };
+	TagPtrSequence roots = { root };
 
 	convertToJson(roots, filename);
 
@@ -710,7 +710,7 @@ static void convertArrayWithNotAllSubarrays(void) {
 	outputThatTestConverted();
 
 	for (auto& root : roots)
-		freeNode(root, &root);
+		freeTag(root, &root);
 }
 
 static void outputTestname(const std::wstring& testname) {

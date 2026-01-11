@@ -5,7 +5,7 @@
 #define PARSEXML_HPP
 
 #include <string>
-#include "node.hpp"
+#include "tag.hpp"
 
 enum class ParsingStatus {
 	Success,
@@ -20,6 +20,6 @@ struct ParsedXml {
 	const ParsingStatus status;
 };
 
-ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots);
+ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots);
 
 #endif

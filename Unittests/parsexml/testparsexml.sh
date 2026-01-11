@@ -4,8 +4,8 @@ wait_to_press_enter(){
 	read -p "Press <Enter> to close .sh-script."
 }
 
-src_cpp_files="../../parsexml.cpp ../../node.cpp"
-src_o_files="./parsexml.o ./node.o"
+src_cpp_files="../../parsexml.cpp ../../tag.cpp"
+src_o_files="./parsexml.o ./tag.o"
 test_cpp_files="./testparsexml.cpp ./assertion.cpp"
 test_o_files="./testparsexml.o ./assertion.o"
 exe_file="./testparsexml.exe"

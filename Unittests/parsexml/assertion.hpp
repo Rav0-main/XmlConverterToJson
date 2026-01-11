@@ -10,7 +10,7 @@ bool assertEqualParsingStatus(
 );
 
 void assertEqualRoots(
-	const NodePtrSequence validRoots, const NodePtrSequence roots
+	const TagPtrSequence validRoots, const TagPtrSequence roots
 );
 
 void outputWrongVerdict(void);

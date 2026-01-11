@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cstring>
 #include <string>
-#include "node.hpp"
+#include "tag.hpp"
 #include "parsexml.hpp"
 #include "tojson.hpp"
 #include "help.hpp"
@@ -34,7 +34,7 @@ int main(const int argc, const char* argv[]) {
 	else {
 		std::string filename;
 		std::string jsonFilename;
-		NodePtrSequence roots;
+		TagPtrSequence roots;
 		for (int i = 1; i < argc; ++i) {
 			filename = std::string(argv[i]);
 			std::cout << i << ") "
@@ -50,8 +50,8 @@ int main(const int argc, const char* argv[]) {
 				getFilenameWithExtension(JSON, filename, jsonFilename);
 				convertToJson(roots, jsonFilename);
 
-				for (Node* root : roots)
-					freeNode(root, &root);
+				for (Tag* root : roots)
+					freeTag(root, &root);
 				roots.clear();
 
 				std::cout << '\"' << filename << "\" converted to \"" << jsonFilename << "\"." << std::endl;

@@ -12,7 +12,7 @@ inline static bool isStartOfTagName(const wchar_t symbol);
 inline static bool isEndOfTagName(const wchar_t symbol);
 inline static bool isClosingTagName(const wchar_t symbol);
 
-ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
+ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 	std::wifstream file(filename);
 
 	if (!file)
@@ -29,8 +29,8 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 	bool inClosingTagName = false;
 	ParsingStatus result = ParsingStatus::Success;
 
-	Node* node;
-	NodePtrSequence stack;
+	Tag* currentTag;
+	TagPtrSequence stack;
 	std::wstring tagName;
 
 	while (!file.fail()) {
@@ -63,16 +63,16 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 			if (tagName.empty() || isInformationTag(tagName.front()))
 				inTagContent = false;
 			else {
-				node = new Node;
-				node->tagName = tagName;
+				currentTag = new Tag;
+				currentTag->name = tagName;
 
 				if (!stack.empty()) {
-					stack.back()->children.push_back(node);
-					stack.push_back(node);
+					stack.back()->children.push_back(currentTag);
+					stack.push_back(currentTag);
 				}
 				else {
-					stack.push_back(node);
-					roots.push_back(node);
+					stack.push_back(currentTag);
+					roots.push_back(currentTag);
 				}
 			}
 
@@ -84,7 +84,7 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 			inTagNameInit = false;
 			inClosingTagName = false;
 
-			if (tagName == stack.back()->tagName && !inTagNameFoundSpace) {
+			if (tagName == stack.back()->name && !inTagNameFoundSpace) {
 				strip(stack.back()->value);
 				stack.pop_back();
 				tagName.clear();
@@ -120,14 +120,14 @@ ParsedXml getXmlRootsOf(const std::string& filename, NodePtrSequence& roots) {
 
 		if(!stack.empty())
 			//dfs-free of current root
-			freeNode(stack.front(), &(stack.front()));
+			freeTag(stack.front(), &(stack.front()));
 
 		roots.pop_back();
 		if (!roots.empty()) {
 
 			//last root is freed (upper)
-			for (Node*& root : roots)
-				freeNode(root, &root);
+			for (Tag*& root : roots)
+				freeTag(root, &root);
 
 		}
 		return ParsedXml(

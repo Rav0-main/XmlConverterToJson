@@ -4,19 +4,19 @@
 
 #define TABULATION L'\t'
 
-struct WritingNodeParameters {
+struct WritingTagParameters {
 	unsigned short level;
-	bool isLastNode;
+	bool isLastTag;
 	bool writeTagName;
 };
 
-static void writeNodeIn(
-	std::wofstream& file, const Node* const node,
-	const WritingNodeParameters parameters
+static void writeTagIn(
+	std::wofstream& file, const Tag* const tag,
+	const WritingTagParameters parameters
 );
 inline static void groupChildrenByName(
-	const Node* const node,
-	std::unordered_map<std::wstring, NodePtrSequence>& groups
+	const Tag* const tag,
+	std::unordered_map<std::wstring, TagPtrSequence>& groups
 );
 
 static ConvertingProfile profile = {
@@ -32,16 +32,16 @@ void setConvertingProfile(ConvertingProfile& newProfile) {
 }
 
 ConvertingResult convertToJson(
-	const NodePtrSequence& roots, const std::string& filename
+	const TagPtrSequence& roots, const std::string& filename
 ) {
 	std::wofstream file(filename);
-	const Node* lastRoot = !roots.empty() ? roots.back() : nullptr;
+	const Tag* lastRoot = !roots.empty() ? roots.back() : nullptr;
 
 	file << "{\n";
-	for (const Node* root : roots)
-		writeNodeIn(file, root, WritingNodeParameters{
+	for (const Tag* root : roots)
+		writeTagIn(file, root, WritingTagParameters{
 			.level = 1,
-			.isLastNode = root == lastRoot,
+			.isLastTag = root == lastRoot,
 			.writeTagName = true
 			}
 		);
@@ -55,33 +55,33 @@ ConvertingResult convertToJson(
 	);
 }
 
-static void writeNodeIn(
-	std::wofstream& file, const Node* const node,
-	const WritingNodeParameters parameters
+static void writeTagIn(
+	std::wofstream& file, const Tag* const tag,
+	const WritingTagParameters parameters
 ) {
 	std::wstring ts(parameters.level, TABULATION);
 	file << ts;
 
 	if(parameters.writeTagName)
-		file << L'\"' << node->tagName << L"\" : ";
+		file << L'\"' << tag->name << L"\" : ";
 
-	if (node->children.empty())
-		file << L'\"' << node->value << L'\"';
+	if (tag->children.empty())
+		file << L'\"' << tag->value << L'\"';
 
 	else {
-		Node* lastChild = node->children.back();
-		std::unordered_map<std::wstring, NodePtrSequence> groupedChildren;
+		Tag* lastChild = tag->children.back();
+		std::unordered_map<std::wstring, TagPtrSequence> groupedChildren;
 
-		groupChildrenByName(node, groupedChildren);
+		groupChildrenByName(tag, groupedChildren);
 		
 		//haves not tag array
-		if (groupedChildren.size() == node->children.size()) {
+		if (groupedChildren.size() == tag->children.size()) {
 			file << L"{\n";
 
-			for (const Node* child : node->children)
-				writeNodeIn(file, child, WritingNodeParameters{
+			for (const Tag* child : tag->children)
+				writeTagIn(file, child, WritingTagParameters{
 					.level = static_cast<unsigned short>(parameters.level + 1),
-					.isLastNode = child == lastChild,
+					.isLastTag = child == lastChild,
 					.writeTagName = true
 					}
 				);
@@ -92,10 +92,10 @@ static void writeNodeIn(
 		else if (groupedChildren.size() == 1 && profile.notNamesOneTagArray) {
 			file << L"[\n";
 
-			for (const Node* child : node->children)
-				writeNodeIn(file, child, WritingNodeParameters{
+			for (const Tag* child : tag->children)
+				writeTagIn(file, child, WritingTagParameters{
 					.level = static_cast<unsigned short>(parameters.level + 1),
-					.isLastNode = child == lastChild,
+					.isLastTag = child == lastChild,
 					.writeTagName = false
 					}
 				);
@@ -115,11 +115,11 @@ static void writeNodeIn(
 					file << L"\" : \n";
 
 				lastChild = children.back();
-				for (const Node* child : children)
-					writeNodeIn(file, child,
-						WritingNodeParameters{
+				for (const Tag* child : children)
+					writeTagIn(file, child,
+						WritingTagParameters{
 							.level = static_cast<unsigned short>(parameters.level + 2),
-							.isLastNode = child == lastChild,
+							.isLastTag = child == lastChild,
 							.writeTagName = false
 						}
 					);
@@ -139,20 +139,20 @@ static void writeNodeIn(
 		}
 	}
 
-	if (!parameters.isLastNode)
+	if (!parameters.isLastTag)
 		file << L',';
 
 	file << L'\n';
 }
 
 inline static void groupChildrenByName(
-	const Node* const node,
-	std::unordered_map<std::wstring, NodePtrSequence>& groups
+	const Tag* const tag,
+	std::unordered_map<std::wstring, TagPtrSequence>& groups
 ) {
-	for (Node* child : node->children) {
-		if (groups.contains(child->tagName))
-			groups.at(child->tagName).push_back(child);
+	for (Tag* child : tag->children) {
+		if (groups.contains(child->name))
+			groups.at(child->name).push_back(child);
 		else
-			groups[child->tagName] = { child };
+			groups[child->name] = { child };
 	}
 }

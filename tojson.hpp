@@ -3,7 +3,7 @@
 #ifndef TOJSON_HPP
 
 #define TOJSON_HPP
-#include "node.hpp"
+#include "tag.hpp"
 
 enum class ConvertingStatus {
 	Success,
@@ -46,7 +46,7 @@ void setConvertingProfile(ConvertingProfile& newProfile);
 ConvertingProfile* getConvertingProfile(void);
 
 ConvertingResult convertToJson(
-	const NodePtrSequence& roots, const std::string& filename
+	const TagPtrSequence& roots, const std::string& filename
 );
 
 #endif
