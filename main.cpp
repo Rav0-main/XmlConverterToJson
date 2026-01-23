@@ -10,7 +10,7 @@
 #define HELP_COMMAND "help"
 #define JSON ".json"
 
-static void outputXmlParsingError(const ParsingStatus& result);
+inline static void outputXmlParsingError(const ParsedXml& result);
 static void getFilenameWithExtension(
 	const std::string& newExtension, const std::string& filename,
 	std::string& newFilename
@@ -38,11 +38,11 @@ int main(const int argc, const char* argv[]) {
 		for (int i = 1; i < argc; ++i) {
 			filename = std::string(argv[i]);
 			std::cout << i << ") "
-						  << "Parsing \"" << filename << "\"..." << std::endl;
+						  << "Converting \"" << filename << "\"..." << std::endl;
 
-			auto [result] = getXmlRootsOf(filename, roots);
+			const ParsedXml result = getXmlRootsOf(filename, roots);
 			
-			if (int(result)) {
+			if (result.status != ParsingStatus::Success) {
 				std::cerr << "While parsing file \"" << filename << "\" throwed error: " << std::endl;
 				outputXmlParsingError(result);
 			}
@@ -60,26 +60,15 @@ int main(const int argc, const char* argv[]) {
 				std::cout << std::endl;
 		}
 	}
+
 	return 0;
 }
 
-static void outputXmlParsingError(const ParsingStatus& result) {
-	switch (int(result)) {
-	case 1:
-		std::cerr << "File not found." << std::endl;
-		break;
-	case 2:
-		std::cerr << "Closing tag name not equal with opening." << std::endl;
-		break;
-	case 3:
-		std::cerr << "Tag name syntax is incorrect." << std::endl;
-		break;
-	case 4:
-		std::cerr << "Found not closed tag name." << std::endl;
-		break;
-	default:
-		std::cerr << "Unknown error." << std::endl;
-	}
+inline static void outputXmlParsingError(const ParsedXml& result) {
+	if (result.status != ParsingStatus::UnknownError)
+		std::wcerr << result.msg << std::endl;
+	else
+		std::wcerr << L"Unknown error." << std::endl;
 }
 
 static void getFilenameWithExtension(

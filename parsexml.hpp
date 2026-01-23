@@ -18,6 +18,7 @@ enum class ParsingStatus {
 
 struct ParsedXml {
 	const ParsingStatus status;
+	const std::wstring msg;
 };
 
 ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots);

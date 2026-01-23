@@ -4,7 +4,7 @@
 
 #define TABULATION L'\t'
 
-struct WritingTagParameters {
+struct WritingTagProperties {
 	unsigned short level;
 	bool isLastTag;
 	bool writeTagName;
@@ -12,7 +12,7 @@ struct WritingTagParameters {
 
 static void writeTagIn(
 	std::wofstream& file, const Tag* const tag,
-	const WritingTagParameters parameters
+	const WritingTagProperties parameters
 );
 inline static void groupChildrenByName(
 	const Tag* const tag,
@@ -39,7 +39,7 @@ ConvertingResult convertToJson(
 
 	file << "{\n";
 	for (const Tag* root : roots)
-		writeTagIn(file, root, WritingTagParameters{
+		writeTagIn(file, root, WritingTagProperties{
 			.level = 1,
 			.isLastTag = root == lastRoot,
 			.writeTagName = true
@@ -57,7 +57,7 @@ ConvertingResult convertToJson(
 
 static void writeTagIn(
 	std::wofstream& file, const Tag* const tag,
-	const WritingTagParameters parameters
+	const WritingTagProperties parameters
 ) {
 	std::wstring ts(parameters.level, TABULATION);
 	file << ts;
@@ -79,7 +79,7 @@ static void writeTagIn(
 			file << L"{\n";
 
 			for (const Tag* child : tag->children)
-				writeTagIn(file, child, WritingTagParameters{
+				writeTagIn(file, child, WritingTagProperties{
 					.level = static_cast<unsigned short>(parameters.level + 1),
 					.isLastTag = child == lastChild,
 					.writeTagName = true
@@ -93,7 +93,7 @@ static void writeTagIn(
 			file << L"[\n";
 
 			for (const Tag* child : tag->children)
-				writeTagIn(file, child, WritingTagParameters{
+				writeTagIn(file, child, WritingTagProperties{
 					.level = static_cast<unsigned short>(parameters.level + 1),
 					.isLastTag = child == lastChild,
 					.writeTagName = false
@@ -117,7 +117,7 @@ static void writeTagIn(
 				lastChild = children.back();
 				for (const Tag* child : children)
 					writeTagIn(file, child,
-						WritingTagParameters{
+						WritingTagProperties{
 							.level = static_cast<unsigned short>(parameters.level + 2),
 							.isLastTag = child == lastChild,
 							.writeTagName = false

@@ -7,6 +7,8 @@
 #define CLOSING_TAG_NAME L'/'
 
 static void strip(std::wstring& str);
+inline void toWstringFrom(const std::string src, std::wstring& dist);
+inline std::wstring LineAndSymbolNumbersMsg(const size_t line, const size_t symbol);
 inline static bool isInformationTag(const wchar_t firstSymbol);
 inline static bool isStartOfTagName(const wchar_t symbol);
 inline static bool isEndOfTagName(const wchar_t symbol);
@@ -15,10 +17,15 @@ inline static bool isClosingTagName(const wchar_t symbol);
 ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 	std::wifstream file(filename);
 
-	if (!file)
+	if (!file) {
+		std::wstring wFilename;
+		toWstringFrom(filename, wFilename);
+
 		return ParsedXml(
-			ParsingStatus::FileNotExistsError
+			ParsingStatus::FileNotExistsError,
+			L"File: \"" + wFilename + L"\" not found."
 		);
+	}
 	
 	wchar_t symbol;
 	symbol = file.get();
@@ -28,6 +35,9 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 	bool inTagContent = false;
 	bool inClosingTagName = false;
 	ParsingStatus result = ParsingStatus::Success;
+	std::wstring outMsg;
+	size_t symbolNumber = 1;
+	size_t currentLine = 1;
 
 	Tag* currentTag;
 	TagPtrSequence stack;
@@ -39,6 +49,8 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 			(inTagNameInit || inClosingTagName)) {
 
 			result = ParsingStatus::WrongTagNameError;
+			outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
+						   L"\nTag starting with \"" + tagName + L"\" have not valid name.";
 			break;
 		}
 		//<[/]abc ...
@@ -62,6 +74,7 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 
 			if (tagName.empty() || isInformationTag(tagName.front()))
 				inTagContent = false;
+
 			else {
 				currentTag = new Tag;
 				currentTag->name = tagName;
@@ -91,6 +104,10 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 			}
 			else {
 				result = ParsingStatus::WrongClosingTagNameError;
+				outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
+					L"\nOpening tag name: \"" + stack.back()->name + \
+					L"\" not equals closing: \"" + tagName + L"\".";
+
 				break;
 			}
 		}
@@ -105,6 +122,10 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 			stack.back()->value.push_back(symbol);
 		}
 
+		if (symbol == L'\n')
+			++currentLine;
+		
+		++symbolNumber;
 		symbol = file.get();
 	}
 
@@ -115,8 +136,10 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 			ParsingStatus::Success
 		);
 	else {
-		if (!stack.empty() && !int(result))
+		if (!stack.empty() && !int(result)) {
 			result = ParsingStatus::TagNameNotClosedError;
+			outMsg = L"Tag name: \"" + stack.front()->name + L"\" not closed.";
+		}
 
 		if(!stack.empty())
 			//dfs-free of current root
@@ -131,7 +154,8 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 
 		}
 		return ParsedXml(
-			result
+			result,
+			outMsg
 		);
 	}
 }
@@ -152,6 +176,16 @@ static void strip(std::wstring& str) {
 		--right;
 
 	str = str.substr(left, right - left + 1);
+}
+
+inline void toWstringFrom(const std::string src, std::wstring& dist) {
+	for (const char symb : src)
+		dist.push_back(static_cast<wchar_t>(symb));
+}
+
+inline std::wstring LineAndSymbolNumbersMsg(const size_t line, const size_t symbol) {
+	return L"Line: " + std::to_wstring(line) + \
+			 L", symbol: " + std::to_wstring(symbol) + L".";
 }
 
 inline static bool isInformationTag(const wchar_t firstSymbol) {
