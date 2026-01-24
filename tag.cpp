@@ -2,9 +2,9 @@
 #include <iostream>
 #include "tag.hpp"
 
-#define EMPTY L"EMPTY"
+inline static const std::wstring EMPTY = L"EMPTY";
 
-static void outputASCIIOf(const std::wstring& str);
+inline static void outputASCIIOf(const std::wstring& str);
 
 void freeTag(Tag* tag, Tag** tagPtr) {
 	if (tag == nullptr)
@@ -57,7 +57,7 @@ void outputTags(
 	}
 }
 
-static void outputASCIIOf(const std::wstring& str) {
+inline static void outputASCIIOf(const std::wstring& str) {
 	std::wcout << std::hex;
 	for (const int symb : str)
 		std::wcout << "0x" << symb << " ";

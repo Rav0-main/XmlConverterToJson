@@ -3,7 +3,7 @@
 #include "..\\..\\parsexml.hpp"
 #include "assertion.hpp"
 
-#define DASH_LINE L"-------------------------------------------------------------"
+inline static const std::wstring DASH_LINE = L"-------------------------------------------------------------";
 
 typedef void (*Test) (void);
 
@@ -16,9 +16,10 @@ static void testNotExistFile(void);
 static void testWrongClosingTagNameWith1Root(void);
 static void testWrongClosingTagNameWith4Roots(void);
 static void testInTagNameStartingNewTagName(void);
+static void testNotXmlFormatFile(void);
 
-static void outputTestname(const std::wstring& testname);
-static void outputDashLine(void);
+inline static void outputTestname(const std::wstring& testname);
+inline static void outputDashLine(void);
 
 int main(void) {
 	const Test tests[] = {
@@ -30,7 +31,8 @@ int main(void) {
 		testNotExistFile,
 		testWrongClosingTagNameWith1Root,
 		testWrongClosingTagNameWith4Roots,
-		testInTagNameStartingNewTagName
+		testInTagNameStartingNewTagName,
+		testNotXmlFormatFile
 	};
 	const size_t size = sizeof(tests) / sizeof(tests[0]);
 
@@ -47,7 +49,7 @@ int main(void) {
 
 static void testValidXmlFileWith1Root(void) {
 	const std::string filename = ".\\valid_test_1.xml";
-	const std::wstring testname = L"Test with valid xml file with 1 root";
+	const std::wstring testname = L"Test valid xml file with 1 root";
 
 	Tag* root = new Tag;
 	root->name = L"m1";
@@ -115,10 +117,10 @@ static void testValidXmlFileWith1Root(void) {
 	root->children = { empty1, t1, t2, empty4 };
 
 	TagPtrSequence roots;
-	auto [res, msg] = getXmlRootsOf(filename, roots);
+	const ParsingStatus status = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if(assertEqualParsingStatus(ParsingStatus::Success, res))
+	if(assertEqualParsingStatusCode(ParsingStatusCode::Success, status.code))
 		assertEqualRoots({ root }, roots);
 
 	freeTag(root, &root);
@@ -129,7 +131,7 @@ static void testValidXmlFileWith1Root(void) {
 
 static void testValidXmlFileWith3Roots(void) {
 	const std::string filename = ".\\valid_test_2.xml";
-	const std::wstring testname = L"Test with valid xml file with 3 roots";
+	const std::wstring testname = L"Test valid xml file with 3 roots";
 
 	Tag* root1 = new Tag;
 	root1->name = L"m1";
@@ -186,10 +188,10 @@ static void testValidXmlFileWith3Roots(void) {
 	};
 
 	 TagPtrSequence roots;
-	auto [res, msg] = getXmlRootsOf(filename, roots);
+	const ParsingStatus status = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if(assertEqualParsingStatus(ParsingStatus::Success, res))
+	if(assertEqualParsingStatusCode(ParsingStatusCode::Success, status.code))
 		assertEqualRoots(answer, roots);
 
 	for (auto& tag : answer)
@@ -201,7 +203,7 @@ static void testValidXmlFileWith3Roots(void) {
 
 static void testValidXmlFileWithChaosFormat(void) {
 	const std::string filename = ".\\valid_test_3.xml";
-	const std::wstring testname = L"Test with valid xml file with chaos format";
+	const std::wstring testname = L"Test valid xml file with chaos format";
 
 	Tag* root1 = new Tag;
 	root1->name = L"m1";
@@ -242,12 +244,12 @@ static void testValidXmlFileWithChaosFormat(void) {
 	root2->children = { empty, t1 };
 
 	TagPtrSequence roots;
-	auto [res, msg] = getXmlRootsOf(filename, roots);
+	const ParsingStatus status = getXmlRootsOf(filename, roots);
 
 	TagPtrSequence answer = { root1, root2 };
 
 	outputTestname(testname);
-	if (assertEqualParsingStatus(ParsingStatus::Success, res))
+	if (assertEqualParsingStatusCode(ParsingStatusCode::Success, status.code))
 		assertEqualRoots(answer, roots);
 
 	for (auto& tag : answer)
@@ -286,10 +288,10 @@ static void testValidXmlFileWithDocTags(void) {
 	root->children = { t1, t2, empty };
 
 	TagPtrSequence roots;
-	auto [res, msg] = getXmlRootsOf(filename, roots);
+	const ParsingStatus status = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if (assertEqualParsingStatus(ParsingStatus::Success, res))
+	if (assertEqualParsingStatusCode(ParsingStatusCode::Success, status.code))
 		assertEqualRoots({ root }, roots);
 
 	freeTag(root, &root);
@@ -300,7 +302,7 @@ static void testValidXmlFileWithDocTags(void) {
 
 static void testValidXmlFileWithTagAttributes(void) {
 	const std::string filename = ".\\tags_with_attrs.xml";
-	const std::wstring testname = L"Test with tags which have attributes";
+	const std::wstring testname = L"Test tags which have attributes";
 
 	Tag* root = new Tag;
 	root->name = L"body";
@@ -328,10 +330,10 @@ static void testValidXmlFileWithTagAttributes(void) {
 	root->children = { t1, t2 };
 
 	TagPtrSequence roots;
-	auto [res, msg] = getXmlRootsOf(filename, roots);
+	const ParsingStatus status = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if (assertEqualParsingStatus(ParsingStatus::Success, res))
+	if (assertEqualParsingStatusCode(ParsingStatusCode::Success, status.code))
 		assertEqualRoots({ root }, roots);
 
 	freeTag(root, &root);
@@ -345,52 +347,63 @@ static void testNotExistFile(void) {
 	const std::wstring testname = L"Test not exist file";
 
 	TagPtrSequence roots;
-	auto [res, msg] = getXmlRootsOf(filename, roots);
+	const ParsingStatus status = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if (assertEqualParsingStatus(ParsingStatus::FileNotExistsError, res))
+	if (assertEqualParsingStatusCode(ParsingStatusCode::FileNotExistsError, status.code))
 		outputTrueVerdict();
 }
 
 static void testWrongClosingTagNameWith1Root(void) {
 	const std::string filename = ".\\wrong_closing_tag_name_1_tree.xml";
-	const std::wstring testname = L"Test with wrong closing tag name with 1 root";
+	const std::wstring testname = L"Test wrong closing tag name with 1 root";
 
 	TagPtrSequence roots;
-	auto [res, msg] = getXmlRootsOf(filename, roots);
+	const ParsingStatus status = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if (assertEqualParsingStatus(ParsingStatus::WrongClosingTagNameError, res))
+	if (assertEqualParsingStatusCode(ParsingStatusCode::WrongClosingTagNameError, status.code))
 		outputTrueVerdict();
 }
 
 static void testWrongClosingTagNameWith4Roots(void) {
 	const std::string filename = ".\\wrong_closing_tag_name_4_trees.xml";
-	const std::wstring testname = L"Test with wrong closing tag name with 4 roots";
+	const std::wstring testname = L"Test wrong closing tag name with 4 roots";
 
 	TagPtrSequence roots;
-	auto [res, msg] = getXmlRootsOf(filename, roots);
+	const ParsingStatus status = getXmlRootsOf(filename, roots);
 
 	outputTestname(testname);
-	if (assertEqualParsingStatus(ParsingStatus::WrongClosingTagNameError, res))
+	if (assertEqualParsingStatusCode(ParsingStatusCode::WrongClosingTagNameError, status.code))
 		outputTrueVerdict();
 }
 
 static void testInTagNameStartingNewTagName(void) {
 	const std::string filename = ".\\wrong_tag_name.xml";
-	const std::wstring testname = L"Test with wrong tag name, in him starting new tag";
+	const std::wstring testname = L"Test wrong tag name, in him starting new tag";
 
 	TagPtrSequence roots;
-	auto [res, msg] = getXmlRootsOf(filename, roots);
+	const ParsingStatus status = getXmlRootsOf(filename, roots);
 	outputTestname(testname);
-	if (assertEqualParsingStatus(ParsingStatus::WrongTagNameError, res))
+	if (assertEqualParsingStatusCode(ParsingStatusCode::WrongTagNameError, status.code))
 		outputTrueVerdict();
 }
 
-static void outputTestname(const std::wstring& testname) {
+static void testNotXmlFormatFile(void) {
+	const std::string filename = ".\\text.txt";
+	const std::wstring testname = L"Test not xml file";
+
+	TagPtrSequence roots;
+	const ParsingStatus status = getXmlRootsOf(filename, roots);
+	outputTestname(testname);
+	if (assertEqualParsingStatusCode(ParsingStatusCode::FileIsNotXmlError, status.code))
+		outputTrueVerdict();
+}
+
+inline static void outputTestname(const std::wstring& testname) {
 	std::wcout << L" * " << testname << L":" << std::endl;
 }
 
-static void outputDashLine(void) {
+inline static void outputDashLine(void) {
 	std::wcout << std::endl << DASH_LINE << std::endl;
 }

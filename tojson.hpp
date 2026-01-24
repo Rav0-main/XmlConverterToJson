@@ -3,14 +3,16 @@
 #ifndef TOJSON_HPP
 
 #define TOJSON_HPP
+
 #include "tag.hpp"
 
-enum class ConvertingStatus {
+enum ConvertingStatusCode {
 	Success,
+	NotOpenedFileError
 };
 
-struct ConvertingResult {
-	const ConvertingStatus status;
+struct ConvertingStatus {
+	const ConvertingStatusCode code;
 };
 
 struct ConvertingProfile {
@@ -22,14 +24,14 @@ struct ConvertingProfile {
 			<el>second</el>
 			<el>third</el>
 		</list>
-	1) If == true:
+	1) if == true:
 	JSON: 
 	"list" : [
 		"first",
 		"second",
 		"third"
 	]
-	2) Else ( == false):
+	2) else ( == false):
 	JSON:
 	"list" : {
 		"el" : [
@@ -42,10 +44,10 @@ struct ConvertingProfile {
 	bool notNamesOneTagArray;
 };
 
-void setConvertingProfile(ConvertingProfile& newProfile);
-ConvertingProfile* getConvertingProfile(void);
+inline void setConvertingProfile(ConvertingProfile& newProfile);
+inline ConvertingProfile* getConvertingProfile(void);
 
-ConvertingResult convertToJson(
+ConvertingStatus convertToJson(
 	const TagPtrSequence& roots, const std::string& filename
 );
 

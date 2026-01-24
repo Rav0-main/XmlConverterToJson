@@ -3,18 +3,18 @@
 #include <string>
 #include "assertion.hpp"
 
-#define OK_LINE L"OK"
-#define WRONG_LINE L"ERROR"
-#define VERDICT L"Verdict"
-#define EMPTY_LINE L"EMPTY"
+inline static const std::wstring OK_LINE = L"OK";
+inline static const std::wstring WRONG_LINE = L"ERROR";
+inline static const std::wstring VERDICT = L"Verdict";
+inline static const std::wstring EMPTY_LINE = L"EMPTY";
 
 static bool checkAtEqualTags(
 	const Tag* const validTag, const Tag* const tag
 );
-static void outputTagNamesOf(const TagPtrSequence& vect);
+inline static void outputTagNamesOf(const TagPtrSequence& vect);
 
-bool assertEqualParsingStatus(
-	const ParsingStatus valid, const ParsingStatus result
+bool assertEqualParsingStatusCode(
+	const ParsingStatusCode valid, const ParsingStatusCode result
 ) {
 	if (valid != result) {
 		std::wcout << L"Wrong code of parsing result: " << int(result) << std::endl;
@@ -117,7 +117,7 @@ static bool checkAtEqualTags(
 	return true;
 }
 
-static void outputTagNamesOf(const TagPtrSequence& vect) {
+inline static void outputTagNamesOf(const TagPtrSequence& vect) {
 	if (vect.size())
 		for (const Tag* tag : vect)
 			std::wcout << tag->name << L", ";
@@ -127,7 +127,7 @@ static void outputTagNamesOf(const TagPtrSequence& vect) {
 	std::wcout << std::endl;
 }
 
-void outputWrongVerdict(void) {
+inline void outputWrongVerdict(void) {
 	std::wcout << VERDICT << L": " << WRONG_LINE << std::endl;
 }
 

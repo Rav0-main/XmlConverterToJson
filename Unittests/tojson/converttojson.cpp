@@ -1,7 +1,7 @@
 #include <iostream>
 #include "..\\..\\tojson.hpp"
 
-#define DASH_LINE L"-------------------------------------------------------------"
+inline static const std::wstring DASH_LINE = L"-------------------------------------------------------------";
 
 typedef void (*Convert) (void);
 
@@ -17,9 +17,11 @@ static void convertNestedDifferentArrays(void);
 
 static void convertArrayWithNotAllSubarrays(void);
 
-static void outputTestname(const std::wstring& testname);
-static void outputThatTestConverted(void);
-static void outputDashLine(void);
+static void convertWrongPathOfJsonFile(void);
+
+inline static void outputTestname(const std::wstring& testname);
+inline static void outputThatTestConverted(void);
+inline static void outputDashLine(void);
 
 int main(void) {
 	const Convert converts[] = {
@@ -33,7 +35,9 @@ int main(void) {
 		convertTwoDifferentArraysInTag,
 		convertNestedDifferentArrays,
 		
-		convertArrayWithNotAllSubarrays
+		convertArrayWithNotAllSubarrays,
+
+		convertWrongPathOfJsonFile
 	};
 
 	const size_t size = sizeof(converts) / sizeof(converts[0]);
@@ -713,14 +717,30 @@ static void convertArrayWithNotAllSubarrays(void) {
 		freeTag(root, &root);
 }
 
-static void outputTestname(const std::wstring& testname) {
+static void convertWrongPathOfJsonFile(void) {
+	const std::wstring testname = L"Test wrong path of json file";
+	const std::string filename = ".\\not_exist_folder\\data.json";
+
+	TagPtrSequence roots;
+
+	const ConvertingStatus status = convertToJson(roots, filename);
+
+	outputTestname(testname);
+	if (status.code != ConvertingStatusCode::NotOpenedFileError)
+		std::wcout << L"Wrong status code: excepted: " << static_cast<int>(ConvertingStatusCode::NotOpenedFileError)
+						 << L"\nbut given: " << static_cast<int>(status.code) << std::endl;
+	else
+		std::wcout << L"OK." << std::endl;
+}
+
+inline static void outputTestname(const std::wstring& testname) {
 	std::wcout << L" * " << testname << L":" << std::endl;
 }
 
-static void outputThatTestConverted(void) {
+inline static void outputThatTestConverted(void) {
 	std::wcout << L"CONVERTED." << std::endl;
 }
 
-static void outputDashLine(void) {
+inline static void outputDashLine(void) {
 	std::wcout << std::endl << DASH_LINE << std::endl;
 }

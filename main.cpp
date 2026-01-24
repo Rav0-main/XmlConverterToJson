@@ -10,7 +10,7 @@
 #define HELP_COMMAND "help"
 #define JSON ".json"
 
-inline static void outputXmlParsingError(const ParsedXml& result);
+inline static void outputXmlParsingError(const ParsingStatus& result);
 static void getFilenameWithExtension(
 	const std::string& newExtension, const std::string& filename,
 	std::string& newFilename
@@ -35,16 +35,17 @@ int main(const int argc, const char* argv[]) {
 		std::string filename;
 		std::string jsonFilename;
 		TagPtrSequence roots;
+
 		for (int i = 1; i < argc; ++i) {
 			filename = std::string(argv[i]);
 			std::cout << i << ") "
 						  << "Converting \"" << filename << "\"..." << std::endl;
 
-			const ParsedXml result = getXmlRootsOf(filename, roots);
+			const ParsingStatus status = getXmlRootsOf(filename, roots);
 			
-			if (result.status != ParsingStatus::Success) {
+			if (status.code != ParsingStatusCode::Success) {
 				std::cerr << "While parsing file \"" << filename << "\" throwed error: " << std::endl;
-				outputXmlParsingError(result);
+				outputXmlParsingError(status);
 			}
 			else {
 				getFilenameWithExtension(JSON, filename, jsonFilename);
@@ -52,6 +53,7 @@ int main(const int argc, const char* argv[]) {
 
 				for (Tag* root : roots)
 					freeTag(root, &root);
+
 				roots.clear();
 
 				std::cout << '\"' << filename << "\" converted to \"" << jsonFilename << "\"." << std::endl;
@@ -64,8 +66,8 @@ int main(const int argc, const char* argv[]) {
 	return 0;
 }
 
-inline static void outputXmlParsingError(const ParsedXml& result) {
-	if (result.status != ParsingStatus::UnknownError)
+inline static void outputXmlParsingError(const ParsingStatus& result) {
+	if (result.code != ParsingStatusCode::UnknownError)
 		std::wcerr << result.msg << std::endl;
 	else
 		std::wcerr << L"Unknown error." << std::endl;

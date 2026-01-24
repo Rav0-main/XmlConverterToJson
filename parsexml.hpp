@@ -7,20 +7,21 @@
 #include <string>
 #include "tag.hpp"
 
-enum class ParsingStatus {
+enum ParsingStatusCode {
 	Success,
 	FileNotExistsError,
 	WrongClosingTagNameError,
 	WrongTagNameError,
 	TagNameNotClosedError,
+	FileIsNotXmlError,
 	UnknownError
 };
 
-struct ParsedXml {
-	const ParsingStatus status;
+struct ParsingStatus {
+	const ParsingStatusCode code;
 	const std::wstring msg;
 };
 
-ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots);
+ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots);
 
 #endif

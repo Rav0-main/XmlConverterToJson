@@ -2,9 +2,9 @@
 #include <cctype>
 #include "parsexml.hpp"
 
-#define START_TAG_NAME L'<'
-#define END_TAG_NAME L'>'
-#define CLOSING_TAG_NAME L'/'
+inline static const wchar_t START_TAG_NAME = L'<';
+inline static const wchar_t END_TAG_NAME = L'>';
+inline static const wchar_t CLOSING_TAG_NAME = L'/';
 
 static void strip(std::wstring& str);
 inline void toWstringFrom(const std::string src, std::wstring& dist);
@@ -14,15 +14,15 @@ inline static bool isStartOfTagName(const wchar_t symbol);
 inline static bool isEndOfTagName(const wchar_t symbol);
 inline static bool isClosingTagName(const wchar_t symbol);
 
-ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
+ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 	std::wifstream file(filename);
 
 	if (!file) {
 		std::wstring wFilename;
 		toWstringFrom(filename, wFilename);
 
-		return ParsedXml(
-			ParsingStatus::FileNotExistsError,
+		return ParsingStatus(
+			ParsingStatusCode::FileNotExistsError,
 			L"File: \"" + wFilename + L"\" not found."
 		);
 	}
@@ -34,7 +34,7 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 	bool inTagNameFoundSpace = false;
 	bool inTagContent = false;
 	bool inClosingTagName = false;
-	ParsingStatus result = ParsingStatus::Success;
+	ParsingStatusCode statusCode = ParsingStatusCode::Success;
 	std::wstring outMsg;
 	size_t symbolNumber = 1;
 	size_t currentLine = 1;
@@ -48,9 +48,9 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 		if (isStartOfTagName(symbol) &&
 			(inTagNameInit || inClosingTagName)) {
 
-			result = ParsingStatus::WrongTagNameError;
+			statusCode = ParsingStatusCode::WrongTagNameError;
 			outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
-						   L"\nTag starting with \"" + tagName + L"\" have not valid name.";
+				L"\nTag starting with \"" + tagName + L"\" have not valid name.";
 			break;
 		}
 		//<[/]abc ...
@@ -103,7 +103,7 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 				tagName.clear();
 			}
 			else {
-				result = ParsingStatus::WrongClosingTagNameError;
+				statusCode = ParsingStatusCode::WrongClosingTagNameError;
 				outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
 					L"\nOpening tag name: \"" + stack.back()->name + \
 					L"\" not equals closing: \"" + tagName + L"\".";
@@ -121,6 +121,15 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 		else if (inTagContent) {
 			stack.back()->value.push_back(symbol);
 		}
+		else if (iswspace(symbol))
+			;
+		//not excepted symbol in xml tree
+		else {
+			statusCode = ParsingStatusCode::FileIsNotXmlError;
+			outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
+						   L"\n. Symbol \"" + symbol + L"\" not correct for xml-format.";
+			break;
+		}
 
 		if (symbol == L'\n')
 			++currentLine;
@@ -131,13 +140,13 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 
 	file.close();
 
-	if (!int(result) && file.eof() && stack.empty())
-		return ParsedXml( 
-			ParsingStatus::Success
+	if (statusCode == ParsingStatusCode::Success && file.eof() && stack.empty())
+		return ParsingStatus( 
+			ParsingStatusCode::Success
 		);
 	else {
-		if (!stack.empty() && !int(result)) {
-			result = ParsingStatus::TagNameNotClosedError;
+		if (!stack.empty() && statusCode == ParsingStatusCode::Success) {
+			statusCode = ParsingStatusCode::TagNameNotClosedError;
 			outMsg = L"Tag name: \"" + stack.front()->name + L"\" not closed.";
 		}
 
@@ -145,16 +154,16 @@ ParsedXml getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 			//dfs-free of current root
 			freeTag(stack.front(), &(stack.front()));
 
-		roots.pop_back();
 		if (!roots.empty()) {
+			roots.pop_back();
 
 			//last root is freed (upper)
 			for (Tag*& root : roots)
 				freeTag(root, &root);
 
 		}
-		return ParsedXml(
-			result,
+		return ParsingStatus(
+			statusCode,
 			outMsg
 		);
 	}

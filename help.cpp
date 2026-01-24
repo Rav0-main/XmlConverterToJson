@@ -3,7 +3,7 @@
 #include "help.hpp"
 #include "config.hpp"
 
-#define DASH_LINE "-------------------------------------------------------------"
+inline static const std::string DASH_LINE = "-------------------------------------------------------------";
 
 static void outputLinesWithOffset(
 	const char offsetChar, const unsigned count,
@@ -16,7 +16,7 @@ void outputHelpPage(void) {
 
 	std::cout << "* What?" << std::endl;
 	outputLinesWithOffset(
-		' ', 2u,
+		' ', 2,
 		{
 			"The utility is needed to convert xml files to json format.",
 			"",

@@ -2,7 +2,11 @@
 #include <unordered_map>
 #include "tojson.hpp"
 
-#define TABULATION L'\t'
+static ConvertingProfile profile = {
+	.notNamesOneTagArray = true
+};
+
+inline static const char TABULATION = '\t';
 
 struct WritingTagProperties {
 	unsigned short level;
@@ -19,22 +23,23 @@ inline static void groupChildrenByName(
 	std::unordered_map<std::wstring, TagPtrSequence>& groups
 );
 
-static ConvertingProfile profile = {
-	.notNamesOneTagArray = true
-};
-
-ConvertingProfile* getConvertingProfile(void) {
+inline ConvertingProfile* getConvertingProfile(void) {
 	return &profile;
 }
 
-void setConvertingProfile(ConvertingProfile& newProfile) {
+inline void setConvertingProfile(ConvertingProfile& newProfile) {
 	profile = newProfile;
 }
 
-ConvertingResult convertToJson(
+ConvertingStatus convertToJson(
 	const TagPtrSequence& roots, const std::string& filename
 ) {
 	std::wofstream file(filename);
+	if (!file)
+		return ConvertingStatus{
+			ConvertingStatusCode::NotOpenedFileError
+		};
+
 	const Tag* lastRoot = !roots.empty() ? roots.back() : nullptr;
 
 	file << "{\n";
@@ -50,9 +55,9 @@ ConvertingResult convertToJson(
 
 	file.close();
 
-	return ConvertingResult(
-		ConvertingStatus::Success
-	);
+	return ConvertingStatus{
+		ConvertingStatusCode::Success
+	};
 }
 
 static void writeTagIn(
