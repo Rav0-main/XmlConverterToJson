@@ -37,7 +37,8 @@ ConvertingStatus convertToJson(
 	std::wofstream file(filename);
 	if (!file)
 		return ConvertingStatus{
-			ConvertingStatusCode::NotOpenedFileError
+			ConvertingStatusCode::NotOpenedFileError,
+			"File \"" + filename + "\" can not open."
 		};
 
 	const Tag* lastRoot = !roots.empty() ? roots.back() : nullptr;

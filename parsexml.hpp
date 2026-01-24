@@ -7,7 +7,7 @@
 #include <string>
 #include "tag.hpp"
 
-enum ParsingStatusCode {
+enum class ParsingStatusCode {
 	Success,
 	FileNotExistsError,
 	WrongClosingTagNameError,
@@ -17,7 +17,7 @@ enum ParsingStatusCode {
 	UnknownError
 };
 
-struct ParsingStatus {
+struct ParsingStatus{
 	const ParsingStatusCode code;
 	const std::wstring msg;
 };

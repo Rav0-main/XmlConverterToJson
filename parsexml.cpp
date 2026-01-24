@@ -188,6 +188,7 @@ static void strip(std::wstring& str) {
 }
 
 inline void toWstringFrom(const std::string src, std::wstring& dist) {
+	dist.reserve(src.size());
 	for (const char symb : src)
 		dist.push_back(static_cast<wchar_t>(symb));
 }

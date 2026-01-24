@@ -6,13 +6,15 @@
 
 #include "tag.hpp"
 
-enum ConvertingStatusCode {
+enum class ConvertingStatusCode {
 	Success,
-	NotOpenedFileError
+	NotOpenedFileError,
+	UnknownError
 };
 
 struct ConvertingStatus {
 	const ConvertingStatusCode code;
+	const std::string msg;
 };
 
 struct ConvertingProfile {

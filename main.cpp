@@ -10,7 +10,8 @@
 #define HELP_COMMAND "help"
 #define JSON ".json"
 
-inline static void outputXmlParsingError(const ParsingStatus& result);
+inline static void outputStatusError(const ParsingStatus& status);
+inline static void outputStatusError(const ConvertingStatus& status);
 static void getFilenameWithExtension(
 	const std::string& newExtension, const std::string& filename,
 	std::string& newFilename
@@ -22,15 +23,18 @@ int main(const int argc, const char* argv[]) {
 		std::cout << "For information, check: " UTILITY_NAME " " HELP_COMMAND 
 					  << std::endl;
 	}
+
 	else if (argc != 2 && !strcmp(argv[argc - 1], HELP_COMMAND)) {
 		std::cout << "To use help-page need write one command - " HELP_COMMAND "."
 					  << std::endl;
 		std::cout << "For information, check: " UTILITY_NAME " " HELP_COMMAND
 			<< std::endl;
 	}
+
 	else if (!strcmp(argv[1], HELP_COMMAND)) {
 		outputHelpPage();
 	}
+
 	else {
 		std::string filename;
 		std::string jsonFilename;
@@ -41,15 +45,18 @@ int main(const int argc, const char* argv[]) {
 			std::cout << i << ") "
 						  << "Converting \"" << filename << "\"..." << std::endl;
 
-			const ParsingStatus status = getXmlRootsOf(filename, roots);
+			const ParsingStatus parsingStatus = getXmlRootsOf(filename, roots);
 			
-			if (status.code != ParsingStatusCode::Success) {
+			if (parsingStatus.code != ParsingStatusCode::Success) {
 				std::cerr << "While parsing file \"" << filename << "\" throwed error: " << std::endl;
-				outputXmlParsingError(status);
+				outputStatusError(parsingStatus);
 			}
 			else {
 				getFilenameWithExtension(JSON, filename, jsonFilename);
-				convertToJson(roots, jsonFilename);
+				
+				const ConvertingStatus convertingStatus = convertToJson(roots, jsonFilename);
+				if (convertingStatus.code != ConvertingStatusCode::Success)
+					outputStatusError(convertingStatus);
 
 				for (Tag* root : roots)
 					freeTag(root, &root);
@@ -66,11 +73,18 @@ int main(const int argc, const char* argv[]) {
 	return 0;
 }
 
-inline static void outputXmlParsingError(const ParsingStatus& result) {
-	if (result.code != ParsingStatusCode::UnknownError)
-		std::wcerr << result.msg << std::endl;
+inline static void outputStatusError(const ParsingStatus& status) {
+	if (status.code != ParsingStatusCode::UnknownError)
+		std::wcerr << status.msg << std::endl;
 	else
 		std::wcerr << L"Unknown error." << std::endl;
+}
+
+inline static void outputStatusError(const ConvertingStatus& status) {
+	if (status.code != ConvertingStatusCode::UnknownError)
+		std::cerr << status.msg << std::endl;
+	else
+		std::cerr << "Unknown error." << std::endl;
 }
 
 static void getFilenameWithExtension(
