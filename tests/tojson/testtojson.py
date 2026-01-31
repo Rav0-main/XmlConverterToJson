@@ -120,7 +120,7 @@ class TestOfConvertingTreeToJson(TestCase):
         )
 
     def testSimpleOneNamedArray(self):
-        self.filename: str = ".\\simple_one_named_array.json"
+        self.filename: str = "simple_one_named_array.json"
         answer: dict = {"main": {
                         "people": [
                             "Ivan", "Georgy", "John",
@@ -136,7 +136,7 @@ class TestOfConvertingTreeToJson(TestCase):
         )
 
     def testObjectOneNamedArray(self):
-        self.filename: str = ".\\object_one_named_array.json"
+        self.filename: str = "object_one_named_array.json"
         answer: dict = {"main": {
                         "people": [
                             {
@@ -162,7 +162,7 @@ class TestOfConvertingTreeToJson(TestCase):
         )
 
     def testTwoDifferentArraysInTag(self):
-        self.filename: str = ".\\two_arrays_in_tag.json"
+        self.filename: str = "two_arrays_in_tag.json"
         answer: dict = {"main":{
                         "people":{
                             "human":[
@@ -196,7 +196,7 @@ class TestOfConvertingTreeToJson(TestCase):
         )
 
     def testNestedDifferentArrays(self):
-        self.filename: str = ".\\nested_arrays.json"
+        self.filename: str = "nested_arrays.json"
         answer: dict = {
 	        "main" : [
 		        {
@@ -237,18 +237,18 @@ class TestOfConvertingTreeToJson(TestCase):
         )
 
     def testArrayWithNotAllSubarrays(self):
-        self.filename: str = ".\\not_all_subarrays.json"
+        self.filename: str = "not_all_subarrays.json"
         answer: dict = {"main" : {
 		                "array" : {
-			                "fourth" : "5",
+			                "fourth" : 5,
 	                        "third" : {
 				    	        "name" : "AMAZING",
 					            "surname" : "WOOOOW!"
 				            },
-			                "second" : "2",
+			                "second" : 2,
 			                "first" : [
-				                "1",
-				                "4"
+				                1,
+				                4
                             ]
 		                }
 	                }}
@@ -257,7 +257,24 @@ class TestOfConvertingTreeToJson(TestCase):
         self.assertParsedJson(
             ParsedJson(IntParsingResult.Success, answer),
             root
-        )  
+        )
+
+    def testWithNumber(self):
+        self.filename: str = "with_numbers.json"
+        answer: dict = {"main" : {
+                            "n1" : 67,
+                            "n2" : 5.2,
+                            "n3" : 5.3e+1,
+                            "n4" : -1.6E-19,
+                            "n5" : -11.1488
+                            }
+                        }
+        
+        root = getFromJson(self.filename)
+        self.assertParsedJson(
+            ParsedJson(IntParsingResult.Success, answer),
+            root
+        )
 
 if __name__ == "__main__":
     main()

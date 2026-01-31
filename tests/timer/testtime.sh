@@ -4,9 +4,9 @@ wait_to_press_enter(){
 	read -p "Press <Enter> to close .sh-script."
 }
 
-src_cpp_files="../../src/main.cpp ../../src/tag.cpp ../../src/parsexml.cpp ../../src/tojson.cpp ../../src/help.cpp"
+src_cpp_files="../../src/main.cpp ../../src/tag.cpp ../../src/parsexml.cpp ../../src/tojson.cpp ../../src/help.cpp ../../src/isnum.cpp"
 include_dir="../../include"
-src_o_files="./main.o ./tag.o ./parsexml.o ./tojson.o ./help.o"
+src_o_files="./main.o ./tag.o ./parsexml.o ./tojson.o ./help.o ./isnum.o"
 exe_file="./fxmltjson.exe"
 test_py_file="./testtime.py"
 SKIP_COMPILE_SRC="-so"

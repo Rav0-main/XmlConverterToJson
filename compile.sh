@@ -4,7 +4,7 @@ wait_to_press_enter(){
 	read -p "Press <Enter> to close .sh-script"
 }
 
-src_cpp_files="src/main.cpp src/tag.cpp src/tojson.cpp src/parsexml.cpp src/help.cpp"
+src_cpp_files="src/main.cpp src/tag.cpp src/tojson.cpp src/parsexml.cpp src/help.cpp src/isnum.cpp"
 include_dir="./include/"
 exe_file="fxmltjson.exe"
 

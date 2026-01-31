@@ -19,6 +19,8 @@ static void convertArrayWithNotAllSubarrays(void);
 
 static void convertWrongPathOfJsonFile(void);
 
+static void convertWithNumbers(void);
+
 inline static void outputTestname(const std::wstring& testname);
 inline static void outputThatTestConverted(void);
 inline static void outputDashLine(void);
@@ -37,7 +39,9 @@ int main(void) {
 		
 		convertArrayWithNotAllSubarrays,
 
-		convertWrongPathOfJsonFile
+		convertWrongPathOfJsonFile,
+
+		convertWithNumbers
 	};
 
 	const size_t size = sizeof(converts) / sizeof(converts[0]);
@@ -55,7 +59,7 @@ int main(void) {
 
 void convertEmptyRoot(void) {
 	const std::wstring testname = L"Test with empty tree";
-	const std::string filename = ".\\empty_tree.json";
+	const std::string filename = "empty_tree.json";
 
 	/*
 	XML-testcase:
@@ -72,7 +76,7 @@ void convertEmptyRoot(void) {
 
 static void convert1Root(void) {
 	const std::wstring testname = L"Test with 1 tree";
-	const std::string filename = ".\\1_tree.json";
+	const std::string filename = "1_tree.json";
 
 	/*
 	XML-testcase:
@@ -142,7 +146,7 @@ static void convert1Root(void) {
 
 static void convert2Roots(void) {
 	const std::wstring testname = L"Test with 2 tree";
-	const std::string filename = ".\\2_trees.json";
+	const std::string filename = "2_trees.json";
 
 	/*
 	XML-testcase:
@@ -212,7 +216,7 @@ static void convert2Roots(void) {
 
 static void convert3Roots(void) {
 	const std::wstring testname = L"Test with 3 trees";
-	const std::string filename = ".\\3_trees.json";
+	const std::string filename = "3_trees.json";
 
 	/*
 	XML-testcase:
@@ -260,7 +264,7 @@ static void convert3Roots(void) {
 
 static void convertSimpleOneNamedArray(void) {
 	const std::wstring testname = L"Test converting of simple one named array";
-	const std::string filename = ".\\simple_one_named_array.json";
+	const std::string filename = "simple_one_named_array.json";
 
 	/*
 	XML-testcase:
@@ -315,7 +319,7 @@ static void convertSimpleOneNamedArray(void) {
 
 static void convertObjectOneNamedArray(void) {
 	const std::wstring testname = L"Test converting of object one named array";
-	const std::string filename = ".\\object_one_named_array.json";
+	const std::string filename = "object_one_named_array.json";
 
 	/*
 	XML-testcase:
@@ -399,7 +403,7 @@ static void convertObjectOneNamedArray(void) {
 
 static void convertTwoDifferentArraysInTag(void) {
 	const std::wstring testname = L"Test two different arrays in tag";
-	const std::string filename = ".\\two_arrays_in_tag.json";
+	const std::string filename = "two_arrays_in_tag.json";
 
 	/*
 	XML-testcase:
@@ -511,7 +515,7 @@ static void convertTwoDifferentArraysInTag(void) {
 
 static void convertNestedDifferentArrays(void) {
 	const std::wstring testname = L"Test nested different arrays";
-	const std::string filename = ".\\nested_arrays.json";
+	const std::string filename = "nested_arrays.json";
 
 	/*
 	XML-testcase:
@@ -650,7 +654,7 @@ static void convertNestedDifferentArrays(void) {
 
 static void convertArrayWithNotAllSubarrays(void) {
 	const std::wstring testname = L"Test array with not all subarrays";
-	const std::string filename = ".\\not_all_subarrays.json";
+	const std::string filename = "not_all_subarrays.json";
 
 	/*
 	XML-testcase:
@@ -719,7 +723,7 @@ static void convertArrayWithNotAllSubarrays(void) {
 
 static void convertWrongPathOfJsonFile(void) {
 	const std::wstring testname = L"Test wrong path of json file";
-	const std::string filename = ".\\not_exist_folder\\data.json";
+	const std::string filename = "not_exist_folder\\data.json";
 
 	TagPtrSequence roots;
 
@@ -731,6 +735,57 @@ static void convertWrongPathOfJsonFile(void) {
 						 << L"\nbut given: " << static_cast<int>(status.code) << std::endl;
 	else
 		std::wcout << L"OK." << std::endl;
+}
+
+static void convertWithNumbers(void) {
+	const std::wstring testname = L"Test with parsed numbers";
+	const std::string filename = "with_numbers.json";
+
+	/*
+	XML-testcase:
+	<main>
+		<n1>67</n1>
+		<n2>5.2</n2>
+		<n3>5.3e+1</n3>
+		<n4>1.6E-19</n4>
+		<n5>-11.1488</n5>
+	</main>
+	*/
+	
+	Tag* root = new Tag;
+	root->name = L"main";
+
+	Tag* n1 = new Tag;
+	n1->name = L"n1";
+	n1->value = L"67";
+
+	Tag* n2 = new Tag;
+	n2->name = L"n2";
+	n2->value = L"5.2";
+
+	Tag* n3 = new Tag;
+	n3->name = L"n3";
+	n3->value = L"5.3e+1";
+
+	Tag* n4 = new Tag;
+	n4->name = L"n4";
+	n4->value = L"-1.6E-19";
+
+	Tag* n5 = new Tag;
+	n5->name = L"n5";
+	n5->value = L"-11.1488";
+
+	root->children = { n1, n2, n3, n4, n5 };
+
+	TagPtrSequence roots = { root };
+
+	convertToJson(roots, filename);
+
+	outputTestname(testname);
+	outputThatTestConverted();
+
+	for (auto& root : roots)
+		freeTag(root, &root);
 }
 
 inline static void outputTestname(const std::wstring& testname) {

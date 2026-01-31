@@ -1,6 +1,7 @@
 #include <fstream>
 #include <unordered_map>
 #include "tojson.hpp"
+#include "isnum.hpp"
 
 static ConvertingProfile profile = {
 	.notNamesOneTagArray = true
@@ -71,8 +72,12 @@ static void writeTagIn(
 	if(parameters.writeTagName)
 		file << L'\"' << tag->name << L"\" : ";
 
-	if (tag->children.empty())
-		file << L'\"' << tag->value << L'\"';
+	if (tag->children.empty()) {
+		if (isNumber(tag->value))
+			file << tag->value;
+		else
+			file << L'\"' << tag->value << L'\"';
+	}
 
 	else {
 		Tag* lastChild = tag->children.back();
