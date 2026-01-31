@@ -10,7 +10,7 @@ bool assertEqualParsingStatusCode(
 	const ParsingStatusCode valid, const ParsingStatusCode result
 );
 
-void assertEqualRoots(
+bool assertEqualRoots(
 	const TagPtrSequence validRoots, const TagPtrSequence roots
 );
 

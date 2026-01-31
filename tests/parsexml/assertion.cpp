@@ -26,7 +26,7 @@ bool assertEqualParsingStatusCode(
 	return true;
 }
 
-void assertEqualRoots(
+bool assertEqualRoots(
 	const TagPtrSequence validRoots, const TagPtrSequence roots
 ) {
 	if (validRoots.size() == roots.size()) {
@@ -42,11 +42,15 @@ void assertEqualRoots(
 			outputTrueVerdict();
 		else
 			outputWrongVerdict();
+	
+		return assertion;
 	}
 	else {
 		std::wcout << L"Wrong tree count: " << roots.size() << std::endl;
 		std::wcout << L"But excepted: " << validRoots.size() << std::endl;
 		outputWrongVerdict();
+
+		return false;
 	}
 }
 

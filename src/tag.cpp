@@ -57,7 +57,7 @@ void outputTags(
 	}
 }
 
-inline static void outputASCIIOf(const std::wstring& str) {
+static void outputASCIIOf(const std::wstring& str) {
 	std::wcout << std::hex;
 	for (const int symb : str)
 		std::wcout << "0x" << symb << " ";

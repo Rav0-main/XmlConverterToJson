@@ -7,8 +7,8 @@
 #include "help.hpp"
 #include "config.hpp"
 
-#define HELP_COMMAND "help"
-#define JSON ".json"
+static const std::string HELP_COMMAND = "help";
+static const std::string JSON = ".json";
 
 inline static void outputStatusError(const ParsingStatus& status);
 inline static void outputStatusError(const ConvertingStatus& status);
@@ -20,18 +20,18 @@ inline static void getFilenameWithExtension(
 int main(const int argc, const char* argv[]) {
 	if (argc == 1) {
 		std::cout << "Choose xml-files to convert." << std::endl;
-		std::cout << "For information, check: " UTILITY_NAME " " HELP_COMMAND 
+		std::cout << "For information, check: " UTILITY_NAME " " + HELP_COMMAND 
 					  << std::endl;
 	}
 
-	else if (argc != 2 && !strcmp(argv[argc - 1], HELP_COMMAND)) {
-		std::cout << "To use help-page need write one command - " HELP_COMMAND "."
+	else if (argc != 2 && !strcmp(argv[argc - 1], HELP_COMMAND.data())) {
+		std::cout << "To use help-page need write one command - " + HELP_COMMAND + "."
 					  << std::endl;
-		std::cout << "For information, check: " UTILITY_NAME " " HELP_COMMAND
+		std::cout << "For information, check: " UTILITY_NAME " " + HELP_COMMAND
 			<< std::endl;
 	}
 
-	else if (!strcmp(argv[1], HELP_COMMAND)) {
+	else if (!strcmp(argv[1], HELP_COMMAND.data())) {
 		outputHelpPage();
 	}
 

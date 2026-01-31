@@ -34,8 +34,12 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 	bool inTagNameFoundSpace = false;
 	bool inTagContent = false;
 	bool inClosingTagName = false;
+	bool inSingleTagName = false;
+	bool foundOneValidTag = false;
+
 	ParsingStatusCode statusCode = ParsingStatusCode::Success;
 	std::wstring outMsg;
+	
 	size_t symbolNumber = 1;
 	size_t currentLine = 1;
 
@@ -56,26 +60,64 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 		//<[/]abc ...
 		else if (iswspace(symbol) && (inTagNameInit || inClosingTagName)) {
 			inTagNameFoundSpace = true;
+
+			if (tagName.empty()) {
+				statusCode = ParsingStatusCode::WrongTagNameError;
+				outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
+					L"\nTag have space(s) before name.";
+				break;
+			}
 		}
 		//<
 		else if (isStartOfTagName(symbol)) {
 			inTagNameInit = true;
 		}
-		//</
-		else if (isClosingTagName(symbol) && inTagNameInit) {
-			inTagNameInit = false;
-			inClosingTagName = true;
+		//[...] / [...]
+		else if(isClosingTagName(symbol)) {
+			//</...
+			if (inTagNameInit && tagName.empty()) {
+				inTagNameInit = false;
+				inClosingTagName = true;
+			}
+			//<... /
+			else if (inTagNameInit)
+				inSingleTagName = true;
+			//</.../
+			else if (inClosingTagName) {
+				statusCode = ParsingStatusCode::WrongTagNameError;
+				outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
+					L"\nNot correct single tag name.";
+				
+				break;
+			}
+			else
+				stack.back()->value.push_back(symbol);
 		}
 		//<...>
 		else if (isEndOfTagName(symbol) && inTagNameInit) {
 			inTagNameInit = false;
 			inTagNameFoundSpace = false;
-			inTagContent = true;
+			inTagContent = !inSingleTagName;
 
-			if (tagName.empty() || isInformationTag(tagName.front()))
+			if (isInformationTag(tagName.front())) {
+				foundOneValidTag = true;
 				inTagContent = false;
+			}
+
+			else if (tagName.empty()) {
+				statusCode = ParsingStatusCode::WrongTagNameError;
+				outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
+					L"\nEmpty tag name.";
+				break;
+			}
+
+			else if (inSingleTagName) {
+				inSingleTagName = false;
+				foundOneValidTag = true;
+			}
 
 			else {
+				foundOneValidTag = true;
 				currentTag = new Tag;
 				currentTag->name = tagName;
 
@@ -93,11 +135,11 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 		}
 		//</...>
 		else if (isEndOfTagName(symbol) && inClosingTagName) {
+			inTagNameFoundSpace = false;
 			inTagContent = false;
-			inTagNameInit = false;
 			inClosingTagName = false;
 
-			if (tagName == stack.back()->name && !inTagNameFoundSpace) {
+			if (tagName == stack.back()->name) {
 				strip(stack.back()->value);
 				stack.pop_back();
 				tagName.clear();
@@ -115,6 +157,7 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 		else if ((inTagNameInit || inClosingTagName) && !inTagNameFoundSpace) {
 			tagName.push_back(symbol);
 		}
+		//skip tag attributes
 		else if ((inTagNameInit || inClosingTagName) && inTagNameFoundSpace)
 			;
 		//<...>...
@@ -126,8 +169,7 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 		//not excepted symbol in xml tree
 		else {
 			statusCode = ParsingStatusCode::FileIsNotXmlError;
-			outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
-						   L"\n. Symbol \"" + symbol + L"\" not correct for xml-format.";
+			outMsg = L"File is not xml-format.";
 			break;
 		}
 
@@ -140,14 +182,24 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 
 	file.close();
 
-	if (statusCode == ParsingStatusCode::Success && file.eof() && stack.empty())
-		return ParsingStatus( 
+	if (statusCode == ParsingStatusCode::Success && file.eof()
+		&& stack.empty() && foundOneValidTag)
+		return ParsingStatus(
 			ParsingStatusCode::Success
 		);
 	else {
 		if (!stack.empty() && statusCode == ParsingStatusCode::Success) {
 			statusCode = ParsingStatusCode::TagNameNotClosedError;
 			outMsg = L"Tag name: \"" + stack.front()->name + L"\" not closed.";
+		}
+		else if (statusCode == ParsingStatusCode::Success && !foundOneValidTag) {
+			statusCode = ParsingStatusCode::FileIsNotXmlError;
+			outMsg = L"File is not xml-format.";
+		}
+		else if (!file.eof()) {
+			statusCode = ParsingStatusCode::UnknownError;
+			outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
+				L"An unknown error has occurred.";
 		}
 
 		if(!stack.empty())

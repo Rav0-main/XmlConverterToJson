@@ -1,0 +1,9 @@
+<root>
+	<tag attr1="hell" attr2="xml" attr3="attr_val" />
+	<tag1>
+		<single />
+	</tag1>
+	<tag2>
+		hello
+	</tag2>
+</root>

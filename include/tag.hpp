@@ -18,7 +18,7 @@ typedef std::deque<Tag*> TagPtrSequence;
 void freeTag(Tag* node, Tag** nodePtr);
 
 void outputTags(
-	const TagPtrSequence& nodes, const bool valueAsAscii
+	const TagPtrSequence& nodes, const bool valueAsAscii = false
 );
 
 #endif
