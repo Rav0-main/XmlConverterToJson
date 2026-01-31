@@ -204,7 +204,7 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 		}
 		else if (statusCode == ParsingStatusCode::Success && !foundOneValidTag) {
 			statusCode = ParsingStatusCode::FileIsNotXmlError;
-			outMsg = L"File is not xml-format.";
+			outMsg = L"File is not xml-format or is empty file.";
 		}
 		else if (statusCode == ParsingStatusCode::Success && !file.eof()) {
 			statusCode = ParsingStatusCode::UnknownError;

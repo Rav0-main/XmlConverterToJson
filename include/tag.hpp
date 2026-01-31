@@ -17,6 +17,9 @@ typedef std::deque<Tag*> TagPtrSequence;
 
 void freeTag(Tag* node, Tag** nodePtr);
 
+/*
+* Output informations about tags in bfs
+*/
 void outputTags(
 	const TagPtrSequence& nodes, const bool valueAsAscii = false
 );

@@ -55,8 +55,10 @@ int main(const int argc, const char* argv[]) {
 				getFilenameWithExtension(JSON, filename, jsonFilename);
 				
 				const ConvertingStatus convertingStatus = convertToJson(roots, jsonFilename);
-				if (convertingStatus.code != ConvertingStatusCode::Success)
+				if (convertingStatus.code != ConvertingStatusCode::Success) {
+					std::cerr << "While converting file \"" << jsonFilename << "\" throwed error: " << std::endl;
 					outputStatusError(convertingStatus);
+				}
 
 				for (Tag* root : roots)
 					freeTag(root, &root);

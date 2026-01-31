@@ -19,9 +19,15 @@ enum class ParsingStatusCode {
 
 struct ParsingStatus{
 	const ParsingStatusCode code;
+	/*
+	* Information about ParsingStatusCode
+	*/
 	const std::wstring msg;
 };
 
+/*
+* Parses xml file and places root nodes in roots
+*/
 ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots);
 
 #endif

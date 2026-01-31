@@ -14,6 +14,9 @@ enum class ConvertingStatusCode {
 
 struct ConvertingStatus {
 	const ConvertingStatusCode code;
+	/*
+	* Information about ConvertingStatusCode
+	*/
 	const std::string msg;
 };
 
@@ -49,6 +52,9 @@ struct ConvertingProfile {
 inline void setConvertingProfile(ConvertingProfile& newProfile);
 inline ConvertingProfile* getConvertingProfile(void);
 
+/*
+* Gets root nodes and write json format in file
+*/
 ConvertingStatus convertToJson(
 	const TagPtrSequence& roots, const std::string& filename
 );
