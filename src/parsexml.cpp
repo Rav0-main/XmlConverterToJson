@@ -2,13 +2,13 @@
 #include <cctype>
 #include "parsexml.hpp"
 
-inline static const wchar_t START_TAG_NAME = L'<';
-inline static const wchar_t END_TAG_NAME = L'>';
-inline static const wchar_t CLOSING_TAG_NAME = L'/';
+static const wchar_t START_TAG_NAME = L'<';
+static const wchar_t END_TAG_NAME = L'>';
+static const wchar_t CLOSING_TAG_NAME = L'/';
 
-static void strip(std::wstring& str);
-inline void toWstringFrom(const std::string src, std::wstring& dist);
-inline std::wstring LineAndSymbolNumbersMsg(const size_t line, const size_t symbol);
+inline static void strip(std::wstring& str);
+inline static void toWstringFrom(const std::string src, std::wstring& dist);
+inline static std::wstring LineAndSymbolNumbersMsg(const size_t line, const size_t symbol);
 inline static bool isInformationTag(const wchar_t firstSymbol);
 inline static bool isStartOfTagName(const wchar_t symbol);
 inline static bool isEndOfTagName(const wchar_t symbol);
@@ -187,29 +187,29 @@ static void strip(std::wstring& str) {
 	str = str.substr(left, right - left + 1);
 }
 
-inline void toWstringFrom(const std::string src, std::wstring& dist) {
+static void toWstringFrom(const std::string src, std::wstring& dist) {
 	dist.reserve(src.size());
 	for (const char symb : src)
 		dist.push_back(static_cast<wchar_t>(symb));
 }
 
-inline std::wstring LineAndSymbolNumbersMsg(const size_t line, const size_t symbol) {
+static std::wstring LineAndSymbolNumbersMsg(const size_t line, const size_t symbol) {
 	return L"Line: " + std::to_wstring(line) + \
 			 L", symbol: " + std::to_wstring(symbol) + L".";
 }
 
-inline static bool isInformationTag(const wchar_t firstSymbol) {
+static bool isInformationTag(const wchar_t firstSymbol) {
 	return firstSymbol == L'?' || firstSymbol == L'!';
 }
 
-inline static bool isStartOfTagName(const wchar_t symbol) {
+static bool isStartOfTagName(const wchar_t symbol) {
 	return symbol == START_TAG_NAME;
 }
 
-inline static bool isEndOfTagName(const wchar_t symbol) {
+static bool isEndOfTagName(const wchar_t symbol) {
 	return symbol == END_TAG_NAME;
 }
 
-inline static bool isClosingTagName(const wchar_t symbol) {
+static bool isClosingTagName(const wchar_t symbol) {
 	return symbol == CLOSING_TAG_NAME;
 }

@@ -4,7 +4,7 @@
 
 #define ASSERTION_HPP
 
-#include "..\\..\\parsexml.hpp"
+#include "parsexml.hpp"
 
 bool assertEqualParsingStatusCode(
 	const ParsingStatusCode valid, const ParsingStatusCode result

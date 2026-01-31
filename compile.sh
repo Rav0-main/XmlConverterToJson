@@ -4,12 +4,13 @@ wait_to_press_enter(){
 	read -p "Press <Enter> to close .sh-script"
 }
 
-src_cpp_files="./main.cpp ./tag.cpp ./tojson.cpp ./parsexml.cpp ./help.cpp"
+src_cpp_files="src/main.cpp src/tag.cpp src/tojson.cpp src/parsexml.cpp src/help.cpp"
+include_dir="./include/"
 exe_file="fxmltjson.exe"
 
 echo Compiling "\"$exe_file\""...
 
-if g++ -O2 -I. -std=c++20 -o "$exe_file" $src_cpp_files ; then
+if g++ -O2 -I$include_dir -std=c++20 -o "$exe_file" $src_cpp_files ; then
 	echo "\"$exe_file\"" success compiled!
 	wait_to_press_enter
 	exit 0

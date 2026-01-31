@@ -4,7 +4,8 @@ wait_to_press_enter(){
 	read -p "Press <Enter> to close .sh-script."
 }
 
-src_cpp_files="../../tojson.cpp ../../tag.cpp"
+src_cpp_files="../../src/tojson.cpp ../../src/tag.cpp"
+include_dir="../../include"
 src_o_files="./tojson.o ./tag.o"
 test_cpp_files="./converttojson.cpp"
 test_o_files="./converttojson.o"
@@ -16,7 +17,7 @@ SKIP_COMPILE_TESTS="-to"
 if [ ! \( "$1" = "$SKIP_COMPILE_SRC" -o "$2" = "$SKIP_COMPILE_SRC" \) ] ; then
 	echo Compiling "\"$src_o_files\"" from "\"$src_cpp_files\"..."
 
-	if g++ -I../../ -std=c++20 -c $src_cpp_files ; then
+	if g++ -I$include_dir -std=c++20 -c $src_cpp_files ; then
 		echo Success compiled object-file of source!
 	
 	else
@@ -33,7 +34,7 @@ fi
 if [ ! \( "$1" = "$SKIP_COMPILE_TESTS" -o "$2" = "$SKIP_COMPILE_TESTS" \) ] ; then
 	echo Compiling "\"$test_cpp_files\""...
 
-	if  g++ -I. -std=c++20 -c $test_cpp_files ; then
+	if  g++ -I$include_dir -std=c++20 -c $test_cpp_files ; then
 		echo Success compiled object-files of tests!
 
 	else

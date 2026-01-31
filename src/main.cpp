@@ -12,7 +12,7 @@
 
 inline static void outputStatusError(const ParsingStatus& status);
 inline static void outputStatusError(const ConvertingStatus& status);
-static void getFilenameWithExtension(
+inline static void getFilenameWithExtension(
 	const std::string& newExtension, const std::string& filename,
 	std::string& newFilename
 );
@@ -73,14 +73,14 @@ int main(const int argc, const char* argv[]) {
 	return 0;
 }
 
-inline static void outputStatusError(const ParsingStatus& status) {
+static void outputStatusError(const ParsingStatus& status) {
 	if (status.code != ParsingStatusCode::UnknownError)
 		std::wcerr << status.msg << std::endl;
 	else
 		std::wcerr << L"Unknown error." << std::endl;
 }
 
-inline static void outputStatusError(const ConvertingStatus& status) {
+static void outputStatusError(const ConvertingStatus& status) {
 	if (status.code != ConvertingStatusCode::UnknownError)
 		std::cerr << status.msg << std::endl;
 	else

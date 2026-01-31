@@ -1,5 +1,5 @@
 #include <iostream>
-#include "..\\..\\tojson.hpp"
+#include "tojson.hpp"
 
 inline static const std::wstring DASH_LINE = L"-------------------------------------------------------------";
 

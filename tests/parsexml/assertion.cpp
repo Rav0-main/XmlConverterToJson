@@ -3,10 +3,10 @@
 #include <string>
 #include "assertion.hpp"
 
-inline static const std::wstring OK_LINE = L"OK";
-inline static const std::wstring WRONG_LINE = L"ERROR";
-inline static const std::wstring VERDICT = L"Verdict";
-inline static const std::wstring EMPTY_LINE = L"EMPTY";
+static const std::wstring OK_LINE = L"OK";
+static const std::wstring WRONG_LINE = L"ERROR";
+static const std::wstring VERDICT = L"Verdict";
+static const std::wstring EMPTY_LINE = L"EMPTY";
 
 static bool checkAtEqualTags(
 	const Tag* const validTag, const Tag* const tag
@@ -117,7 +117,7 @@ static bool checkAtEqualTags(
 	return true;
 }
 
-inline static void outputTagNamesOf(const TagPtrSequence& vect) {
+static void outputTagNamesOf(const TagPtrSequence& vect) {
 	if (vect.size())
 		for (const Tag* tag : vect)
 			std::wcout << tag->name << L", ";
@@ -127,7 +127,7 @@ inline static void outputTagNamesOf(const TagPtrSequence& vect) {
 	std::wcout << std::endl;
 }
 
-inline void outputWrongVerdict(void) {
+void outputWrongVerdict(void) {
 	std::wcout << VERDICT << L": " << WRONG_LINE << std::endl;
 }
 

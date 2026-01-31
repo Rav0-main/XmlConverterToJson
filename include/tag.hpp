@@ -1,8 +1,8 @@
 #pragma once
 
-#ifndef NODE_HPP
+#ifndef TAG_HPP
 
-#define NODE_HPP
+#define TAG_HPP
 
 #include <string>
 #include <deque>

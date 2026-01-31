@@ -1,9 +1,9 @@
 #include <iostream>
 #include <string>
-#include "..\\..\\parsexml.hpp"
+#include "parsexml.hpp"
 #include "assertion.hpp"
 
-inline static const std::wstring DASH_LINE = L"-------------------------------------------------------------";
+static const std::wstring DASH_LINE = L"-------------------------------------------------------------";
 
 typedef void (*Test) (void);
 
@@ -400,10 +400,10 @@ static void testNotXmlFormatFile(void) {
 		outputTrueVerdict();
 }
 
-inline static void outputTestname(const std::wstring& testname) {
+static void outputTestname(const std::wstring& testname) {
 	std::wcout << L" * " << testname << L":" << std::endl;
 }
 
-inline static void outputDashLine(void) {
+static void outputDashLine(void) {
 	std::wcout << std::endl << DASH_LINE << std::endl;
 }

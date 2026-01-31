@@ -6,7 +6,7 @@ static ConvertingProfile profile = {
 	.notNamesOneTagArray = true
 };
 
-inline static const char TABULATION = '\t';
+static const char TABULATION = '\t';
 
 struct WritingTagProperties {
 	unsigned short level;
@@ -23,11 +23,11 @@ inline static void groupChildrenByName(
 	std::unordered_map<std::wstring, TagPtrSequence>& groups
 );
 
-inline ConvertingProfile* getConvertingProfile(void) {
+ConvertingProfile* getConvertingProfile(void) {
 	return &profile;
 }
 
-inline void setConvertingProfile(ConvertingProfile& newProfile) {
+void setConvertingProfile(ConvertingProfile& newProfile) {
 	profile = newProfile;
 }
 
@@ -151,7 +151,7 @@ static void writeTagIn(
 	file << L'\n';
 }
 
-inline static void groupChildrenByName(
+static void groupChildrenByName(
 	const Tag* const tag,
 	std::unordered_map<std::wstring, TagPtrSequence>& groups
 ) {

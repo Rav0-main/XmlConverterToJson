@@ -4,7 +4,8 @@ wait_to_press_enter(){
 	read -p "Press <Enter> to close .sh-script."
 }
 
-src_cpp_files="../../main.cpp ../../tag.cpp ../../parsexml.cpp ../../tojson.cpp ../../help.cpp"
+src_cpp_files="../../src/main.cpp ../../src/tag.cpp ../../src/parsexml.cpp ../../src/tojson.cpp ../../src/help.cpp"
+include_dir="../../include"
 src_o_files="./main.o ./tag.o ./parsexml.o ./tojson.o ./help.o"
 exe_file="./fxmltjson.exe"
 test_py_file="./testtime.py"
@@ -14,7 +15,7 @@ SAVE_JSONs="-sj"
 if [ ! \( "$1" = "$SKIP_COMPILE_SRC" -o "$2" = "$SKIP_COMPILE_SRC" \) ] ; then
 	echo Compiling "\"$src_o_files\"" from "\"$src_cpp_files\"..."
 
-	if g++ -O2 -I../../ -std=c++20 -c $src_cpp_files ; then
+	if g++ -O2 -I$include_dir -std=c++20 -c $src_cpp_files ; then
 		echo Success compiled object-file of source!
 	
 	else

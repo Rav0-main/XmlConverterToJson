@@ -3,11 +3,11 @@
 #include "help.hpp"
 #include "config.hpp"
 
-inline static const std::string DASH_LINE = "-------------------------------------------------------------";
+static const std::string DASH_LINE = "-------------------------------------------------------------";
 
-static void outputLinesWithOffset(
+inline static void outputLinesWithOffset(
 	const char offsetChar, const unsigned count,
-	const std::vector<const char*> lines
+	const std::vector<const char*>&& lines
 );
 
 void outputHelpPage(void) {
@@ -84,7 +84,7 @@ void outputHelpPage(void) {
 
 static void outputLinesWithOffset(
 	const char offsetChar, const unsigned count,
-	const std::vector<const char*> lines
+	const std::vector<const char*>&& lines
 ) {
 	for (const char* line : lines) {
 		for (unsigned j = 0; j < count; ++j)
