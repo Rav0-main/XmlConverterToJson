@@ -1,5 +1,5 @@
 <root>
-	<tag attr1="hell" attr2="xml" attr3="attr_val" />
+	<tag attr1="/attr" attr2="/xml" attr3="attr/val" />
 	<tag1>
 		<single />
 	</tag1>

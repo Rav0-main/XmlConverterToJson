@@ -13,6 +13,7 @@ inline static bool isInformationTag(const wchar_t firstSymbol);
 inline static bool isStartOfTagName(const wchar_t symbol);
 inline static bool isEndOfTagName(const wchar_t symbol);
 inline static bool isClosingTagName(const wchar_t symbol);
+inline static bool isTagAttributeSymbol(const wchar_t symbol);
 
 ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) {
 	std::wifstream file(filename);
@@ -35,6 +36,7 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 	bool inTagContent = false;
 	bool inClosingTagName = false;
 	bool inSingleTagName = false;
+	bool inTagAttribute = false;
 	bool foundOneValidTag = false;
 
 	ParsingStatusCode statusCode = ParsingStatusCode::Success;
@@ -80,8 +82,10 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 				inClosingTagName = true;
 			}
 			//<... /
-			else if (inTagNameInit)
-				inSingleTagName = true;
+			else if (inTagNameInit) {
+				if (!inTagAttribute)
+					inSingleTagName = true;
+			}
 			//</.../
 			else if (inClosingTagName) {
 				statusCode = ParsingStatusCode::WrongTagNameError;
@@ -157,6 +161,9 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 		else if ((inTagNameInit || inClosingTagName) && !inTagNameFoundSpace) {
 			tagName.push_back(symbol);
 		}
+		//<... attr="...
+		else if (inTagNameInit && isTagAttributeSymbol(symbol))
+			inTagAttribute = !inTagAttribute;
 		//skip tag attributes
 		else if ((inTagNameInit || inClosingTagName) && inTagNameFoundSpace)
 			;
@@ -173,10 +180,13 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 			break;
 		}
 
-		if (symbol == L'\n')
+		if (symbol == L'\n') {
 			++currentLine;
-		
-		++symbolNumber;
+			symbolNumber = 0;
+		}
+		else
+			++symbolNumber;
+
 		symbol = file.get();
 	}
 
@@ -196,7 +206,7 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 			statusCode = ParsingStatusCode::FileIsNotXmlError;
 			outMsg = L"File is not xml-format.";
 		}
-		else if (!file.eof()) {
+		else if (statusCode == ParsingStatusCode::Success && !file.eof()) {
 			statusCode = ParsingStatusCode::UnknownError;
 			outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
 				L"An unknown error has occurred.";
@@ -264,4 +274,8 @@ static bool isEndOfTagName(const wchar_t symbol) {
 
 static bool isClosingTagName(const wchar_t symbol) {
 	return symbol == CLOSING_TAG_NAME;
+}
+
+inline static bool isTagAttributeSymbol(const wchar_t symbol) {
+	return symbol == L'\'' || symbol == L'\"';
 }
