@@ -11,13 +11,14 @@ test_cpp_files="./converttojson.cpp"
 test_o_files="./converttojson.o"
 exe_file="./converttojson.exe"
 test_py_file="./testtojson.py"
+compiler="g++"
 SKIP_COMPILE_SRC="-so"
 SKIP_COMPILE_TESTS="-to"
 
 if [ ! \( "$1" = "$SKIP_COMPILE_SRC" -o "$2" = "$SKIP_COMPILE_SRC" \) ] ; then
 	echo Compiling "\"$src_o_files\"" from "\"$src_cpp_files\"..."
 
-	if g++ -I$include_dir -std=c++20 -c $src_cpp_files ; then
+	if $compiler -I$include_dir -std=c++20 -c $src_cpp_files ; then
 		echo Success compiled object-file of source!
 	
 	else
@@ -34,7 +35,7 @@ fi
 if [ ! \( "$1" = "$SKIP_COMPILE_TESTS" -o "$2" = "$SKIP_COMPILE_TESTS" \) ] ; then
 	echo Compiling "\"$test_cpp_files\""...
 
-	if  g++ -I$include_dir -std=c++20 -c $test_cpp_files ; then
+	if  $compiler -I$include_dir -std=c++20 -c $test_cpp_files ; then
 		echo Success compiled object-files of tests!
 
 	else
@@ -47,7 +48,7 @@ else
 	echo Skip compiling of "\"$test_cpp_files\""...
 fi
 
-if g++ -std=c++20 -o "$exe_file" $src_o_files $test_o_files ; then
+if  $compiler -std=c++20 -o "$exe_file" $src_o_files $test_o_files ; then
 	echo Success compiled "\"$exe_file\"";
 
 else

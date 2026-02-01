@@ -9,13 +9,14 @@ include_dir="../../include"
 src_o_files="./main.o ./tag.o ./parsexml.o ./tojson.o ./help.o ./isnum.o"
 exe_file="./fxmltjson.exe"
 test_py_file="./testtime.py"
+compiler="g++"
 SKIP_COMPILE_SRC="-so"
 SAVE_JSONs="-sj"
 
 if [ ! \( "$1" = "$SKIP_COMPILE_SRC" -o "$2" = "$SKIP_COMPILE_SRC" \) ] ; then
 	echo Compiling "\"$src_o_files\"" from "\"$src_cpp_files\"..."
 
-	if g++ -O2 -I$include_dir -std=c++20 -c $src_cpp_files ; then
+	if $compiler -O2 -I$include_dir -std=c++20 -c $src_cpp_files ; then
 		echo Success compiled object-file of source!
 	
 	else
@@ -31,7 +32,7 @@ fi
 
 echo Compiling "\"$exe_file\""...
 
-if g++ -O2 -std=c++20 -o "$exe_file" $src_o_files ; then
+if $compiler -O2 -std=c++20 -o "$exe_file" $src_o_files ; then
 	echo Success compiled "\"$exe_file\"";
 
 else
