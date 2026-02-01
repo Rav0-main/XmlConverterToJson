@@ -21,11 +21,17 @@
 </div>
 
 <div>
-<h1>Technical agreements</h1>
+<h1>Features:</h1>
 <p>1. Skips all tag attributes.</p>
 <p>2. Skips all comments.</p>
 <p>3. Skips all information tags, which starts with '!' or '?'.</p>
-<p>4. This is study project.</p>
+<p>4. Skips all CDATA.</p>
+<p>5. This is study project.</p>
+</div>
+
+<div>
+<h1>On future:</h1>
+<p>1. Full converting - every tag will be object with properties: value, attributes and children.</p>
 </div>
 
 <div>
