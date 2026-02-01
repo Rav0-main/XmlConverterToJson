@@ -731,7 +731,7 @@ static void convertWrongPathOfJsonFile(void) {
 
 	outputTestname(testname);
 	if (status.code != ConvertingStatusCode::NotOpenedFileError)
-		std::wcout << L"Wrong status code: excepted: " << static_cast<int>(ConvertingStatusCode::NotOpenedFileError)
+		std::wcout << L"Wrong status code: expected: " << static_cast<int>(ConvertingStatusCode::NotOpenedFileError)
 						 << L"\nbut given: " << static_cast<int>(status.code) << std::endl;
 	else
 		std::wcout << L"OK." << std::endl;

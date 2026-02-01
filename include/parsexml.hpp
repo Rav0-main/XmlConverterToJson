@@ -13,6 +13,7 @@ enum class ParsingStatusCode {
 	WrongClosingTagNameError,
 	WrongTagNameError,
 	TagNameNotClosedError,
+	TagAttributeNotClosedError,
 	FileIsNotXmlError,
 	UnknownError
 };

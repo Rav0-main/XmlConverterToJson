@@ -37,6 +37,7 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 	bool inClosingTagName = false;
 	bool inSingleTagName = false;
 	bool inTagAttribute = false;
+
 	bool foundOneValidTag = false;
 
 	ParsingStatusCode statusCode = ParsingStatusCode::Success;
@@ -52,11 +53,11 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 	while (!file.fail()) {
 		//<[/]...<
 		if (isStartOfTagName(symbol) &&
-			(inTagNameInit || inClosingTagName)) {
+			(inTagNameInit || inClosingTagName) && !inTagAttribute) {
 
 			statusCode = ParsingStatusCode::WrongTagNameError;
 			outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
-				L"\nTag starting with \"" + tagName + L"\" have not valid name.";
+				L"\nTag which starting on \"" + tagName + L"\" has not valid name.";
 			break;
 		}
 		//<[/]abc ...
@@ -103,15 +104,24 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 			inTagNameFoundSpace = false;
 			inTagContent = !inSingleTagName;
 
-			if (isInformationTag(tagName.front())) {
+			if (tagName.empty()) {
+				statusCode = ParsingStatusCode::WrongTagNameError;
+				outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
+					L"\nEmpty tag name.";
+
+				break;
+			}
+
+			else if (isInformationTag(tagName.front()) && !inTagAttribute) {
 				foundOneValidTag = true;
 				inTagContent = false;
 			}
 
-			else if (tagName.empty()) {
-				statusCode = ParsingStatusCode::WrongTagNameError;
+			else if (inTagAttribute) {
+				statusCode = ParsingStatusCode::TagAttributeNotClosedError;
 				outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
-					L"\nEmpty tag name.";
+					L"\nAttribute of \"" + tagName + L"\" not closed.";
+
 				break;
 			}
 
@@ -176,7 +186,9 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 		//not excepted symbol in xml tree
 		else {
 			statusCode = ParsingStatusCode::FileIsNotXmlError;
-			outMsg = L"File is not xml-format.";
+			outMsg = L"File is not xml-format.\n" + \
+							LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
+							L"\nUnexpected symbol \"" + symbol + L"\".";
 			break;
 		}
 

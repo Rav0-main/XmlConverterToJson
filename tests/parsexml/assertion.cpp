@@ -18,7 +18,7 @@ bool assertEqualParsingStatusCode(
 ) {
 	if (valid != result) {
 		std::wcout << L"Wrong code of parsing result: " << int(result) << std::endl;
-		std::wcout << L"Excepted: " << int(valid) << std::endl;
+		std::wcout << L"Expected: " << int(valid) << std::endl;
 		outputWrongVerdict();
 		return false;
 	}
@@ -47,7 +47,7 @@ bool assertEqualRoots(
 	}
 	else {
 		std::wcout << L"Wrong tree count: " << roots.size() << std::endl;
-		std::wcout << L"But excepted: " << validRoots.size() << std::endl;
+		std::wcout << L"But expected: " << validRoots.size() << std::endl;
 		outputWrongVerdict();
 
 		return false;
