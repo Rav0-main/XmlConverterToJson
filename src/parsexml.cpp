@@ -128,6 +128,8 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 			else if (inSingleTagName) {
 				inSingleTagName = false;
 				foundOneValidTag = true;
+				if (!stack.empty())
+					inTagContent = true;
 			}
 
 			else {
@@ -153,10 +155,20 @@ ParsingStatus getXmlRootsOf(const std::string& filename, TagPtrSequence& roots) 
 			inTagContent = false;
 			inClosingTagName = false;
 
-			if (tagName == stack.back()->name) {
+			if (stack.empty()) {
+				statusCode = ParsingStatusCode::WrongClosingTagNameError;
+				outMsg = LineAndSymbolNumbersMsg(currentLine, symbolNumber) + \
+					L"Unknown closing tag name: \"" + tagName + L"\".";
+
+				break;
+			}
+			else if (tagName == stack.back()->name) {
 				strip(stack.back()->value);
 				stack.pop_back();
 				tagName.clear();
+
+				if (!stack.empty())
+					inTagContent = true;
 			}
 			else {
 				statusCode = ParsingStatusCode::WrongClosingTagNameError;

@@ -464,7 +464,6 @@ static bool testInTagNameStartingNewTagName(void) {
 	TagPtrSequence roots;
 	const ParsingStatus status = getXmlRootsOf(filename, roots);
 
-	outputTestname(testname);
 	if (assertEqualParsingStatusCode(ParsingStatusCode::WrongTagNameError, status.code)) {
 		outputTrueVerdict();
 		return true;
